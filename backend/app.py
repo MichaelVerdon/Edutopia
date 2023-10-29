@@ -4,6 +4,7 @@ import random
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
+app.secret_key = "290347520935670823"
 
 app.config["MYSQL_HOST"] = "localhost"
 app.config["MYSQL_USER"] = "root"
@@ -31,14 +32,10 @@ def get_question():
         return jsonify({"error": "No questions found for the specified topic_id"}), 404
 
     session.setdefault("retrieved_questions", [])
-    unretrieved_questions = [
-        question
-        for question in questions
-        if question["id"] not in session["retrieved_questions"]
-    ]
 
     # Select a random question from retrieved questions
-    question = unretrieved_questions[random.randint(0, len(questions) - 1)]
+
+    question = questions[random.randint(0, len(questions) - 1)]
 
     return jsonify(question)
 
