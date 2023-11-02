@@ -18,6 +18,8 @@ mysql = MySQL(app)
 def get_question():
     topic_id = request.args.get("topic_id")
 
+    session.setdefault("questions", [])
+
     # Check argument is valid
     if topic_id is None:
         return jsonify({"error": "missing 'topic_id' parameter"}), 400
@@ -31,14 +33,20 @@ def get_question():
     if not questions:
         return jsonify({"error": "No questions found for the specified topic_id"}), 404
 
-    session.setdefault("retrieved_questions", [])
-
     # Select a random question from retrieved questions
 
-    question = questions[random.randint(0, len(questions) - 1)]
+    while True:
+        question = questions[random.randint(0, len(questions) - 1)]
+        if question not in session["questions"]:
+            break
+
+    session["questions"].append(question)
+    session.modified = True
 
     return jsonify(question)
 
 
 if __name__ == "__main__":
     app.run(debug=False, port=9000)
+
+# http://localhost:9000/get_question?topic_id=1
