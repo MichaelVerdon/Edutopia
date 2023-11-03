@@ -1,0 +1,94 @@
+/* LandingPage.css */
+
+/* Style for the landing page container */
+.landing-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    /*background-color: #000000; */
+  }
+  
+/* Style for the button container */
+.button-container {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+  }
+  
+  /* Style for the 'Play' button */
+  .play-button {
+    background-color: #000000;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-right: 10px; 
+  }
+  
+  .play-button:hover {
+    background-color: #999;
+  }
+  
+  /* Style for the 'Options' button */
+  .options-button {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px; 
+  }
+  
+  .options-button:hover {
+    background-color: #999;
+  }
+ 
+/* Style for the hexagon container */
+.hexagon-container {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 10px;
+    justify-content: center; 
+  }
+  
+  /* Style for the outer hexagon */
+  .hexagon {
+    width: 96px;
+    height: 96px;
+    background-color: #414141; 
+    /*clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%); */
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    transition: transform 0.2s ease;
+    margin-bottom: 50px;
+  }
+  
+  /* Style for inner hexagon */
+  .hexagon .hexagon-inner {
+    width: 95%;
+    height: 95%;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background-color: #000000; 
+
+  }
+  
+  /* Style for the text inside the inner hexagon */
+  .hexagon .hexagon-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Impact', sans-serif;
+    font-size: 48px; 
+    color: #fff; 
+  }
+
+  .hexagon:hover {
+    transform: scale(1.2);
+  }
