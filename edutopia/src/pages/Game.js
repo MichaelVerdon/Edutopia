@@ -1,39 +1,34 @@
-import React , { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function Game() {
-
-  // Using the Api to obtain a question.
-  var api_link = "http://localhost:9000/get_question?topic_id="
-  // Topics to be questioned on will be stored in this array with their equivalent id number.
-  var topic_ids = []
-
+  const api_link = "http://localhost:9000/get_question?topic_id=";
   const [question, setQuestion] = useState(null);
 
-  // This function will fetch a question using the api
   const fetchQuestion = (topic_id) => {
     fetch(api_link + topic_id)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        return response.json();
+        response.json()
       })
       .then(data => {
-        setQuestion(data);
+        console.log(data)
       })
       .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
       });
   }
 
-  useEffect(() => {
-    fetchQuestion("1"); // Fetch a question when the component mounts
-  }, []);
+  const getQuestionClick = () => {
+    fetchQuestion("1"); // Change "1" to the desired topic_id
+  }
 
   return (
     <div className="game">
       <p>GAMEEEE</p>
-      <p>{question ? question : "Loading question..."}</p>
+      <button onClick={getQuestionClick}>Get Question</button>
+      <p>{question ? question : "empty"}</p>
     </div>
   );
 }
