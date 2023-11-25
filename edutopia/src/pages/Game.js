@@ -44,8 +44,8 @@ function Game() {
     setModal(!modal);
   };
   const questionAndToggle = () => {
-    getQuestionClick;
-    toggleModal;
+    getQuestionClick();
+    toggleModal();
   };
 
   if(modal) {
@@ -61,6 +61,7 @@ function Game() {
       <p>GAMEEEE</p>
       <button onClick={getQuestionClick}>Get Question</button>
       <p>{question ? question : "empty"}</p>
+      
       <button onClick={questionAndToggle} className="btn-modal">
         Open
       </button>
