@@ -22,7 +22,8 @@ function Game() {
   }
 
   const getQuestionClick = () => {
-    fetchQuestion("1"); // Change "1" to the desired topic_id
+     // Change "1" to the desired topic_id
+    setQuestion(fetchQuestion("1"));
   }
 
   const [isModalOpen, setModalOpen] = useState(false); 
