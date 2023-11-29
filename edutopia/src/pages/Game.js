@@ -3,7 +3,7 @@ import PopUp from './PopUp';
 import Question from './Question';
 
 function Game() {
-  const api_link = "http://localhost:9000/get_question?topic_id=";
+  const api_link = "http://localhost:9020/get_question?topic_id=";
   const [question, setQuestion] = useState(null);
 
   const fetchQuestion = (topic_id) => {
@@ -23,8 +23,8 @@ function Game() {
   }
 
   const getQuestionClick = () => {
-     // Change "1" to the desired topic_id
-    setQuestion(fetchQuestion("1"));
+    setQuestion(fetchQuestion("1")); // Change "1" to the desired topic_id
+
   }
 
   const [isModalOpen, setModalOpen] = useState(false); 
@@ -43,6 +43,10 @@ function Game() {
   const toggleModal = () => {
     setModal(!modal);
   };
+  const questionAndToggle = () => {
+    getQuestionClick;
+    toggleModal;
+  };
 
   if(modal) {
     document.body.classList.add('active-modal')
@@ -50,20 +54,21 @@ function Game() {
     document.body.classList.remove('active-modal')
   }
 
+
   return (
     <div className="game">
       <PopUp isOpen={isModalOpen} onClose={closeModal} />
       <p>GAMEEEE</p>
       <button onClick={getQuestionClick}>Get Question</button>
       <p>{question ? question : "empty"}</p>
-      <button onClick={toggleModal} className="btn-modal">
+      <button onClick={questionAndToggle} className="btn-modal">
         Open
       </button>
 
       {modal && (
         <div className="modal">
           <div className="overlay">
-            <Question></Question>
+            <Question questionJson={question} close={toggleModal}></Question>
             <button className="close-modal" onClick={toggleModal}>
               CLOSE
             </button>
