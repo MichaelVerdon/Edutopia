@@ -1,25 +1,34 @@
+import React from 'react';
 
+function Question ({questionJson, close}) {
+    //question_id, topic_id, question_text, option_one, option_two, option_three, option four, correct
+    let question = JSON.parse(questionJson);
 
+    //TODO timer, totally dont steal from here https://stackoverflow.com/questions/40885923/countdown-timer-in-react
 
-
-function Question ({questions}) {
-    /*
-    const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [answerIndex, setAnswerIndex] = useState(null);
-    const {question_id, topic_id, question_text, option_one, option_two, option_three, option_four, correct} = questions[currentQuestion]
-
-    const onAnswerClick = (answer, index) => {
-        setAnswerIndex(index);
+    const onAnswerClick = (button) => {
+        if (Number(button.id) == question.correct){
+            button.style.backgroundColor = "#AED581";
+            delay(1000);
+            close;
+        } else{
+            button.style.backgroundColor = "#FF4443";
+            delay(1000);
+            close;
+        }
     }
-    */
+
+ 
     return(
         <div className='QuestionField'>
-            <h1>Question: </h1>
+            <small>Timer:</small>
+            <h1>Question:</h1>
+            <h2>{question.Question_text}</h2>
             <div>
-                <button className='btn'></button>
-                <button className='btn'></button>
-                <button className='btn'></button>
-                <button className='btn'></button>
+                <button className='btn' id='1' onClick={onAnswerClick(this)}>{question.Option_one}</button>
+                <button className='btn' id='2' onClick={onAnswerClick(this)}>{question.Option_two}</button>
+                <button className='btn' id='3' onClick={onAnswerClick(this)}>{question.Option_three}</button>
+                <button className='btn' id='4' onClick={onAnswerClick(this)}>{question.Option_four}</button>
             </div>
         </div>
 
