@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PopUp from './PopUp';
 import Question from './Question';
+import Question from './Question';
 
 function Game() {
   const api_link = "http://localhost:9020/get_question?topic_id=";
@@ -61,6 +62,21 @@ function Game() {
       <p>GAMEEEE</p>
       <button onClick={getQuestionClick}>Get Question</button>
       <p>{question ? question : "empty"}</p>
+      <button onClick={questionAndToggle} className="btn-modal">
+        Open
+      </button>
+
+      {modal && (
+        <div className="modal">
+          <div className="overlay">
+            <Question questionJson={question} close={toggleModal}></Question>
+            <button className="close-modal" onClick={toggleModal}>
+              CLOSE
+            </button>
+            </div>
+        </div>
+      )}
+      
       <button onClick={questionAndToggle} className="btn-modal">
         Open
       </button>
