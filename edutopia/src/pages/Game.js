@@ -6,24 +6,26 @@ function Game() {
   const [question, setQuestion] = useState(null);
 
   const fetchQuestion = (topic_id) => {
-    fetch(api_link + topic_id)
+    return fetch(api_link + topic_id)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        response.json()
-      })
-      .then(data => {
-        console.log(data)
+        return response.json();
       })
       .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
+        throw error;
       });
   }
+  
 
   const getQuestionClick = () => {
-     // Change "1" to the desired topic_id
-    setQuestion(fetchQuestion("1"));
+    // Change "1" to the desired topic_id
+    fetchQuestion("1")
+      .then(data => {
+        setQuestion(data);
+      })
+      .catch(error => console.error('Error fetching question:', error));
   }
 
   const [isModalOpen, setModalOpen] = useState(false); 
@@ -42,7 +44,7 @@ function Game() {
       <PopUp isOpen={isModalOpen} onClose={closeModal} />
       <p>GAMEEEE</p>
       <button onClick={getQuestionClick}>Get Question</button>
-      <p>{question ? question : "empty"}</p>
+      <p>{question !== null ? question : "empty"}</p>
     </div>
   );
 }

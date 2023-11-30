@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify, session
 import random
+from flask_cors import CORS
 
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = "290347520935670823"
 
 app.config["MYSQL_HOST"] = "localhost"
