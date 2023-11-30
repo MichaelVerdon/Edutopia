@@ -7,14 +7,14 @@ function Question ({questionJson, close}) {
     //TODO timer, totally dont steal from here https://stackoverflow.com/questions/40885923/countdown-timer-in-react
 
     const onAnswerClick = (button) => {
-        if (Number(button.id) == question.correct){
+        if (Number(button.id) === question.correct){
             button.style.backgroundColor = "#AED581";
-            delay(1000);
-            close;
+            //delay(1000);
+            close();
         } else{
             button.style.backgroundColor = "#FF4443";
-            delay(1000);
-            close;
+            //delay(1000);
+            close();
         }
     }
 
