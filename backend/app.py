@@ -53,6 +53,6 @@ def get_question():
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=9000)
+    app.run(debug=False, port=9020)
 
 # http://localhost:9000/get_question?topic_id=1
