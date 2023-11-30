@@ -33,6 +33,10 @@ def get_question():
     if not questions:
         return jsonify({"error": "No questions found for the specified topic_id"}), 404
 
+    # Check if all questions have been asked, reset if needed
+    if len(session["questions"]) == len(questions):
+        session["questions"] = []
+
     # Select a random question from retrieved questions
 
     while True:
