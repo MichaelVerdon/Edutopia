@@ -46,7 +46,7 @@ function Game() {
  //score add
  const addScore = () => {
   setScore(score + 1);
-};
+  };
 
   //question modal
   const [modal, setModal] = useState(false);
