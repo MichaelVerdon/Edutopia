@@ -21,12 +21,15 @@ const checkboxLabels = [
   'IBM Quantum',
 ];
 
-function PopUp({ isOpen, onClose }) {
+function PopUp({ isOpen, onClose, onTopicsChange }) {
   const [selectedTopics, setSelectedTopics] = useState([]);
 
   useEffect(() => {
     console.log('Selected Topics:', selectedTopics);
-  }, [selectedTopics]);
+    // Notify parent component about the change in topics
+    onTopicsChange(selectedTopics);
+  }, [selectedTopics, onTopicsChange]);
+
 
   const toggleTopic = (topicNumber) => {
     setSelectedTopics((prevTopics) => {
@@ -40,6 +43,12 @@ function PopUp({ isOpen, onClose }) {
         return [...prevTopics, topicNumber];
       }
     });
+  };
+
+  const handleClose = () => {
+    // Export the current state of selectedTopics when the modal is closed
+    onTopicsChange(selectedTopics);
+    onClose();
   };
 
   return (
@@ -60,9 +69,9 @@ function PopUp({ isOpen, onClose }) {
           </div>
         ))}
       </div>
-      <button onClick={onClose}>Close</button>
+      <button onClick={handleClose}>Close</button>
     </Modal>
   );
 }
 
-export default PopUp;
+export default PopUp; 

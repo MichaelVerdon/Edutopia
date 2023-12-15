@@ -3,11 +3,16 @@ import PopUp from './PopUp';
 import Question from './Question';
 
 function Game() {
-  const api_link = "http://localhost:9020/get_question?topic_id=";
+  const api_link = "http://localhost:9000/get_question?topic_id=";
   const [question, setQuestion] = useState('');
   const [score, setScore] = useState(0)
+  const [selectedTopics, setSelectedTopics] = useState([]);
 
-  //const questionJSON = JSON.stringify(require('./Question.json'));
+  // This function will be passed to the PopUp component
+  const handleTopicsChange = (newTopics) => {
+    // Update the selected topics in the parent component
+    setSelectedTopics(newTopics);
+  };
 
   const fetchQuestion = (topic_id) => {
     return fetch(api_link + topic_id)
@@ -24,8 +29,12 @@ function Game() {
   
 
   const getQuestionClick = async() => {
-    // Change "1" to the desired topic_id
-    await fetchQuestion("1")
+    var topic = '1'
+    if (selectedTopics.length !== 0) {
+      const randomIndex = Math.floor(Math.random() * selectedTopics.length);
+      topic = selectedTopics[randomIndex];
+    }
+    await fetchQuestion(topic)
       .then(data => {
         setQuestion(data);
       })
@@ -67,7 +76,7 @@ function Game() {
 
   return (
     <div className="game">
-      <PopUp isOpen={isModalOpen} onClose={closeModal} />
+      <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
       <div>
       <p>GAMEEEE</p>
       <p>Score: {score}</p>
