@@ -1,17 +1,58 @@
+import Player from './PlayerObject';
+
 class GameHandler{
 
-    constructor(topics){
-        this.topics = topics;
-        this.api_url = "http://localhost:9000/get_question?topic_id=";
+    constructor(players){
+        // players will be an array of Player Objects
+        this.players = players;
+        // Hard-coded for now for testing purposes (Will change it to array of players)
+        this.player1 = new PlayerObject(1);
+        this.player2 = new PlayerObject(2);
+        this.player3 = new PlayerObject(3);
+        this.player4 = new PlayerObject(4);
     }
 
-    // To check a player answered correctly or incorrectly 
-    static questionStatus(question_data, answer){
-        if(answer == question_data[6]){
-            return true;
+    // Increment Points if answered correctly
+    static questionAnswered(status){
+        if(status){
+            player.techPoints(player.techPoints + 1)
+        }
+    }
+
+    // Add plot to a players ownedTiles array
+    static claimPlot(tile, player_id){
+        for(player in players){
+            if(player.id = player_id){
+                player.ownedTiles = player.ownedTiles.push(tile)
+            }
+        }  
+    }
+
+    // Remove a specified plot from a players ownedTiles array
+    static removePlot(tile, player_id){
+        for(player in players){
+            if(player.id = player_id){
+                player.ownedTiles = player.ownedTiles.filter(item => item !== tile);
+                // Remove player from game if they have 0 tiles owned (eliminated)
+                if(player.ownedTiles.length === 0){
+                    player.liveStatus = false;
+                }
+            }
+        }  
+    }
+
+    // Set player initial tiles
+    // To be continued when hex board is committed to repo
+    static assignStartingTiles(){
+        var allocatedTiles = [];
+    }
+
+    static getWinner(){
+        if(this.players.length === 1){
+            return this.players[0]
         }
         else{
-            return false;
+            return 0; // Return 0 if no winner
         }
     }
 

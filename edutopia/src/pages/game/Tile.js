@@ -1,6 +1,6 @@
 class Tile {
-    constructor(x, y, z) {
-      this.coordinates = { x, y, z };
+    constructor(x, y) {
+      this.coordinates = { x, y };
       this.owner = null; // Player object or null if unowned
       this.biome = null; // Biome type (e.g., forest, desert)
       this.resources = {

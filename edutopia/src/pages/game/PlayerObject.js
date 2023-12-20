@@ -1,16 +1,16 @@
+import Tile from './Tile';
+
 class PlayerObject{
 
-    // Points
-    techPoints = 0;
-    foodPoints = 0;
-    woodPoints = 0;
-    metalPoints = 0;
-
-    // Tuple co-ordinates for tiles owned by a player which can be edited
-    ownedTiles = [];
-
-    constructor(player_id){
-        this.player_id = player_id;
+    constructor(playerId) {
+        this.playerId = playerId;
+        this.liveStatus = true;
+        this._techPoints = 0; // Points
+        this._foodPoints = 0;
+        this._woodPoints = 0;
+        this._metalPoints = 0;
+        // A list of tile objects
+        this._ownedTiles = [];
     }
 
     // Return Player ID For checks
@@ -24,6 +24,9 @@ class PlayerObject{
 
     get ownedTiles(){return this.ownedTiles;}
 
+    // Checks for eliminating players
+    get liveStatus(){return this.alive}
+
     // Set Methods for resource points
     set techPoints(setPoints){this.techPoints = setPoints;}
     set foodPoints(setPoints){this.foodPoints = setPoints;}
@@ -31,6 +34,8 @@ class PlayerObject{
     set metalPoints(setPoints){this.metalPoints = setPoints;}
 
     set ownedTiles(ownedTiles){this.ownedTiles = ownedTiles;}
+
+    set liveStatus(status){this.alive = status;}
 
     // Methods for checking resources generated per turn
 

@@ -29,7 +29,7 @@ function Game() {
   
 
   const getQuestionClick = async() => {
-    var topic = '1'
+    var topic = '1' // Default for safety?
     if (selectedTopics.length !== 0) {
       const randomIndex = Math.floor(Math.random() * selectedTopics.length);
       topic = selectedTopics[randomIndex];
