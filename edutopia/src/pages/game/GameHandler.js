@@ -1,4 +1,5 @@
 import Player from './PlayerObject';
+import Tile from './Tile';
 
 class GameHandler{
 
@@ -15,14 +16,14 @@ class GameHandler{
     // Increment Points if answered correctly
     static questionAnswered(status){
         if(status){
-            player.techPoints(player.techPoints + 1)
+            this.player.techPoints(player.techPoints + 1)
         }
     }
 
     // Add plot to a players ownedTiles array
     static claimPlot(tile, player_id){
         for(player in players){
-            if(player.id = player_id){
+            if(player.id === player_id){
                 player.ownedTiles = player.ownedTiles.push(tile)
             }
         }  
@@ -31,11 +32,12 @@ class GameHandler{
     // Remove a specified plot from a players ownedTiles array
     static removePlot(tile, player_id){
         for(player in players){
-            if(player.id = player_id){
+            if(player.id === player_id){
                 player.ownedTiles = player.ownedTiles.filter(item => item !== tile);
                 // Remove player from game if they have 0 tiles owned (eliminated)
                 if(player.ownedTiles.length === 0){
-                    player.liveStatus = false;
+                    this.players.splice(this.players.indexOf(player), 1)
+                    player.liveStatus = false; //Used for showing player alive on HUD or not
                 }
             }
         }  
@@ -47,6 +49,7 @@ class GameHandler{
         var allocatedTiles = [];
     }
 
+    // Used for checking for a winner each turn
     static getWinner(){
         if(this.players.length === 1){
             return this.players[0]
