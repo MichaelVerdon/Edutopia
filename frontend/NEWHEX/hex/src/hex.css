@@ -1,0 +1,28 @@
+.hexagon-group polygon,
+  .hexagon-group {
+    
+    pointer-events: all;
+    stroke: black; /* Border color */
+    stroke-width: 0.1px; /* Border width */
+  }
+
+  .hexagon-group.active polygon,
+  .hexagon-group.active {
+    fill: red; /* Hexagon fill color when active */
+  }
+  
+  .hexagon-group:hover polygon,
+  .hexagon-group:hover path {
+    
+    cursor: pointer; /* Change cursor on hover */
+  }
+  
+  .hexagon-text {
+    cursor: pointer;
+    fill: black; /* Text color */
+    user-select: none; /* Prevent text selection */
+    font-family: 'Arial', sans-serif; /* Font for the text */
+    font-size: 1.5px; /* Size of the text */
+    
+  }
+  
