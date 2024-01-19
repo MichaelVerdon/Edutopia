@@ -41,3 +41,5 @@ class PlayerObject{
 
     // 
 }
+
+export default PlayerObject;

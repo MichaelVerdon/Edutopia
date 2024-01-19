@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PopUp from './PopUp';
 import Question from './Question';
-import Board from './game/Board.js';
+import Board from './game/Board';
 import './Game.css';
+import GameHandler from './game/GameHandler';
 
 function Game() {
   const api_link = "http://localhost:9000/get_question?topic_id=";
@@ -73,6 +74,24 @@ function Game() {
     document.body.classList.add('active-modal')
   } else {
     document.body.classList.remove('active-modal')
+  }
+
+  function gameLoop(){
+    var gameOver = false;
+    //let gameHandler = new GameHandler();
+    while(!gameOver){
+      // Question Logic
+
+      // Points Logic
+
+      // Tile Claiming Logic
+
+      // Buying Logic
+
+      // Battle Logic
+
+      // End turn Logic
+    }
   }
 
 

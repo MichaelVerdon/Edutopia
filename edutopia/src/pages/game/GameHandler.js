@@ -7,10 +7,10 @@ class GameHandler{
         // players will be an array of Player Objects
         this.players = players;
         // Hard-coded for now for testing purposes (Will change it to array of players)
-        this.player1 = new PlayerObject(1);
-        this.player2 = new PlayerObject(2);
-        this.player3 = new PlayerObject(3);
-        this.player4 = new PlayerObject(4);
+        this.player1 = new Player(1);
+        this.player2 = new Player(2);
+        this.player3 = new Player(3);
+        this.player4 = new Player(4);
     }
 
     // Increment Points if answered correctly
@@ -58,5 +58,7 @@ class GameHandler{
             return 0; // Return 0 if no winner
         }
     }
-
 }
+
+export default GameHandler;
+
