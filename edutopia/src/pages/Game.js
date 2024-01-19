@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PopUp from './PopUp';
 import Question from './Question';
+import Board from './game/Board.js';
+import './Game.css';
 
 function Game() {
   const api_link = "http://localhost:9000/get_question?topic_id=";
@@ -76,26 +78,26 @@ function Game() {
 
   return (
     <div className="game">
-      <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
-      <div>
-      <p>GAMEEEE</p>
-      <p>Score: {score}</p>
-      </div>
-      
-      
-      
       <button onClick={questionAndToggle} className="btn-modal">
-       open
-      </button>
+        open
+        </button>
 
-      {modal && (
-        <div className="modal">
-          <div className="overlay">
-            <Question questionJson={question} close={toggleModal} scoreAdd={addScore}></Question>
-            </div>
+        {modal && (
+          <div className="modal">
+            <div className="overlay">
+              <Question questionJson={question} close={toggleModal} scoreAdd={addScore}></Question>
+              </div>
+          </div>
+        )}
+      <div className='hudContainer'>
+        <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
+        <div>
+        <p>GAMEEEE</p>
+        <p>Score: {score}</p>
         </div>
-      )}
-      
+      </div>
+      <div className='hexContainer'>
+      </div>
     </div>
   );
 }
