@@ -116,6 +116,7 @@ function Game() {
         </div>
       </div>
       <div className='hexContainer'>
+        <Board/>
       </div>
     </div>
   );
