@@ -1,27 +1,19 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import PopUp from './PopUp';
 import Question from './Question';
+import Battle from './Battle';
+import PlayerObject from './game/PlayerObject.js';
 import Board from './game/Board';
-import PlayerObject from './game/PlayerObject';
-import Store from './Store';
-import ResourceBar from './ResourceBar';
 import './Game.css';
 import GameHandler from './game/GameHandler';
-import gameConfig from '../pages/game/configurations.json';
-import NotificationManager from '../pages/game/NotificationManager';
-
-
-export const PlayerContext = createContext();
 
 function Game() {
-  const api_link = "http://localhost:9000/get_question?topic_id=";
+  const api_link = "http://localhost:9020/get_question?topic_id=";
   const [question, setQuestion] = useState('');
   const [score, setScore] = useState(0)
   const [selectedTopics, setSelectedTopics] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  
 
-  const [player, setPlayer] = useState(new PlayerObject(1));
+  const playerEx = new PlayerObject(1);
 
   // This function will be passed to the PopUp component
   const handleTopicsChange = (newTopics) => {
@@ -68,7 +60,7 @@ function Game() {
     setModalOpen(false);
   };
  //score add
- const addScore = () => {
+ const addScore = (time) => {
   setScore(score + 1);
   };
 
@@ -83,25 +75,27 @@ function Game() {
   };
 
   if(modal) {
-    document.body.classList.add('active-modal')
+    document.body.classList.add('questionModal')
   } else {
-    document.body.classList.remove('active-modal')
+    document.body.classList.remove('questionModal')
   }
 
-   //store modal
-   const [storeModal, setStoreModal] = useState(false);
-   const toggleStoreModal = () => {
-     setStoreModal(!storeModal);
-   };
-   
- 
- 
-   if(storeModal) {
-     document.body.classList.add('active-storeModal')
-   } else {
-     document.body.classList.remove('active-storeModal')
-     //NotificationManager.showSuccessNotification("Test");
-   }
+  //battle modal
+  const [battleModal, setBattleModal] = useState(false);
+  const toggleBattleModal = () => {
+    setBattleModal(!battleModal);
+  };
+
+  const questionAndBattle = async () => {
+    await getQuestionClick();
+    toggleBattleModal();
+  };
+
+  if(battleModal) {
+    document.body.classList.add('battleModal')
+  } else {
+    document.body.classList.remove('battleModal')
+  }
 
   function gameLoop(){
     var gameOver = false;
@@ -121,55 +115,73 @@ function Game() {
     }
   }
 
-  return (
-    <PlayerContext.Provider value={{player, setPlayer}}>
+  function gameLoop(){
+    var gameOver = false;
+    //let gameHandler = new GameHandler();
+    while(!gameOver){
+      // Question Logic
 
-      {modal && (
-          <div className="modal">
+      // Points Logic
+
+      // Tile Claiming Logic
+
+      // Buying Logic
+
+      // Battle Logic
+
+      // End turn Logic
+    }
+  }
+
+
+  return (
+    <div className="game">
+      <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
+      <div>
+      <p>GAMEEEE</p>
+      <p>Score: {score}</p>
+      <p>Number of troops: {playerEx.troopAmount}</p>
+      </div>
+      
+      
+      
+      <button onClick={questionAndToggle} href="questionModal" class="modal-button">
+       open
+      </button>
+
+      <button onClick={questionAndBattle} href="battleModal" class="modal-button">
+       open battle
+      </button>
+
+        {modal && (
+          <div id="questionModal" class="modal">
             <div className="overlay">
               <Question questionJson={question} close={toggleModal} scoreAdd={addScore}></Question>
               </div>
           </div>
         )}
 
-        {storeModal && (
-        <div id="storeModal" class="storeModal">
+      {battleModal && (
+        <div id="battleModal" class="battleModal">
           <div className="overlay">
-            <Store storeModal={storeModal} close={toggleStoreModal}></Store>
+            <Battle player={playerEx} questionJson={question} close={toggleBattleModal}></Battle>
             </div>
         </div>
-        )}
-
-
-      <div className="game">
-
+      )}
       <div className='hudContainer'>
-
+        <button onClick={questionAndToggle} className="btn-modal">
+        open
+        </button>
         <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
-
-        <div className='hudElementContainer'>
-        <div className='buttons-container'> {/* New container for the buttons */}
-          <button onClick={questionAndToggle} className="btn-modal">
-          Question
-          </button>
-
-          <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
-          Store
-          </button>
+        <div>
+        <p>GAMEEEE</p>
+        <p>Score: {score}</p>
         </div>
-
-          <p class='Score-text'>Score: {score}</p>
-        
-          <ResourceBar techPoints={player.techPoints} woodPoints={player.woodPoints} foodPoints={player.foodPoints} metalPoints={player.metalPoints}>
-          </ResourceBar>
       </div>
-
-    </div>
-    <div className='hexContainer'>
+      <div className='hexContainer'>
         <Board/>
       </div>
-  </div>
-  </PlayerContext.Provider>
+    </div>
   );
 }
 

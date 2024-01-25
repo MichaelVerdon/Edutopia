@@ -36,7 +36,7 @@ function Question ({questionJson, close, scoreAdd}) {
         setAnswer(answer)
         if (question[answer] === question[7]){
             setColor('#68e868') //green
-            scoreAdd()
+            scoreAdd(time)
         }else{
             setColor('#e86868') //red
         }
