@@ -1,6 +1,6 @@
 import Tile from './Tile';
 
-class PlayerObject{
+export default class PlayerObject{
 
     constructor(playerId) {
         this.playerId = playerId;
@@ -9,6 +9,7 @@ class PlayerObject{
         this._foodPoints = 0;
         this._woodPoints = 0;
         this._metalPoints = 0;
+        this._troopAmount = 10;
         // A list of tile objects
         this._ownedTiles = [];
     }
@@ -17,23 +18,25 @@ class PlayerObject{
     get playerID(){return this.player_id;}
 
     // Get Methods for resource points
-    get techPoints(){return this.techPoints;}
-    get foodPoints(){return this.foodPoints;}
-    get woodPoints(){return this.woodPoints;}
-    get metalPoints(){return this.metalPoints;}
+    get techPoints(){return this._techPoints;}
+    get foodPoints(){return this._foodPoints;}
+    get woodPoints(){return this._woodPoints;}
+    get metalPoints(){return this._metalPoints;}
+    get troopAmount(){return this._troopAmount;}
 
-    get ownedTiles(){return this.ownedTiles;}
+    get ownedTiles(){return this._ownedTiles;}
 
     // Checks for eliminating players
     get liveStatus(){return this.alive}
 
     // Set Methods for resource points
-    set techPoints(setPoints){this.techPoints = setPoints;}
-    set foodPoints(setPoints){this.foodPoints = setPoints;}
-    set woodPoints(setPoints){this.woodPoints = setPoints;}
-    set metalPoints(setPoints){this.metalPoints = setPoints;}
+    set techPoints(setPoints){this._techPoints = setPoints;}
+    set foodPoints(setPoints){this._foodPoints = setPoints;}
+    set woodPoints(setPoints){this._woodPoints = setPoints;}
+    set metalPoints(setPoints){this._metalPoints = setPoints;}
+    set troopAmount(setAmount){this._troopAmount = setAmount;}
 
-    set ownedTiles(ownedTiles){this.ownedTiles = ownedTiles;}
+    set ownedTiles(ownedTiles){this._ownedTiles = ownedTiles;}
 
     set liveStatus(status){this.alive = status;}
 
@@ -41,5 +44,3 @@ class PlayerObject{
 
     // 
 }
-
-export default PlayerObject;
