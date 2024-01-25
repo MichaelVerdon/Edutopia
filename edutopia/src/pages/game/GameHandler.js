@@ -1,5 +1,4 @@
 import Player from './PlayerObject';
-import Tile from './Tile';
 
 class GameHandler{
 
