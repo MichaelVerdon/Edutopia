@@ -3,7 +3,11 @@ import { HexGrid, Layout, GridGenerator } from 'react-hexgrid';
 import InteractiveHexagon from './InteractiveHexagon';
 import Tile from './Tile';
 import configs from './configurations';
-import gapData from './gapCoordinates.json'; // Import the entire JSON file
+import gapData from './gapCoordinates.json';
+import plains from './plains.png'; // Ensure the path is correct
+import mountain from './mountain.png'; // Ensure the path is correct
+import forest from './forest.png';
+
 
 class Board extends Component {
   constructor(props) {
@@ -11,42 +15,32 @@ class Board extends Component {
     const config = configs['rectangle'];
     const generator = GridGenerator.getGenerator(config.map);
     const hexCoordinates = generator.apply(this, config.mapProps);
-
-    // Extract the gapCoordinates array from the imported data
     const gapCoordinates = gapData.gapCoordinates;
-
-    // Create a set for quick lookup of gap coordinates
-    const gapSet = new Set(
-      gapCoordinates.map(coord => `${coord.q},${coord.r},${coord.s}`)
-    );
-
-    // Filter out the hexagons that are in the gap set
-    const hexagons = hexCoordinates
-      .filter(hexCoord => !gapSet.has(`${hexCoord.q},${hexCoord.r},${hexCoord.s}`))
-      .map(hexCoord => new Tile(hexCoord.q, hexCoord.r, hexCoord.s));
-
-    this.state = {
-      hexagons,
-      config,
-      viewBox: `${config.viewBox.x} ${config.viewBox.y} ${config.viewBox.width} ${config.viewBox.height}`,
-    };
+    const gapSet = new Set(gapCoordinates.map(coord => `${coord.q},${coord.r},${coord.s}`));
+    const hexagons = hexCoordinates.filter(hexCoord => !gapSet.has(`${hexCoord.q},${hexCoord.r},${hexCoord.s}`))
+                                   .map(hexCoord => new Tile(hexCoord.q, hexCoord.r, hexCoord.s));
+    this.state = { hexagons, config, viewBox: `${config.viewBox.x} ${config.viewBox.y} ${config.viewBox.width} ${config.viewBox.height}` };
   }
 
   render() {
     const { hexagons, config, viewBox } = this.state;
     const size = { x: config.layout.width, y: config.layout.height };
-
-    // Container style for scrolling
-    const containerStyle = {
-      width: '100%',
-      overflow: 'auto',
-      maxHeight: '100vh',
-    };
+    const containerStyle = { width: '100%', overflow: 'auto', maxHeight: '100vh' };
 
     return (
       <div style={containerStyle}>
         <HexGrid width={config.width} height={config.height} viewBox={viewBox}>
-            
+          <defs>
+            <pattern id="patternForest" patternUnits="objectBoundingBox"  width="1" height="1" viewBox="0 0 6 6" patternTransform="scale(1.16)">
+              <image href={plains} width="6" height="6" transform="rotate(30, 3, 3)" preserveAspectRatio="xMidYMid slice"/>
+            </pattern>
+            <pattern id="patternMountain" patternUnits="objectBoundingBox" width="1" height="1" viewBox="0 0 6 6" patternTransform="scale(1.16)">
+              <image href={mountain} width="6" height="6" transform="rotate(30, 3, 3)" preserveAspectRatio="xMidYMid slice"/>
+            </pattern>
+            <pattern id="patternPlains" patternUnits="objectBoundingBox" width="1" height="1" viewBox="0 0 6 6" patternTransform="scale(1.16)">
+              <image href={forest} width="6" height="6" transform="rotate(30, 3, 3)" preserveAspectRatio="xMidYMid slice"/>
+            </pattern>
+          </defs>
           <Layout size={size} flat={config.layout.flat} spacing={config.layout.spacing} origin={config.origin}>
             {hexagons.map((hex, i) => (
               <InteractiveHexagon
@@ -55,13 +49,25 @@ class Board extends Component {
                 r={hex.r}
                 s={hex.s}
                 size={size}
-                tile={hex} // Pass the Tile instance to InteractiveHexagon
+                fill={this.determineFillColor(hex.biome)}
+                tile={hex} 
               />
             ))}
           </Layout>
         </HexGrid>
       </div>
     );
+  }
+
+  determineFillColor(biome) {
+    switch (biome) {
+      case "Plains":
+        return "url(#patternPlains)";
+      case "Mountain":
+        return "url(#patternMountain)";
+      default:
+        return "none";
+    }
   }
 }
 
