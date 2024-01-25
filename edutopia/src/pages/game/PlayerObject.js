@@ -1,6 +1,7 @@
 import Tile from './Tile';
 
 export default class PlayerObject{
+export default class PlayerObject{
 
     constructor(playerId, randomTile) {
         this.playerId = playerId;
@@ -9,6 +10,7 @@ export default class PlayerObject{
         this._foodPoints = 0;
         this._woodPoints = 0;
         this._metalPoints = 0;
+        this._troopAmount = 10;
         this._troopAmount = 10;
         // A list of tile objects
         this.ownedTiles = [randomTile]; // We need to assign a random starting tile
@@ -24,7 +26,13 @@ export default class PlayerObject{
     get woodPoints(){return this._woodPoints;}
     get metalPoints(){return this._metalPoints;}
     get troopAmount(){return this._troopAmount;}
+    get techPoints(){return this._techPoints;}
+    get foodPoints(){return this._foodPoints;}
+    get woodPoints(){return this._woodPoints;}
+    get metalPoints(){return this._metalPoints;}
+    get troopAmount(){return this._troopAmount;}
 
+    get ownedTiles(){return this._ownedTiles;}
     get ownedTiles(){return this._ownedTiles;}
 
     // Checks for eliminating players
@@ -36,12 +44,17 @@ export default class PlayerObject{
     set woodPoints(setPoints){this._woodPoints = setPoints;}
     set metalPoints(setPoints){this._metalPoints = setPoints;}
     set troopAmount(setAmount){this._troopAmount = setAmount;}
+    set techPoints(setPoints){this._techPoints = setPoints;}
+    set foodPoints(setPoints){this._foodPoints = setPoints;}
+    set woodPoints(setPoints){this._woodPoints = setPoints;}
+    set metalPoints(setPoints){this._metalPoints = setPoints;}
+    set troopAmount(setAmount){this._troopAmount = setAmount;}
 
+    set ownedTiles(ownedTiles){this._ownedTiles = ownedTiles;}
     set ownedTiles(ownedTiles){this._ownedTiles = ownedTiles;}
 
     set setLiveStatus(status){this.alive = status;}
 
     // Methods for checking resources generated per turn
 
-    // 
-}
+} 

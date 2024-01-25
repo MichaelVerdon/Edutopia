@@ -3,15 +3,15 @@ import PopUp from './PopUp';
 import Question from './Question';
 import Battle from './Battle';
 import PlayerObject from './game/PlayerObject.js';
-import Board from './game/Board';
-import './Game.css';
-import GameHandler from './game/GameHandler';
 
 function Game() {
+  const api_link = "http://localhost:9020/get_question?topic_id=";
   const api_link = "http://localhost:9020/get_question?topic_id=";
   const [question, setQuestion] = useState('');
   const [score, setScore] = useState(0)
   const [selectedTopics, setSelectedTopics] = useState([]);
+
+  const playerEx = new PlayerObject(1);
 
   const playerEx = new PlayerObject(1);
 
@@ -61,6 +61,7 @@ function Game() {
   };
  //score add
  const addScore = (time) => {
+ const addScore = (time) => {
   setScore(score + 1);
   };
 
@@ -93,44 +94,26 @@ function Game() {
 
   if(battleModal) {
     document.body.classList.add('battleModal')
+    document.body.classList.add('questionModal')
+  } else {
+    document.body.classList.remove('questionModal')
+  }
+
+  //battle modal
+  const [battleModal, setBattleModal] = useState(false);
+  const toggleBattleModal = () => {
+    setBattleModal(!battleModal);
+  };
+
+  const questionAndBattle = async () => {
+    await getQuestionClick();
+    toggleBattleModal();
+  };
+
+  if(battleModal) {
+    document.body.classList.add('battleModal')
   } else {
     document.body.classList.remove('battleModal')
-  }
-
-  function gameLoop(){
-    var gameOver = false;
-    //let gameHandler = new GameHandler();
-    while(!gameOver){
-      // Question Logic
-
-      // Points Logic
-
-      // Tile Claiming Logic
-
-      // Buying Logic
-
-      // Battle Logic
-
-      // End turn Logic
-    }
-  }
-
-  function gameLoop(){
-    var gameOver = false;
-    //let gameHandler = new GameHandler();
-    while(!gameOver){
-      // Question Logic
-
-      // Points Logic
-
-      // Tile Claiming Logic
-
-      // Buying Logic
-
-      // Battle Logic
-
-      // End turn Logic
-    }
   }
 
 
@@ -141,10 +124,12 @@ function Game() {
       <p>GAMEEEE</p>
       <p>Score: {score}</p>
       <p>Number of troops: {playerEx.troopAmount}</p>
+      <p>Number of troops: {playerEx.troopAmount}</p>
       </div>
       
       
       
+      <button onClick={questionAndToggle} href="questionModal" class="modal-button">
       <button onClick={questionAndToggle} href="questionModal" class="modal-button">
        open
       </button>
@@ -153,13 +138,17 @@ function Game() {
        open battle
       </button>
 
-        {modal && (
-          <div id="questionModal" class="modal">
-            <div className="overlay">
-              <Question questionJson={question} close={toggleModal} scoreAdd={addScore}></Question>
-              </div>
-          </div>
-        )}
+      <button onClick={questionAndBattle} href="battleModal" class="modal-button">
+       open battle
+      </button>
+
+      {modal && (
+        <div id="questionModal" class="modal">
+          <div className="overlay">
+            <Question questionJson={question} close={toggleModal} scoreAdd={addScore}></Question>
+            </div>
+        </div>
+      )}
 
       {battleModal && (
         <div id="battleModal" class="battleModal">
@@ -168,19 +157,7 @@ function Game() {
             </div>
         </div>
       )}
-      <div className='hudContainer'>
-        <button onClick={questionAndToggle} className="btn-modal">
-        open
-        </button>
-        <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
-        <div>
-        <p>GAMEEEE</p>
-        <p>Score: {score}</p>
-        </div>
-      </div>
-      <div className='hexContainer'>
-        <Board/>
-      </div>
+      
     </div>
   );
 }
