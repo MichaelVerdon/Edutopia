@@ -7,6 +7,7 @@ import gapData from './gapCoordinates.json';
 import plains from '../images/sprites/Grassland_Blue.png';
 import mountain from '../images/sprites/Rocky_Blue.png';
 import forest from '../images/sprites/Woods_Blue.png';
+import './hex.css';
 
 
 class Board extends Component {
@@ -25,10 +26,9 @@ class Board extends Component {
   render() {
     const { hexagons, config, viewBox } = this.state;
     const size = { x: config.layout.width, y: config.layout.height };
-    const containerStyle = { width: '100%', overflow: 'auto', maxHeight: '100vh' };
 
     return (
-      <div style={containerStyle}>
+      <div className='board'>
         <HexGrid width={config.width} height={config.height} viewBox={viewBox}>
           <defs>
             <pattern id="patternForest" patternUnits="objectBoundingBox"  width="1" height="1" viewBox="0 0 6 6" patternTransform="scale(1.16)">

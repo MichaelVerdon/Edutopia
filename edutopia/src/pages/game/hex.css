@@ -25,4 +25,19 @@
     font-size: 1.5px; /* Size of the text */
     
   }
+
+  .board {
+    display: flex; /* or display: grid; */
+    justify-content: center; /* Centers content horizontally */
+    align-items: center;
+    width: '100%';
+    overflow: 'auto';
+  }
+
+  .board-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Adjust height as needed */
+  }
   

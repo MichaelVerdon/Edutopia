@@ -97,9 +97,6 @@ function Game() {
 
   return (
     <div className="game">
-      <button onClick={questionAndToggle} className="btn-modal">
-        open
-        </button>
 
         {modal && (
           <div className="modal">
@@ -109,6 +106,9 @@ function Game() {
           </div>
         )}
       <div className='hudContainer'>
+        <button onClick={questionAndToggle} className="btn-modal">
+        open
+        </button>
         <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
         <div>
         <p>GAMEEEE</p>
