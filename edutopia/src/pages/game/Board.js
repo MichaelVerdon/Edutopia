@@ -4,9 +4,9 @@ import InteractiveHexagon from './InteractiveHexagon';
 import Tile from './Tile';
 import configs from './configurations';
 import gapData from './gapCoordinates.json';
-import plains from './plains.png'; // Ensure the path is correct
-import mountain from './mountain.png'; // Ensure the path is correct
-import forest from './forest.png';
+import plains from '../images/sprites/Grassland_Blue.png';
+import mountain from '../images/sprites/Rocky_Blue.png';
+import forest from '../images/sprites/Woods_Blue.png';
 
 
 class Board extends Component {
