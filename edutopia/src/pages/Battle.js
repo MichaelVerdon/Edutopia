@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Question from './Question'; //function Question ({questionJson, close, scoreAdd})
-//import PlayerObject from './game/PlayerObject.js';
+import Question from './Question'; 
 import Game from './Game';
+import Modal from 'react-modal';
 
-function Battle ({player, questionJson, close}) {
+Modal.setAppElement('#root'); 
+
+function Battle ({player, questionJson, close, isOpen}) {
     const [phase, setPhase] = useState(0);//phase of pop up that is returned
     const [battleTroopsAmount, setBattleTroopsAmount] = useState(0);
     const [winner, setWinner] = useState(0);
@@ -93,6 +95,10 @@ function Battle ({player, questionJson, close}) {
             setPhase(4);
         }
     }
+
+    const stepper = (btn)=>{
+
+    }
     
     //winning changes to variables, TODO: add changes to player 2 values when he exits
     useEffect(() => {
@@ -104,40 +110,47 @@ function Battle ({player, questionJson, close}) {
    
     if(phase === 0){ //asking if u want to fight
         return(
-            <div>
+            <Modal isOpen={isOpen} onRequestClose={close} contentLabel="Battle" className='battleModal'>
+                <div className='basicDiv'>
                 <h1>Get ready to battle</h1>
                 <h2>Do you want to battle?</h2>
-                <button onClick={changePhase}>yes</button>
-                <button onClick={close}>no</button>
-            </div>
+                <button className='btn' onClick={changePhase}>yes</button>
+                <button className='btn' onClick={close}>no</button>
+                </div>
+            </Modal>
         );
     }
     else if(phase === 1){ //select land to fight over, TODO need catalins part for this
         return(
-            <div>
+            <Modal isOpen={isOpen} onRequestClose={close} contentLabel="Battle"  className='battleModal'>
+                <div className='basicDiv'>
                 <h1>Get ready to battle</h1>
                 <h2>Select a land to start the battle on</h2>
-                <button onClick={changePhase}>land</button>
-                <button onClick={close}>close</button>
-            </div>
+                <button className='btn' onClick={changePhase}>land</button>
+                <button className='btn' onClick={close}>close</button>
+                </div>
+            </Modal>
         );
     }
     else if(phase === 2){ //select troops, TODO add saving the number of battle troops
         return(
-            <div>
-                <h1>Get ready to battle</h1>
-                <h2>Select the number of troops</h2>
-                <p>Number of troops that can be used: {player.troopAmount}</p>
-                <label htmlFor="troopsForBattle">How many troops you want to send to battle:</label>
-                <input type="number" id="troopsForBattle" name="troopsForBattle" min="0" max={parseInt(player.troopAmount)}></input>
-                <button type="button" onClick={setTroopsForBattle}>Input</button> 
-                <button onClick={close}>close</button>
-            </div>
+            <Modal isOpen={isOpen} onRequestClose={close} contentLabel="Battle"  className='battleModal'>
+                <div className='basicDiv'>
+                    <h1>Get ready to battle</h1>
+                    <h2>Select the number of troops</h2>
+                    <p>Number of troops that can be used: {player.troopAmount}</p>
+                    <label htmlFor="troopsForBattle">How many troops you want to send to battle: </label>
+                        <input type="number" id="troopsForBattle" name="troopsForBattle" min="0" max={parseInt(player.troopAmount)}></input>
+                    <button className='btn' type="button" onClick={setTroopsForBattle}>Input</button> 
+                    <button className='btn' onClick={close}>close</button>
+                </div>
+            </Modal>
         );
     } 
     else if(phase === 3){ //question, TODO add solution for when the number of troops isnt equal
         return(
-            <div>
+            <Modal isOpen={isOpen} onRequestClose={close} contentLabel="Battle"  className='battleModal'>
+                <div className='basicDiv'>
                 <button onClick={changePhase}>no need for question</button>
                 {modal && (
                     <div id="questionModal" class="modal">
@@ -146,16 +159,19 @@ function Battle ({player, questionJson, close}) {
                         </div>
                     </div>
                 )}
-                <button onClick={close}>close</button>
-            </div>
+                <button className='btn' onClick={close}>close</button>
+                </div>
+            </Modal>
         );
     }
     else if(phase === 4){ //winner announced, TODO add code that will log this win, but also might need catalins part, player id is also not a var yet
         return(
-            <div>
+            <Modal isOpen={isOpen} onRequestClose={close} contentLabel="Battle" className='battleModal'>
+                <div className='basicDiv'>
                 <h1>Player {winner} wins the land</h1>
-                <button onClick={close}>close</button>
-            </div>
+                <button className='btn' onClick={close}>close</button>
+                </div>
+            </Modal>
         );
     }
     else{ //empty
