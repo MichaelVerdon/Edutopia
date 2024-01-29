@@ -115,24 +115,6 @@ function Game() {
     }
   }
 
-  function gameLoop(){
-    var gameOver = false;
-    //let gameHandler = new GameHandler();
-    while(!gameOver){
-      // Question Logic
-
-      // Points Logic
-
-      // Tile Claiming Logic
-
-      // Buying Logic
-
-      // Battle Logic
-
-      // End turn Logic
-    }
-  }
-
 
   return (
     <div className="game">

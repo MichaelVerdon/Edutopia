@@ -42,5 +42,4 @@ export default class PlayerObject{
 
     // Methods for checking resources generated per turn
 
-    // 
-}
+} 
