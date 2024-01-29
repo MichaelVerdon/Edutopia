@@ -119,21 +119,7 @@ function Game() {
   return (
     <div className="game">
       <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
-      <div>
-      <p>GAMEEEE</p>
-      <p>Score: {score}</p>
-      <p>Number of troops: {playerEx.troopAmount}</p>
-      </div>
       
-      
-      
-      <button onClick={questionAndToggle} href="questionModal" class="modal-button">
-       open
-      </button>
-
-      <button onClick={questionAndBattle} href="battleModal" class="modal-button">
-       open battle
-      </button>
 
         {modal && (
           <div id="questionModal" class="modal">
@@ -146,19 +132,21 @@ function Game() {
       {battleModal && (
         <div id="battleModal" class="battleModal">
           <div className="overlay">
-            <Battle player={playerEx} questionJson={question} close={toggleBattleModal}></Battle>
+            <Battle player={playerEx} questionJson={question} close={toggleBattleModal} isOpen={battleModal}></Battle>
             </div>
         </div>
       )}
-      <div className='hudContainer'>
+      <div className='hudContainer' style={{display:"flex", flexWrap: "wrap", justifyContent: "space-around"}}>
         <button onClick={questionAndToggle} className="btn-modal">
         open
         </button>
         <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
-        <div>
         <p>GAMEEEE</p>
         <p>Score: {score}</p>
-        </div>
+        <p>Number of troops: {playerEx.troopAmount}</p>   
+        <button onClick={questionAndBattle} href="battleModal" class="modal-button">
+        open battle
+        </button>
       </div>
       <div className='hexContainer'>
         <Board/>
