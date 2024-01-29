@@ -2,14 +2,19 @@ import React, { useState, useEffect } from 'react';
 import PopUp from './PopUp';
 import Question from './Question';
 import Board from './game/Board';
+import PlayerObject from './game/PlayerObject';
+import Store from './Store';
 import './Game.css';
 import GameHandler from './game/GameHandler';
 
 function Game() {
-  const api_link = "http://localhost:9000/get_question?topic_id=";
+  const api_link = "http://localhost:9020/get_question?topic_id=";
   const [question, setQuestion] = useState('');
   const [score, setScore] = useState(0)
   const [selectedTopics, setSelectedTopics] = useState([]);
+
+  const fakePlayer = new PlayerObject(1);
+  
 
   // This function will be passed to the PopUp component
   const handleTopicsChange = (newTopics) => {
@@ -76,6 +81,18 @@ function Game() {
     document.body.classList.remove('active-modal')
   }
 
+   //store modal
+   const [storeModal, setStoreModal] = useState(false);
+   const toggleStoreModal = () => {
+     setStoreModal(!storeModal);
+   };
+ 
+   if(storeModal) {
+     document.body.classList.add('active-storeModal')
+   } else {
+     document.body.classList.remove('active-storeModal')
+   }
+
   function gameLoop(){
     var gameOver = false;
     //let gameHandler = new GameHandler();
@@ -105,10 +122,24 @@ function Game() {
               </div>
           </div>
         )}
+
+        {storeModal && (
+        <div id="storeModal" class="storeModal">
+          <div className="overlay">
+            <Store storeModal={storeModal} close={toggleStoreModal} player={fakePlayer}></Store>
+            </div>
+        </div>
+        )}
+
       <div className='hudContainer'>
         <button onClick={questionAndToggle} className="btn-modal">
         open
         </button>
+        <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
+        store
+        </button>
+
+        
         <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
         <div>
         <p>GAMEEEE</p>
