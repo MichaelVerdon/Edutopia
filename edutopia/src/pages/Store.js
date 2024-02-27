@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 Modal.setAppElement('#root'); 
 
-function Store ({storeModal, close, player}) {
+function Store ({storeModal, close, player, setPlayer}) {
+
     const [phase, setPhase] = useState(0);
     const [reason, setReason] = useState("");
+    const [selectedItem, setSelectedItem] = useState(null);
    
     const JsonData = [
       {
@@ -68,23 +70,55 @@ function Store ({storeModal, close, player}) {
         "land": true
       }
   ];
+  
 
   function handleRowClick(row) {
+    setSelectedItem(row)
     //checks if u have enough resources, if not tells u u cant buy
-    if(player.getTechPoints <= row.techPoints || player.getFoodPoints <= row.foodPoints || player.getWoodPoints <= row.woodPoints || player.getMetalPoints <= row.metalPoints){
+    if(player.getTechPoints < row.techPoints || player.getFoodPoints < row.foodPoints || player.getWoodPoints < row.woodPoints || player.getMetalPoints < row.metalPoints){
       setReason("you don't have enough resources");
+      setSelectedItem(null)
       setPhase(1);
     }
-    if (row.land === true){
+    else if (row.land === true){
+      
       //checks if u have that sort of land, if not tells u u cant buy
-      setReason("you don't have the kind of land needed");
-      setPhase(1);
+      if(false){
+        setReason("you don't have the kind of land needed");
+        setPhase(1);
+      }else{
       //if yes asks u to pick a land
       setPhase(2);
+      console.log(phase);}
+    }else{
+      //asks u if u r down to buy, if yes gives u your purchase takes away your money
+      setPhase(3);
+      console.log(phase);
     }
-    //asks u if u r down to buy, if yes gives u your purchase takes away your money
-    setPhase(3);
+  } 
+
+  useEffect(() => {
+    console.log(phase);
+  }, [phase]);
+
+  const backToMain = () => {
+    setPhase(0);
   }
+
+  function purchase(){
+    if(selectedItem.id===1){
+      //give him trooper
+    } //add giving tiles
+
+    player.techPoints = (player.getTechPoints - selectedItem.techPoints);
+    player.foodPoints = (player.getFoodPoints - selectedItem.foodPoints);
+    player.woodPoints = (player.getWoodPoints - selectedItem.woodPoints);
+    player.metalPoints = (player.getMetalPoints - selectedItem.metalPoints); 
+    setPlayer(player)
+    close();
+  }
+
+
 
   const DisplayData = JsonData.map((info) => (
     <tr key={info.id} onClick={() => handleRowClick(info)}>
@@ -96,6 +130,7 @@ function Store ({storeModal, close, player}) {
       <td>{info.metalPoints}</td>
     </tr>
   ));
+
   if(phase === 0){
     return(
         <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
@@ -116,42 +151,49 @@ function Store ({storeModal, close, player}) {
                     {DisplayData}
                 </tbody>
             </table>
-            <button onClick={close} className="btn-modal">Close</button>
+            <button onClick={close} className="btn">Close</button>
           </div>
         </Modal>
     );
   }else if(phase ===1){
     return(
+      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
       <div className="modalDiv">
         <h1>You can't buy this because {reason}</h1>
-        <button onClick={setPhase(0)} className="btn">Go back</button>
+        <button onClick={backToMain} className="btn">Go back</button>
         <button onClick={close} className="btn">Close</button>
       </div>
+      </Modal>
     );
 
   }else if(phase ===2){
     return(
-      <div className="modalDiv">
-        <h1>Pick a land</h1>
-        <button onClick={setPhase(0)} className="btn">Go back</button>
-        <button onClick={close} className="btn">Close</button>
-      </div>
+      
+        <div className="modalDiv">
+          <h1>Pick a land</h1>
+          <button onClick={close} className="btn">Close</button>
+        </div>
+      
     );
 
   }else if(phase ===3){
     return(
-      <div className="modalDiv">
-        <h1>Are you sure you want to purchase this?</h1>
-        <button onClick={close} className="btn">Yes</button> 
-        <button onClick={close} className="btn">No</button>
-      </div>
+      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
+        <div className="modalDiv">
+          <h1>Are you sure you want to purchase this?</h1>
+          <button onClick={purchase} className="btn">Yes</button> 
+          <button onClick={close} className="btn">No</button>
+        </div>
+      </Modal>
     );
   }else{
     return(
-      <div className="modalDiv">
-          <p>error</p>
-          <button onClick={close}>close</button>
-      </div>
+      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
+        <div className="modalDiv">
+            <p>error</p>
+            <button className="btn" onClick={close}>close</button>
+        </div>
+      </Modal>
     );
   }
 }
