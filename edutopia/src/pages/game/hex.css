@@ -8,7 +8,7 @@
 
   .hexagon-group.active polygon,
   .hexagon-group.active {
-    fill: red; /* Hexagon fill color when active */
+    fill: 'fillColor'; /* Hexagon fill color when active */
   }
   
   .hexagon-group:hover polygon,
