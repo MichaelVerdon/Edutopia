@@ -1,22 +1,31 @@
 // InteractiveHexagon.js
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Hexagon, Text } from 'react-hexgrid';
 import configs from './configurations';
 import gameSettings from './GameSettings';
 import './hex.css';
 
-const InteractiveHexagon = ({ q, r, s, tile }) => {
+const InteractiveHexagon = ({ q, r, s }) => {
   const [isActive, setIsActive] = useState(false);
   const [fillColor, setFillColor] = useState(gameSettings.getBiomeForCoordinates(q, r, s));
+
+  useEffect(() => {
+    // Update fillColor when biome changes
+    setFillColor(gameSettings.getBiomeForCoordinates(q, r, s));
+  }, [q, r, s, gameSettings.customBiomes]);
+
+  const updateHexagonBiome = (newBiome) => {
+    gameSettings.setBiome(q, r, s, newBiome); // Update biome in GameSettings
+    setFillColor(newBiome); // Update the fill color
+  };
 
   const handleClick = () => {
     console.log('Hexagon clicked');
     console.log(`"q": ${q}, "r": ${r}, "s": ${s}`);
     console.log(fillColor);
-    const newBiome = 'patternGrassLand'; // Change this to the desired new biome
-    gameSettings.setBiome(q, r, s, newBiome);
-    setFillColor(newBiome); // Update the fill color
+    // Example: Change biome to 'patternGrassLand' when clicked
+    updateHexagonBiome('patternGrassLand');
   };
 
   return (
@@ -34,6 +43,4 @@ const InteractiveHexagon = ({ q, r, s, tile }) => {
   );
 };
 
-
-window.InteractiveHexagon = InteractiveHexagon;
 export default InteractiveHexagon;
