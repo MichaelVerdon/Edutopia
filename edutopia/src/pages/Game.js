@@ -13,7 +13,7 @@ function Game() {
   const [score, setScore] = useState(0)
   const [selectedTopics, setSelectedTopics] = useState([]);
 
-  const fakePlayer = new PlayerObject(1);
+  const [fakePlayer, setFakePlayer] = useState(new PlayerObject(1));
   
 
   // This function will be passed to the PopUp component
@@ -87,6 +87,7 @@ function Game() {
      setStoreModal(!storeModal);
    };
  
+ 
    if(storeModal) {
      document.body.classList.add('active-storeModal')
    } else {
@@ -126,7 +127,7 @@ function Game() {
         {storeModal && (
         <div id="storeModal" class="storeModal">
           <div className="overlay">
-            <Store storeModal={storeModal} close={toggleStoreModal} player={fakePlayer}></Store>
+            <Store storeModal={storeModal} close={toggleStoreModal} player={fakePlayer} setPlayer={setFakePlayer}></Store>
             </div>
         </div>
         )}
@@ -141,9 +142,11 @@ function Game() {
 
         
         <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
-        <div>
-        <p>GAMEEEE</p>
-        <p>Score: {score}</p>
+        <div className='display: flex'>
+          <p>GAMEEEE</p>
+          <p>Score: {score}</p>
+          <p>Tech: {fakePlayer.techPoints} wood: {fakePlayer.woodPoints} food: {fakePlayer.foodPoints} metal: {fakePlayer.metalPoints}</p>
+
         </div>
       </div>
       <div className='hexContainer'>
