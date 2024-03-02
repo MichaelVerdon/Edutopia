@@ -11,21 +11,23 @@ const InteractiveHexagon = ({ q, r, s }) => {
   const [fillColor, setFillColor] = useState(gameSettings.getBiomeForCoordinates(q, r, s));
 
   useEffect(() => {
-    // Update fillColor when biome changes
+    // Updates fillColor when biome changes
     setFillColor(gameSettings.getBiomeForCoordinates(q, r, s));
   }, [q, r, s, gameSettings.customBiomes]);
 
-  const updateHexagonBiome = (newBiome) => {
-    gameSettings.setBiome(q, r, s, newBiome); // Update biome in GameSettings
-    setFillColor(newBiome); // Update the fill color
-  };
-
   const handleClick = () => {
+    // Get the next biome in the cycle from GameSettings
+    const nextBiome = gameSettings.getNextBiomeInCycle(q, r, s);
+    
+    // Log the current and new biomes
     console.log('Hexagon clicked');
     console.log(`"q": ${q}, "r": ${r}, "s": ${s}`);
-    console.log(fillColor);
-    // Example: Change biome to 'patternGrassLand' when clicked
-    updateHexagonBiome('patternGrassLand');
+    console.log("Old biome:", fillColor);
+    console.log("New biome:", nextBiome);
+
+    // Update the biome
+    gameSettings.setBiome(q, r, s, nextBiome);
+    setFillColor(nextBiome);
   };
 
   return (
