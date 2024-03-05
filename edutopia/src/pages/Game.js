@@ -4,6 +4,7 @@ import Question from './Question';
 import Board from './game/Board';
 import PlayerObject from './game/PlayerObject';
 import Store from './Store';
+import ResourceBar from './ResourceBar';
 import './Game.css';
 import GameHandler from './game/GameHandler';
 
@@ -145,7 +146,7 @@ function Game() {
         <div className='display: flex'>
           <p>GAMEEEE</p>
           <p>Score: {score}</p>
-          <p>Tech: {fakePlayer.techPoints} wood: {fakePlayer.woodPoints} food: {fakePlayer.foodPoints} metal: {fakePlayer.metalPoints}</p>
+          <ResourceBar/>
 
         </div>
       </div>
