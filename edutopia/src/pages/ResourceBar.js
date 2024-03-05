@@ -1,4 +1,5 @@
 import react, {useState} from 'react';
+import './ResourceBar.css';
 
 function ResourceBar({techPoints, foodPoints, woodPoints, metalPoints}){
 
@@ -9,7 +10,12 @@ function ResourceBar({techPoints, foodPoints, woodPoints, metalPoints}){
     // Tech, Food, Wood, Metal
 
     return(
-        <div>Testing</div>
+        <div className='ResourceBarContainer'>
+            <div className='ResourceContainer'></div>
+            <div className='ResourceContainer'></div>
+            <div className='ResourceContainer'></div>
+            <div className='ResourceContainer'></div>
+        </div>
     );
 
 }
