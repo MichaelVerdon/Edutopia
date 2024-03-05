@@ -146,7 +146,8 @@ function Game() {
         <div className='display: flex'>
           <p>GAMEEEE</p>
           <p>Score: {score}</p>
-          <ResourceBar/>
+          <ResourceBar techPoints={0} woodPoints={0} foodPoints={0} metalPoints={0}>
+          </ResourceBar>
 
         </div>
       </div>

@@ -1,0 +1,13 @@
+.ResourceBarContainer {
+    display: flex;
+    align-items: center;
+}
+
+.ResourceContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin: 5px;
+}
