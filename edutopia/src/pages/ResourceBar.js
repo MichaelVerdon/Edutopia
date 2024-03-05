@@ -13,6 +13,8 @@ function ResourceBar({techPoints = 0, foodPoints = 0, woodPoints = 0, metalPoint
     const [metal, setMetalPoints] = useState(metalPoints);
     // Tech, Food, Wood, Metal
 
+    // TO DO: ADD INFO ICON
+
     return(
         <div className='ResourceBarContainer'>
             <div className='ResourceContainer'>

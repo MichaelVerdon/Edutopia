@@ -8,7 +8,11 @@
     transform: translateX(-50%);
     z-index: 1;
     background-color: white;
-    justify-content: space-between;
+    display: flex;
+}
+
+.hudElementContainer {
+    display: flex;
 }
 
 .boardContainer {

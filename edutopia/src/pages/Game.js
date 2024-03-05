@@ -134,22 +134,27 @@ function Game() {
         )}
 
       <div className='hudContainer'>
+
+      <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
+
+        <div className='hudElementContainer'>
         <button onClick={questionAndToggle} className="btn-modal">
         open
         </button>
+        </div>
+
+        <div className='hudElementContainer'>
         <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
         store
         </button>
+        </div>
 
-        
-        <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
-        <div className='display: flex'>
-          <p>GAMEEEE</p>
-          <p>Score: {score}</p>
+        <div className='hudElementContainer'>
+        <p>GAMEEEE</p>
+        <p>Score: {score}</p>
+        </div>
           <ResourceBar techPoints={0} woodPoints={0} foodPoints={0} metalPoints={0}>
           </ResourceBar>
-
-        </div>
       </div>
       <div className='hexContainer'>
         <Board/>
