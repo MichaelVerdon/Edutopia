@@ -11,7 +11,7 @@ import GameHandler from './game/GameHandler';
 export const PlayerContext = createContext();
 
 function Game() {
-  const api_link = "http://localhost:9020/get_question?topic_id=";
+  const api_link = "http://localhost:9000/get_question?topic_id=";
   const [question, setQuestion] = useState('');
   const [score, setScore] = useState(0)
   const [selectedTopics, setSelectedTopics] = useState([]);

@@ -10,7 +10,7 @@ app.secret_key = "290347520935670823"
 
 app.config["MYSQL_HOST"] = "localhost"
 app.config["MYSQL_USER"] = "root"
-app.config["MYSQL_PASSWORD"] = "up930421"
+app.config["MYSQL_PASSWORD"] = "teammeng"
 app.config["MYSQL_DB"] = "questions"
 
 mysql = MySQL(app)
@@ -53,6 +53,6 @@ def get_question():
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=9020)
+    app.run(debug=False, port=9000)
 
 # http://localhost:9000/get_question?topic_id=1
