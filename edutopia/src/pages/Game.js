@@ -17,9 +17,6 @@ function Game() {
   const [selectedTopics, setSelectedTopics] = useState([]);
 
   const [player, setPlayer] = useState(new PlayerObject(1));
-  const playerSetup = ()=> {
-    player.setWoodPoints(120);
-  }
 
   // This function will be passed to the PopUp component
   const handleTopicsChange = (newTopics) => {
