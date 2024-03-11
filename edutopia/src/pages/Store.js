@@ -2,42 +2,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import Modal from 'react-modal';
 import { PlayerContext } from './Game';
 import PlayerObject from './game/PlayerObject';
-import gameSettings from './game/GameSettings';
-import './Store.css';
-import NotificationManager from '../pages/game/NotificationManager';
 Modal.setAppElement('#root'); 
-
 
 function Store ({storeModal, close}) {
 
     const [phase, setPhase] = useState(0);
     const [reason, setReason] = useState("");
     const [selectedItem, setSelectedItem] = useState(null);
-    const { player, setPlayer } = useContext(PlayerContext);
-    const [showPopup, setShowPopup] = useState(false);
 
-    const customStyles = {
-      overlay: {
-        backgroundColor: 'transparent', 
-        pointerEvents: 'none', 
-      },
-      content: {
-        padding: '15px',
-        transform: 'translate(-50%, -25%)',
-        width: 'auto',
-        height: 'auto',
-        pointerEvents: 'auto',
-      }
-    };
-    const customStyles2 = {
-      content: {
-        padding: '15px',
-        transform: 'translate(-50%, -25%)',
-        width: '100%',
-        height: 'auto',
-        
-      }
-    };
+    const { player, setPlayer } = useContext(PlayerContext);
+
    
     const JsonData = [
       {
@@ -48,21 +22,17 @@ function Store ({storeModal, close}) {
           "foodPoints": 10,
           "woodPoints": 10,
           "metalPoints": 10,
-          "land": false,
-          "landNeeded": "",
-          "landNew": "GrasslandWithFarm"
+          "land": false
       },
       {
         "id": 2,
-        "item": "./images/sprites/GrasslandWithFarm_Blue.png",
+        "item": "./images/sprites/GrasslandAndFarm_Blue.png",
         "name":"Farm",
         "techPoints": 10, 
         "foodPoints": 10,
         "woodPoints": 10,
         "metalPoints": 10,
-        "land": true,
-        "landNeeded": "Grassland",
-        "landNew": "GrasslandWithFarm"
+        "land": true
       },
       {
         "id": 3,
@@ -72,9 +42,7 @@ function Store ({storeModal, close}) {
         "foodPoints": 10,
         "woodPoints": 10,
         "metalPoints": 10,
-        "land": true,
-        "landNeeded": "Rocky",
-        "landNew": "RockyWithMine"
+        "land": true
       },
       {
         "id": 4,
@@ -84,9 +52,7 @@ function Store ({storeModal, close}) {
         "foodPoints": 10,
         "woodPoints": 10,
         "metalPoints": 10,
-        "land": true,
-        "landNeeded": "Woods",
-        "landNew": "WoodsWithSawmill"
+        "land": true
       },
       {
         "id": 5,
@@ -96,9 +62,7 @@ function Store ({storeModal, close}) {
         "foodPoints": 10,
         "woodPoints": 10,
         "metalPoints": 10,
-        "land": true,
-        "landNeeded": "Village",
-        "landNew": "VillageWithTrainingGrounds"
+        "land": true
       },
       {
         "id": 6,
@@ -108,28 +72,13 @@ function Store ({storeModal, close}) {
         "foodPoints": 10,
         "woodPoints": 10,
         "metalPoints": 10,
-        "land": true,
-        "landNeeded": "Village",
-        "landNew": "GVillageWithPotionShop"
-      },
-      {
-        "id": 7,
-        "item": "./images/sprites/VillageWithTrainingGroundsAndPotionShop_Blue.png",
-        "name":"Potion Shop",
-        "techPoints": 10, 
-        "foodPoints": 10,
-        "woodPoints": 10,
-        "metalPoints": 10,
-        "land": true,
-        "landNeeded": ["VillageWithPotionShop", "VillageWithTrainingGrounds"],
-        "landNew": "VillageWithTrainingGroundsAndPotionShop"
+        "land": true
       }
   ];
   
 
   function handleRowClick(row) {
-    setSelectedItem(row);
-    setShowPopup(true);
+    setSelectedItem(row)
     //checks if u have enough resources, if not tells u u cant buy
     if(player.getTechPoints < row.techPoints || player.getFoodPoints < row.foodPoints || player.getWoodPoints < row.woodPoints || player.getMetalPoints < row.metalPoints){
       setReason("you don't have enough resources");
@@ -145,19 +94,13 @@ function Store ({storeModal, close}) {
       }else{
       //if yes asks u to pick a land
       setPhase(2);
-      //console.log(phase);
-    }
+      console.log(phase);}
     }else{
       //asks u if u r down to buy, if yes gives u your purchase takes away your money
       setPhase(3);
-      //console.log(phase);
+      console.log(phase);
     }
   } 
-
-  const handleClosePopup = () => {
-    setShowPopup(false);
-    setPhase(0);
-  };
 
   useEffect(() => {
     console.log(phase);
@@ -171,48 +114,15 @@ function Store ({storeModal, close}) {
     let tempPlayer = new PlayerObject(player.getPlayerID);
     if(selectedItem.id===1){
       tempPlayer.freeTroops = player.freeTroops +1;
-    }else{
-      tempPlayer.freeTroops = player.freeTroops;
-    }
-    if(selectedItem.land){
-      //TODO: add for different colors
-      const { q, r, s } = gameSettings.getClickedHexagon();
-      gameSettings.setBiomeForCoordinates(q,r,s,selectedItem.landNew + "_Blue");
-      NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);
-    }
-    else{
-      NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful`);
-    }
-    tempPlayer.ownedTiles = player.ownedTiles;
-    tempPlayer.liveStatus = player.liveStatus;
+    } //add giving tiles
+
     tempPlayer.techPoints = (player.getTechPoints - selectedItem.techPoints);
     tempPlayer.foodPoints = (player.getFoodPoints - selectedItem.foodPoints);
     tempPlayer.woodPoints = (player.getWoodPoints - selectedItem.woodPoints);
     tempPlayer.metalPoints = (player.getMetalPoints - selectedItem.metalPoints); 
     setPlayer(tempPlayer)
 
-
     close();
-  }
-
-  function saveSelection(){
-    const { q, r, s } = gameSettings.getClickedHexagon();
-    const clickedHexagonBiome = gameSettings.getBiomeForCoordinates(q, r, s);
-
-    //TODO: add checking for if the player owns the tile not just _Unclaimed
-
-    if (clickedHexagonBiome === selectedItem.landNeeded + "_Unclaimed") {
-      if(player.getTechPoints < selectedItem.techPoints || player.getFoodPoints < selectedItem.foodPoints || player.getWoodPoints < selectedItem.woodPoints || player.getMetalPoints < selectedItem.metalPoints){
-        setReason("you don't have enough resources");
-        setSelectedItem(null)
-        setPhase(1);
-      }else{
-        setPhase(3);
-      }  
-    } else {
-      setReason("you don't own the correct land for this purchase or you selected an incorrect land");
-      setPhase(1);
-    }
   }
 
 
@@ -230,13 +140,7 @@ function Store ({storeModal, close}) {
 
   if(phase === 0){
     return(
-        <Modal 
-          isOpen={storeModal} 
-          onRequestClose={close} 
-          contentLabel="Store" 
-          className="storeModal"
-          >
-            <button className="close-btn" onClick={close}>X</button> {/* Top right X close button */}
+        <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
           <div  className="modalDiv">
             <h1>Store</h1>
             <table class="table table-striped" >
@@ -254,40 +158,50 @@ function Store ({storeModal, close}) {
                     {DisplayData}
                 </tbody>
             </table>
+            <button onClick={close} className="btn">Close</button>
           </div>
         </Modal>
     );
-  } else if (phase === 1) {
-    return (
-      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal" style={customStyles2}>
-        <div className="phase-popup">
-            <h1>You can't buy this because {reason}</h1>
-            <button onClick={backToMain} className="btn">Go back</button>
-            <button className="close-btn-small" onClick={close}>X</button> {/* Top right X close button */}
-        </div>
-        </Modal>
+  }else if(phase ===1){
+    return(
+      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
+      <div className="modalDiv">
+        <h1>You can't buy this because {reason}</h1>
+        <button onClick={backToMain} className="btn">Go back</button>
+        <button onClick={close} className="btn">Close</button>
+      </div>
+      </Modal>
     );
-} else if (phase === 2) {
-    return (
-      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal" style={customStyles}>
-        <div className="phase-popup">
-            <h1>Pick a land</h1>
-            <button onClick={saveSelection} className="btn">Save selection</button>
-            <button className="close-btn-small" onClick={close}>X</button> {/* Top right X close button */}
-        </div>
-        </Modal>
-    );
-} else if (phase === 3) {
-    return (
-      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal" style={customStyles}>
-        <div className="phase-popup">
-            <h1>Are you sure you want to purchase this?</h1>
-            <button onClick={purchase} className="btn">Yes</button>
-            <button className="close-btn-small" onClick={close}>X</button> {/* Top right X close button */}
-        </div>
-        </Modal>
-    );
-}
 
+  }else if(phase ===2){
+    return(
+      
+        <div className="modalDiv">
+          <h1>Pick a land</h1>
+          <button onClick={close} className="btn">Close</button>
+        </div>
+      
+    );
+
+  }else if(phase ===3){
+    return(
+      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
+        <div className="modalDiv">
+          <h1>Are you sure you want to purchase this?</h1>
+          <button onClick={purchase} className="btn">Yes</button> 
+          <button onClick={close} className="btn">No</button>
+        </div>
+      </Modal>
+    );
+  }else{
+    return(
+      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
+        <div className="modalDiv">
+            <p>error</p>
+            <button className="btn" onClick={close}>close</button>
+        </div>
+      </Modal>
+    );
+  }
 }
 export default Store;
