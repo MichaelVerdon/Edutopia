@@ -1,0 +1,9 @@
+# Ignore log files
+*.log
+
+# Ignore the directory "test" and all its contents
+node_modules
+test/
+
+# Ignore specific files
+config.json
