@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Modal from 'react-modal';
+import { PlayerContext } from './Game';
+import PlayerObject from './game/PlayerObject';
 Modal.setAppElement('#root'); 
 
-function Store ({storeModal, close, player, setPlayer}) {
+function Store ({storeModal, close}) {
 
     const [phase, setPhase] = useState(0);
     const [reason, setReason] = useState("");
     const [selectedItem, setSelectedItem] = useState(null);
+
+    const { player, setPlayer } = useContext(PlayerContext);
+
    
     const JsonData = [
       {
@@ -106,15 +111,17 @@ function Store ({storeModal, close, player, setPlayer}) {
   }
 
   function purchase(){
+    let tempPlayer = new PlayerObject(player.getPlayerID);
     if(selectedItem.id===1){
-      player.freeTroops = player.freeTroops +1;
+      tempPlayer.freeTroops = player.freeTroops +1;
     } //add giving tiles
 
-    player.techPoints = (player.getTechPoints - selectedItem.techPoints);
-    player.foodPoints = (player.getFoodPoints - selectedItem.foodPoints);
-    player.woodPoints = (player.getWoodPoints - selectedItem.woodPoints);
-    player.metalPoints = (player.getMetalPoints - selectedItem.metalPoints); 
-    setPlayer(player)
+    tempPlayer.techPoints = (player.getTechPoints - selectedItem.techPoints);
+    tempPlayer.foodPoints = (player.getFoodPoints - selectedItem.foodPoints);
+    tempPlayer.woodPoints = (player.getWoodPoints - selectedItem.woodPoints);
+    tempPlayer.metalPoints = (player.getMetalPoints - selectedItem.metalPoints); 
+    setPlayer(tempPlayer)
+
     close();
   }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import PopUp from './PopUp';
 import Question from './Question';
 import Board from './game/Board';
@@ -8,14 +8,18 @@ import ResourceBar from './ResourceBar';
 import './Game.css';
 import GameHandler from './game/GameHandler';
 
+export const PlayerContext = createContext();
+
 function Game() {
   const api_link = "http://localhost:9020/get_question?topic_id=";
   const [question, setQuestion] = useState('');
   const [score, setScore] = useState(0)
   const [selectedTopics, setSelectedTopics] = useState([]);
 
-  const [fakePlayer, setFakePlayer] = useState(new PlayerObject(1));
-  
+  const [player, setPlayer] = useState(new PlayerObject(1));
+  const playerSetup = ()=> {
+    player.setWoodPoints(120);
+  }
 
   // This function will be passed to the PopUp component
   const handleTopicsChange = (newTopics) => {
@@ -113,8 +117,8 @@ function Game() {
     }
   }
 
-
   return (
+    <PlayerContext.Provider value={{player, setPlayer}}>
     <div className="game">
 
         {modal && (
@@ -128,7 +132,7 @@ function Game() {
         {storeModal && (
         <div id="storeModal" class="storeModal">
           <div className="overlay">
-            <Store storeModal={storeModal} close={toggleStoreModal} player={fakePlayer} setPlayer={setFakePlayer}></Store>
+            <Store storeModal={storeModal} close={toggleStoreModal}></Store>
             </div>
         </div>
         )}
@@ -141,9 +145,6 @@ function Game() {
         <button onClick={questionAndToggle} className="btn-modal">
         open
         </button>
-        </div>
-
-        <div className='hudElementContainer'>
         <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
         store
         </button>
@@ -153,10 +154,8 @@ function Game() {
         <div className='display: flex'>
           <p>GAMEEEE</p>
           <p>Score: {score}</p>
-          <p>Tech: {fakePlayer.techPoints} wood: {fakePlayer.woodPoints} food: {fakePlayer.foodPoints} metal: {fakePlayer.metalPoints} troops: {fakePlayer.freeTroops}</p>
-
         </div>
-          <ResourceBar techPoints={0} woodPoints={0} foodPoints={0} metalPoints={0}>
+          <ResourceBar techPoints={player.techPoints} woodPoints={player.woodPoints} foodPoints={player.foodPoints} metalPoints={player.metalPoints}>
           </ResourceBar>
       </div>
       <div className='hexContainer'>
@@ -164,6 +163,7 @@ function Game() {
       </div>
     </div>
   </div>
+  </PlayerContext.Provider>
   );
 }
 

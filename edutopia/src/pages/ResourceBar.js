@@ -1,16 +1,29 @@
-import react, {useState} from 'react';
+import react, {useState, useContext, useEffect} from 'react';
 import './ResourceBar.css';
 import MetalIcon from './images/sprites/Metal.png';
 import TechIcon from './images/sprites/Technology.png';
 import FoodIcon from './images/sprites/Food.png';
 import WoodIcon from './images/sprites/Wood.png';
+import TroopIcon from './images/sprites/Troop_Blue.png';
+import { PlayerContext } from './Game';
 
-function ResourceBar({techPoints = 0, foodPoints = 0, woodPoints = 0, metalPoints = 0}){
+function ResourceBar(){
 
-    const [tech, setTechPoints] = useState(techPoints);
-    const [food, setFoodPoints] = useState(foodPoints);
-    const [wood, setWoodPoints] = useState(woodPoints);
-    const [metal, setMetalPoints] = useState(metalPoints);
+    const { player, setPlayer } = useContext(PlayerContext);
+
+    const [tech, setTechPoints] = useState(player.getTechPoints);
+    const [food, setFoodPoints] = useState(player.getFoodPoints);
+    const [wood, setWoodPoints] = useState(player.getWoodPoints);
+    const [metal, setMetalPoints] = useState(player.getMetalPoints);
+    const [ownedTroops, setOwnedTroops] = useState(player.getOwnedTroops);
+
+    useEffect(()=>{
+        setFoodPoints(player.getFoodPoints);
+        setWoodPoints(player.getWoodPoints);
+        setTechPoints(player.getTechPoints);
+        setMetalPoints(player.getMetalPoints);
+        setOwnedTroops(player.getOwnedTroops);
+    },[player]);
     // Tech, Food, Wood, Metal
 
     // TO DO: ADD INFO ICON
@@ -35,6 +48,11 @@ function ResourceBar({techPoints = 0, foodPoints = 0, woodPoints = 0, metalPoint
             <div className='ResourceContainer'>
                 <img src={MetalIcon} alt="Metal Icon" />
                 <div>{metal}</div>
+            </div>
+
+            <div className='ResourceContainer'>
+                <img src={TroopIcon} alt="Troop Icon" />
+                <div>{ownedTroops}</div>
             </div>
         </div>
     );
