@@ -11,6 +11,7 @@ class PlayerObject{
         this.metalPoints = 100;
         // A list of tile objects
         this.ownedTiles = [];
+        this.freeTroops = 10;
     }
 
     // Return Player ID For checks
@@ -23,6 +24,7 @@ class PlayerObject{
     get getMetalPoints(){return this.metalPoints;}
 
     get getOwnedTiles(){return this.ownedTiles;}
+    get getOwnedTroops(){return this.freeTroops;}
 
     // Checks for eliminating players
     get getLiveStatus(){return this.alive}
@@ -34,6 +36,7 @@ class PlayerObject{
     set setMetalPoints(setPoints){this.metalPoints = setPoints;}
 
     set setOwnedTiles(ownedTiles){this.ownedTiles = ownedTiles;}
+    set setFreeTroops(freeTroops){this.freeTroops = freeTroops;}
 
     set setLiveStatus(status){this.alive = status;}
 

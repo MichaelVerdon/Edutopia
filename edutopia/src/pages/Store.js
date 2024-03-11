@@ -107,7 +107,7 @@ function Store ({storeModal, close, player, setPlayer}) {
 
   function purchase(){
     if(selectedItem.id===1){
-      //give him trooper
+      player.freeTroops = player.freeTroops +1;
     } //add giving tiles
 
     player.techPoints = (player.getTechPoints - selectedItem.techPoints);

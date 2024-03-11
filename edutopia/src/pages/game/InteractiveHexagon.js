@@ -15,6 +15,7 @@ const InteractiveHexagon = ({ q, r, s }) => {
     setFillColor(gameSettings.getBiomeForCoordinates(q, r, s));
   }, [q, r, s, gameSettings.customBiomes]);
 
+ 
   const handleClick = () => {
     // Get the next biome in the cycle from GameSettings
     const nextBiome = gameSettings.getNextBiomeInCycle(q, r, s);

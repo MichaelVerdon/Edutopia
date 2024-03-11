@@ -145,7 +145,7 @@ function Game() {
         <div className='display: flex'>
           <p>GAMEEEE</p>
           <p>Score: {score}</p>
-          <p>Tech: {fakePlayer.techPoints} wood: {fakePlayer.woodPoints} food: {fakePlayer.foodPoints} metal: {fakePlayer.metalPoints}</p>
+          <p>Tech: {fakePlayer.techPoints} wood: {fakePlayer.woodPoints} food: {fakePlayer.foodPoints} metal: {fakePlayer.metalPoints} troops: {fakePlayer.freeTroops}</p>
 
         </div>
       </div>
