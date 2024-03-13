@@ -9,12 +9,12 @@
     z-index: 1;
     background-color: white;
     display: flex;
+    justify-content: center;
 }
 
 .hudElementContainer {
     display: flex;
     gap: 3rem;
-    padding-left: 10rem;
 }
 
 .boardContainer {
