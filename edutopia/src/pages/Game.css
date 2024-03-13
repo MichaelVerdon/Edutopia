@@ -30,3 +30,8 @@
     align-items: center;
     position: relative;
 }
+
+.btn-modal{
+    display: inline-block;
+    padding: 1rem;
+}
