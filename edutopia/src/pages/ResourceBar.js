@@ -33,26 +33,36 @@ function ResourceBar(){
             <div className='ResourceContainer'>
                 <img src={TechIcon} alt="Tech Icon" />
                 <div>{tech}</div>
+                <div className='ResourceInfoIcon'>ℹ️</div>
+                <div className='ResourceInfoText'>Tech Points</div>
             </div>
 
             <div className='ResourceContainer'>
                 <img src={FoodIcon} alt="Food Icon" />
                 <div>{food}</div>
+                <div className='ResourceInfoIcon'>ℹ️</div>
+                <div className='ResourceInfoText'>Food Points</div>
             </div>
 
             <div className='ResourceContainer'>
                 <img src={WoodIcon} alt="Wood Icon" />
                 <div>{wood}</div>
+                <div className='ResourceInfoIcon'>ℹ️</div>
+                <div className='ResourceInfoText'>Wood Points</div>
             </div>
 
             <div className='ResourceContainer'>
                 <img src={MetalIcon} alt="Metal Icon" />
                 <div>{metal}</div>
+                <div className='ResourceInfoIcon'>ℹ️</div>
+                <div className='ResourceInfoText'>Metal Points</div>
             </div>
 
             <div className='ResourceContainer'>
                 <img src={TroopIcon} alt="Troop Icon" />
                 <div>{ownedTroops}</div>
+                <div className='ResourceInfoIcon'>ℹ️</div>
+                <div className='ResourceInfoText'>Troop Points</div>
             </div>
         </div>
     );
