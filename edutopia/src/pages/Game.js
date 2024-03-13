@@ -141,16 +141,18 @@ function Game() {
         <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
 
         <div className='hudElementContainer'>
-        <button onClick={questionAndToggle} className="btn-modal">
-        open
-        </button>
-        <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
-        store
-        </button>
-        <div className='display: flex'>
+
+          <button onClick={questionAndToggle} className="btn-modal">
+          question
+          </button>
+
+          <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
+          store
+          </button>
+
           <p>GAMEEEE</p>
           <p>Score: {score}</p>
-        </div>
+        
           <ResourceBar techPoints={player.techPoints} woodPoints={player.woodPoints} foodPoints={player.foodPoints} metalPoints={player.metalPoints}>
           </ResourceBar>
       </div>
