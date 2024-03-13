@@ -116,9 +116,8 @@ function Game() {
 
   return (
     <PlayerContext.Provider value={{player, setPlayer}}>
-    <div className="game">
 
-        {modal && (
+      {modal && (
           <div className="modal">
             <div className="overlay">
               <Question questionJson={question} close={toggleModal} scoreAdd={addScore}></Question>
@@ -134,9 +133,12 @@ function Game() {
         </div>
         )}
 
+
+      <div className="game">
+
       <div className='hudContainer'>
 
-      <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
+        <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
 
         <div className='hudElementContainer'>
         <button onClick={questionAndToggle} className="btn-modal">
@@ -145,9 +147,6 @@ function Game() {
         <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
         store
         </button>
-
-        
-        <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
         <div className='display: flex'>
           <p>GAMEEEE</p>
           <p>Score: {score}</p>
@@ -155,10 +154,11 @@ function Game() {
           <ResourceBar techPoints={player.techPoints} woodPoints={player.woodPoints} foodPoints={player.foodPoints} metalPoints={player.metalPoints}>
           </ResourceBar>
       </div>
-      <div className='hexContainer'>
+
+    </div>
+    <div className='hexContainer'>
         <Board/>
       </div>
-    </div>
   </div>
   </PlayerContext.Provider>
   );
