@@ -61,6 +61,29 @@ class PlayerObject{
         this.woodPoints += woodPointsPerTurn;
         this.metalPoints += metalPointsPerTurn;
     }
+    
+    // Method to buy upgrades for tiles in here (for now)
+
+    //
+
+    // Check if player has enough resources
+    hasEnoughResources(cost) {
+        return (
+            this.techPoints >= cost.techPoints &&
+            this.foodPoints >= cost.foodPoints &&
+            this.woodPoints >= cost.woodPoints &&
+            this.metalPoints >= cost.metalPoints
+        );
+    }
+
+    // Deduct resource cost 
+    deductResources(cost) {
+        this.techPoints -= cost.techPoints;
+        this.foodPoints -= cost.foodPoints;
+        this.woodPoints -= cost.woodPoints;
+        this.metalPoints -= cost.metalPoints;
+    }
+
 }
 
 export default PlayerObject;
