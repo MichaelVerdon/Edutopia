@@ -40,9 +40,27 @@ class PlayerObject{
 
     set setLiveStatus(status){this.alive = status;}
 
-    // Methods for checking resources generated per turn
+    // Method to calculate resources generated per turn based on owned tiles
+    calculateResourcesPerTurn() {
+        let techPointsPerTurn = 0;
+        let foodPointsPerTurn = 0;
+        let woodPointsPerTurn = 0;
+        let metalPointsPerTurn = 0;
 
-    // 
+        // Iterate over owned tiles and calculate resources per turn
+        for (const tile of this.ownedTiles) {
+            techPointsPerTurn += tile.getTechPoints();
+            foodPointsPerTurn += tile.getFoodPoints();
+            woodPointsPerTurn += tile.getWoodPoints();
+            metalPointsPerTurn += tile.getMetalPoints();
+        }
+
+        // Update player resources
+        this.techPoints += techPointsPerTurn;
+        this.foodPoints += foodPointsPerTurn;
+        this.woodPoints += woodPointsPerTurn;
+        this.metalPoints += metalPointsPerTurn;
+    }
 }
 
 export default PlayerObject;
