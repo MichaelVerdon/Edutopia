@@ -5,12 +5,9 @@ import { HexGrid, Layout, GridGenerator } from 'react-hexgrid';
 import InteractiveHexagon from './InteractiveHexagon';
 import configs from './configurations';
 import gapData from './gapCoordinates.json';
-import grassLand from '../images/sprites/Grassland_Unclaimed.png';
-import rocky from '../images/sprites/Rocky_Unclaimed.png';
-import woods from '../images/sprites/Woods_Unclaimed.png';
-import potionShop from '../images/sprites/VillageWithPotionShop_Yellow.png';
-import water from '../images/sprites/water.png';
-import './inGameHex.css'; // Import the new CSS file
+import images from './imageImports';
+import './inGameHex.css';
+
 
 class Board extends Component {
   constructor(props) {
@@ -31,24 +28,22 @@ class Board extends Component {
     return (
       <div className='board'>
         <HexGrid width={config.width} height={config.height} viewBox={viewBox}>
-          <defs>
-            {/* Define patterns for each biome */}
-            <pattern id="patternGrassLand" patternUnits="objectBoundingBox"  width="1" height="1" viewBox="0 0 6 6" patternTransform="scale(1.16)">
-              <image href={grassLand} width="6" height="6" transform="rotate(30, 3, 3)" preserveAspectRatio="xMidYMid slice"/>
+        <defs>
+          {/* Define patterns for each biome */}
+          {Object.keys(images).map((key) => (
+            <pattern
+              key={key}
+              id={key}
+              patternUnits="objectBoundingBox"
+              width="1"
+              height="1"
+              viewBox="0 0 6 6"
+              patternTransform="scale(1.16)"
+            >
+              <image href={images[key]} width="6" height="6" preserveAspectRatio="xMidYMid slice"/>
             </pattern>
-            <pattern id="patternRocky" patternUnits="objectBoundingBox" width="1" height="1" viewBox="0 0 6 6" patternTransform="scale(1.16)">
-              <image href={rocky} width="6" height="6" transform="rotate(30, 3, 3)" preserveAspectRatio="xMidYMid slice"/>
-            </pattern>
-            <pattern id="patternWoods" patternUnits="objectBoundingBox" width="1" height="1" viewBox="0 0 6 6" patternTransform="scale(1.16)">
-              <image href={woods} width="6" height="6" transform="rotate(30, 3, 3)" preserveAspectRatio="xMidYMid slice"/>
-            </pattern>
-            <pattern id="patternPotShop" patternUnits="objectBoundingBox" width="1" height="1" viewBox="0 0 6 6" patternTransform="scale(1.16)">
-              <image href={potionShop} width="6" height="6"  preserveAspectRatio="xMidYMid slice"/>
-            </pattern>
-            <pattern id="patternWater" patternUnits="objectBoundingBox" width="1" height="1" viewBox="0 0 6 6" patternTransform="scale(1.16)">
-              <image href={water} width="6" height="6"  preserveAspectRatio="xMidYMid slice"/>
-            </pattern>
-          </defs>
+          ))}
+        </defs>
           <Layout size={size} flat={config.layout.flat} spacing={config.layout.spacing} origin={config.origin}>
             {hexagons.map((hex, i) => (
               <InteractiveHexagon

@@ -1,49 +1,57 @@
 /* inGameHex.css */
 body {
-  /* Set background image */
-  background-color: black;
-}
-.inGameHex polygon,
-.inGameHex {
-  pointer-events: all;
-  stroke: black; /* Border color */
-  stroke-width: 0.1px; /* Border width */
-}
-
-.inGameHex.active polygon,
-.inGameHex.active {
-  fill: 'fillColor'; /* Hexagon fill color when active */
-}
-
-.inGameHex:hover polygon,
-.inGameHex:hover path {
-  cursor: pointer; /* Change cursor on hover */
-}
-
-/* Add a slight highlight effect */
-.inGameHex:hover {
-  filter: brightness(110%); /* Increase brightness on hover */
-}
-
-.inGameHex .hexagon-text {
-  cursor: pointer;
-  fill: black; /* Text color */
-  user-select: none; /* Prevent text selection */
-  font-family: 'Arial', sans-serif; /* Font for the text */
-  font-size: 1.5px; /* Size of the text */
-}
-
-.board {
-  display: flex; /* or display: grid; */
-  justify-content: center; /* Centers content horizontally */
-  align-items: center;
-  width: '100%';
-  overflow: 'auto';
-}
-
-.board-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; /* Adjust height as needed */
-}
+    /* Set background image */
+    background-color: rgba(255, 255, 255, 0);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('../images/sprites/background.png');
+    /* STUFF TO ADD TO CHANGE BACKGROUND------------OPINION NEEDED*/ 
+    /*background-position: center center; /* 'absolute' is not a valid value for background-position */
+    /*background-repeat: no-repeat; /* If you don't want the image to repeat */
+    /*background-attachment: fixed; /* If you want the image to stay in place while scrolling */
+    /*background-size: cover;*/
+    
+  }
+  .inGameHex polygon,
+  .inGameHex {
+    pointer-events: all;
+    stroke: black; /* Border color */
+    stroke-width: 0.1px; /* Border width */
+  }
+  
+  .inGameHex.active polygon,
+  .inGameHex.active {
+    fill: 'fillColor'; /* Hexagon fill color when active */
+  }
+  
+  .inGameHex:hover polygon,
+  .inGameHex:hover path {
+    cursor: pointer; /* Change cursor on hover */
+  }
+  
+  /* Add a slight highlight effect */
+  .inGameHex:hover {
+    filter: brightness(110%); /* Increase brightness on hover */
+  }
+  
+  .inGameHex .hexagon-text {
+    cursor: pointer;
+    fill: black; /* Text color */
+    user-select: none; /* Prevent text selection */
+    font-family: 'Arial', sans-serif; /* Font for the text */
+    font-size: 1.5px; /* Size of the text */
+  }
+  
+  .board {
+    display: flex; /* or display: grid; */
+    justify-content: center; /* Centers content horizontally */
+    align-items: center;
+    width: '100%';
+    overflow: 'auto';
+  }
+  
+  .board-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Adjust height as needed */
+  }
+  
