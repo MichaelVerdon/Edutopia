@@ -1,0 +1,14 @@
+{
+    "hexagons": [
+      { "q": 0, "r": 0, "s": 0, "biome": "Rocky_Unclaimed" },
+      { "q": 1, "r": 0, "s": -1, "biome": "Rocky_Unclaimed" },
+      { "q": 2, "r": -1, "s": -1, "biome": "Rocky_Unclaimed" },
+      { "q": 0, "r": 1, "s": -1, "biome": "Grassland_Unclaimed" },
+      { "q": 1, "r": 1, "s": -2, "biome": "Grassland_Unclaimed" },
+      { "q": 2, "r": 0, "s": -2, "biome": "Grassland_Unclaimed" },
+      { "q": 0, "r": 2, "s": -2, "biome": "Woods_Unclaimed" },
+      { "q": 1, "r": 2, "s": -3, "biome": "Woods_Unclaimed" },
+      { "q": 2, "r": 1, "s": -3, "biome": "Woods_Unclaimed" }
+      
+    ]
+  }
