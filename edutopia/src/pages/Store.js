@@ -26,7 +26,7 @@ function Store ({storeModal, close}) {
       },
       {
         "id": 2,
-        "item": "./images/sprites/GrasslandAndFarm_Blue.png",
+        "item": "./images/sprites/GrasslandWithFarm_Blue.png",
         "name":"Farm",
         "techPoints": 10, 
         "foodPoints": 10,

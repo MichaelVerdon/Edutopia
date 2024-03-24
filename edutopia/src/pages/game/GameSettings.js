@@ -53,6 +53,10 @@ const GameSettings = {
     GameSettings.notifyBiomeChanges();
   },
 
+  saveClickedHexagon: (q, r, s) => {
+    GameSettings.clickedHexagon = { q, r, s };
+  },
+
 };
 
 export default GameSettings;
