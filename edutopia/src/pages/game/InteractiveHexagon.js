@@ -28,7 +28,7 @@ const InteractiveHexagon = ({ q, r, s }) => {
     console.log('Hexagon clicked');
     console.log(`"q": ${q}, "r": ${r}, "s": ${s}`);
     console.log("Current Hexagon biome:", fillColor);
-    gameSettings.setBiomeForCoordinates(q,r,s, "patternWater")
+    gameSettings.setBiomeForCoordinates(q,r,s, "Water")
 /*
     // Change the biome based on the selected item and the buildingBiomeMapping
     if (selectedItem && selectedItem.id in buildingBiomeMapping) {
