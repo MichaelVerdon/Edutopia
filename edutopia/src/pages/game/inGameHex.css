@@ -41,16 +41,19 @@ body {
   }
   
   .board {
-    display: flex; /* or display: grid; */
-    justify-content: center; /* Centers content horizontally */
-    align-items: center;
-    width: '100%';
-    overflow: 'auto';
-  }
-  
-  .board-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Adjust height as needed */
+    width: 100%; /* Change '100%' to 'calc(100% - 20px)' */
+    padding: 200px 0px 200px 400px; /* Add padding to the left and right sides */
   }
+
+  
+  .board-container {
+    width: 100%;
+    position: relative;
+    overflow-x: auto;
+    
+  }
+
+  
