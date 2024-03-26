@@ -10,14 +10,11 @@ const InteractiveHexagon = ({ q, r, s }) => {
 
   useEffect(() => {
     const updateBiome = () => {
-      
       setFillColor(gameSettings.customBiomes[`${q},${r},${s}`] || gameSettings.getBiomeForCoordinates(q, r, s));
     };
 
-    
     gameSettings.subscribeToBiomeChanges(updateBiome);
 
-    // Unsubscribe from changes when the component unmounts
     return () => {
       gameSettings.unsubscribeFromBiomeChanges(updateBiome);
     };
@@ -28,19 +25,16 @@ const InteractiveHexagon = ({ q, r, s }) => {
     console.log('Hexagon clicked');
     console.log(`"q": ${q}, "r": ${r}, "s": ${s}`);
     console.log("Current Hexagon biome:", fillColor);
-    gameSettings.setBiomeForCoordinates(q,r,s, "Water")
-/*
-    // Change the biome based on the selected item and the buildingBiomeMapping
-    if (selectedItem && selectedItem.id in buildingBiomeMapping) {
-      const newBiome = buildingBiomeMapping[selectedItem.id];
-      gameSettings.setBiomeForCoordinates(q, r, s, newBiome);
-    } else {
-      // Handle default biome change if no specific mapping is found
-      gameSettings.setBiomeForCoordinates(q, r, s, "defaultBiome");
-    } 
-*/
+    gameSettings.setBiomeForCoordinates(q,r,s, "Water");
   };
   
+  // Disable onClick event handler for Water hexagons
+  const clickable = fillColor !== 'Water';
+  // Set cursor style to 'auto' for Water hexagons
+  const cursorStyle = clickable ? 'pointer' : 'auto';
+
+  // Define the class name for the hexagon dynamically based on its biome
+  const hexagonClass = `inGameHex ${isActive ? 'active' : ''} ${fillColor === 'Water' ? 'water' : ''}`;
 
   return (
     <Hexagon
@@ -49,8 +43,9 @@ const InteractiveHexagon = ({ q, r, s }) => {
       s={s}
       size={configs.hexSize}
       fill={fillColor}
-      onClick={handleClick}
-      className={`inGameHex ${isActive ? 'active' : ''}`}
+      onClick={clickable ? handleClick : null} // Conditionally assign onClick handler
+      className={hexagonClass} // Assign the dynamic class name
+      style={{ cursor: cursorStyle }} // Set cursor style based on clickable
     >
       <Text className="hexagon-text">{`${q},${r},${s}`}</Text>
     </Hexagon>
