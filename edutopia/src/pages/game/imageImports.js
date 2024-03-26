@@ -1,4 +1,4 @@
-//imageImports.js
+// imageImports.js
 // Sourcing images
 
 
