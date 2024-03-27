@@ -3,8 +3,8 @@ import PlayerObject from "./PlayerObject";
 // Inherit from PlayerObject Class so they can have all functionalities of player class.
 class aiPlayer extends PlayerObject{
 
-    constructor (playerId){
-        super(playerId)
+    constructor (playerId, randomTile){
+        super(playerId, randomTile)
         this.difficulty = this.setDifficulty();
     }
 
