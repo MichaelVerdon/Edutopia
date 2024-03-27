@@ -72,6 +72,10 @@ const GameSettings = {
     GameSettings.clickedHexagon = { q, r, s };
   },
 
+  getClickedHexagon: () => {
+    return GameSettings.clickedHexagon;
+  }
+
 };
 
 export default GameSettings;

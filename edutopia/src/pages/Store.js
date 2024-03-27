@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import Modal from 'react-modal';
 import { PlayerContext } from './Game';
 import PlayerObject from './game/PlayerObject';
+import gameSettings from './game/GameSettings';
 Modal.setAppElement('#root'); 
 
 function Store ({storeModal, close}) {
@@ -22,7 +23,9 @@ function Store ({storeModal, close}) {
           "foodPoints": 10,
           "woodPoints": 10,
           "metalPoints": 10,
-          "land": false
+          "land": false,
+          "landNeeded": "",
+          "landNew": "GrasslandWithFarm"
       },
       {
         "id": 2,
@@ -32,7 +35,9 @@ function Store ({storeModal, close}) {
         "foodPoints": 10,
         "woodPoints": 10,
         "metalPoints": 10,
-        "land": true
+        "land": true,
+        "landNeeded": "Grassland",
+        "landNew": "GrasslandWithFarm"
       },
       {
         "id": 3,
@@ -42,7 +47,9 @@ function Store ({storeModal, close}) {
         "foodPoints": 10,
         "woodPoints": 10,
         "metalPoints": 10,
-        "land": true
+        "land": true,
+        "landNeeded": "Rocky",
+        "landNew": "RockyWithMine"
       },
       {
         "id": 4,
@@ -52,7 +59,9 @@ function Store ({storeModal, close}) {
         "foodPoints": 10,
         "woodPoints": 10,
         "metalPoints": 10,
-        "land": true
+        "land": true,
+        "landNeeded": "Woods",
+        "landNew": "WoodsWithSawmill"
       },
       {
         "id": 5,
@@ -62,7 +71,9 @@ function Store ({storeModal, close}) {
         "foodPoints": 10,
         "woodPoints": 10,
         "metalPoints": 10,
-        "land": true
+        "land": true,
+        "landNeeded": "Village",
+        "landNew": "VillageWithTrainingGrounds"
       },
       {
         "id": 6,
@@ -72,7 +83,21 @@ function Store ({storeModal, close}) {
         "foodPoints": 10,
         "woodPoints": 10,
         "metalPoints": 10,
-        "land": true
+        "land": true,
+        "landNeeded": "Village",
+        "landNew": "GVillageWithPotionShop"
+      },
+      {
+        "id": 7,
+        "item": "./images/sprites/VillageWithTrainingGroundsAndPotionShop_Blue.png",
+        "name":"Potion Shop",
+        "techPoints": 10, 
+        "foodPoints": 10,
+        "woodPoints": 10,
+        "metalPoints": 10,
+        "land": true,
+        "landNeeded": ["VillageWithPotionShop", "VillageWithTrainingGrounds"],
+        "landNew": "VillageWithTrainingGroundsAndPotionShop"
       }
   ];
   
@@ -94,11 +119,12 @@ function Store ({storeModal, close}) {
       }else{
       //if yes asks u to pick a land
       setPhase(2);
-      console.log(phase);}
+      //console.log(phase);
+    }
     }else{
       //asks u if u r down to buy, if yes gives u your purchase takes away your money
       setPhase(3);
-      console.log(phase);
+      //console.log(phase);
     }
   } 
 
@@ -114,8 +140,16 @@ function Store ({storeModal, close}) {
     let tempPlayer = new PlayerObject(player.getPlayerID);
     if(selectedItem.id===1){
       tempPlayer.freeTroops = player.freeTroops +1;
-    } //add giving tiles
-
+    }else{
+      tempPlayer.freeTroops = player.freeTroops;
+    }
+    if(selectedItem.land){
+      //TODO: add for different colors
+      const { q, r, s } = gameSettings.getClickedHexagon();
+      gameSettings.setBiomeForCoordinates(q,r,s,selectedItem.landNew + "_Blue");
+    }
+    tempPlayer.ownedTiles = player.ownedTiles;
+    tempPlayer.liveStatus = player.liveStatus;
     tempPlayer.techPoints = (player.getTechPoints - selectedItem.techPoints);
     tempPlayer.foodPoints = (player.getFoodPoints - selectedItem.foodPoints);
     tempPlayer.woodPoints = (player.getWoodPoints - selectedItem.woodPoints);
@@ -123,6 +157,26 @@ function Store ({storeModal, close}) {
     setPlayer(tempPlayer)
 
     close();
+  }
+
+  function saveSelection(){
+    const { q, r, s } = gameSettings.getClickedHexagon();
+    const clickedHexagonBiome = gameSettings.getBiomeForCoordinates(q, r, s);
+
+    //TODO: add checking for if the player owns the tile not just _Unclaimed
+
+    if (clickedHexagonBiome === selectedItem.landNeeded + "_Unclaimed") {
+      if(player.getTechPoints < selectedItem.techPoints || player.getFoodPoints < selectedItem.foodPoints || player.getWoodPoints < selectedItem.woodPoints || player.getMetalPoints < selectedItem.metalPoints){
+        setReason("you don't have enough resources");
+        setSelectedItem(null)
+        setPhase(1);
+      }else{
+        setPhase(3);
+      }  
+    } else {
+      setReason("you don't own the correct land for this purchase or you selected an incorrect land");
+      setPhase(1);
+    }
   }
 
 
@@ -178,6 +232,7 @@ function Store ({storeModal, close}) {
       
         <div className="modalDiv">
           <h1>Pick a land</h1>
+          <button onClick={saveSelection} className="btn">Save selection</button>
           <button onClick={close} className="btn">Close</button>
         </div>
       

@@ -25,7 +25,8 @@ const InteractiveHexagon = ({ q, r, s }) => {
     console.log('Hexagon clicked');
     console.log(`"q": ${q}, "r": ${r}, "s": ${s}`);
     console.log("Current Hexagon biome:", fillColor);
-    gameSettings.setBiomeForCoordinates(q,r,s, "Water");
+    //gameSettings.setBiomeForCoordinates(q,r,s, "Water");
+    gameSettings.saveClickedHexagon(q,r,s);
   };
   
   // Disable onClick event handler for Water hexagons
