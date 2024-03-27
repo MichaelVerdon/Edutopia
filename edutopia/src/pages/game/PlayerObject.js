@@ -2,7 +2,7 @@ import Tile from './Tile';
 
 class PlayerObject{
 
-    constructor(playerId) {
+    constructor(playerId, randomTile) {
         this.playerId = playerId;
         this.liveStatus = true;
         this.techPoints = 100; // Points
@@ -10,7 +10,7 @@ class PlayerObject{
         this.woodPoints = 100;
         this.metalPoints = 100;
         // A list of tile objects
-        this.ownedTiles = [];
+        this.ownedTiles = [randomTile]; // We need to assign a random starting tile
         this.freeTroops = 10;
     }
 
