@@ -1,6 +1,7 @@
 import PlayerObject from "./PlayerObject";
 
 // Inherit from PlayerObject Class so they can have all functionalities of player class.
+// You will be able to treat this as a PlayerObject class and use same funcs and vars.
 class aiPlayer extends PlayerObject{
 
     constructor (playerId, randomTile){
