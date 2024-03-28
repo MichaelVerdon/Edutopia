@@ -29,9 +29,12 @@ body {
 }
 
 /* Add a slight highlight effect */
-.inGameHex:hover {
-  filter: brightness(110%); /* Increase brightness on hover */
+.inGameHex:hover,
+.inGameHex.active{
+  filter: brightness(130%);
 }
+
+
 
 .inGameHex .hexagon-text {
   cursor: pointer;

@@ -7,9 +7,11 @@ import { createNoise2D } from 'simplex-noise';
 const noise2D = createNoise2D();
 const biomes = Object.keys(images);
 
+
 const gapCoordinates = gapData.gapCoordinates;
 const GameSettings = {
   customBiomes: {},
+  clickedHexagon: null,
 
   getBiomeForCoordinates: (q, r, s) => {
     if (gapCoordinates.some(coord => coord.q === q && coord.r === r && coord.s === s)) {
@@ -34,10 +36,6 @@ const GameSettings = {
 
     }
   },
-    
-
-
-  
 
   setBiome: (q, r, s, biome) => {
     const key = `${q},${r},${s}`;
@@ -69,12 +67,17 @@ const GameSettings = {
   },
 
   saveClickedHexagon: (q, r, s) => {
-    GameSettings.clickedHexagon = { q, r, s };
+    if (GameSettings.clickedHexagon && GameSettings.clickedHexagon.q === q && GameSettings.clickedHexagon.r === r && GameSettings.clickedHexagon.s === s) {
+      GameSettings.clickedHexagon = null; 
+    } else {
+      GameSettings.clickedHexagon = { q, r, s };
+    }
+  
+    GameSettings.notifyBiomeChanges(); 
   },
-
   getClickedHexagon: () => {
     return GameSettings.clickedHexagon;
-  }
+  },
 
 };
 

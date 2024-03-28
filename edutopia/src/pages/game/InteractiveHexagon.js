@@ -5,8 +5,14 @@ import gameSettings from './GameSettings';
 import './inGameHex.css';
 
 const InteractiveHexagon = ({ q, r, s }) => {
-  const [isActive, setIsActive] = useState(false);
   const [fillColor, setFillColor] = useState(gameSettings.getBiomeForCoordinates(q, r, s));
+  const [isSelected, setIsSelected] = useState(false);
+
+
+  const checkSelected = () => {
+    const selected = gameSettings.clickedHexagon && gameSettings.clickedHexagon.q === q && gameSettings.clickedHexagon.r === r && gameSettings.clickedHexagon.s === s;
+    setIsSelected(selected);
+  };
 
   useEffect(() => {
     const updateBiome = () => {
@@ -14,28 +20,26 @@ const InteractiveHexagon = ({ q, r, s }) => {
     };
 
     gameSettings.subscribeToBiomeChanges(updateBiome);
+    gameSettings.subscribeToBiomeChanges(checkSelected);
 
+    // Clean up
     return () => {
       gameSettings.unsubscribeFromBiomeChanges(updateBiome);
+      gameSettings.unsubscribeFromBiomeChanges(checkSelected);
     };
   }, [q, r, s]);
 
   const handleClick = () => {
-    setIsActive(!isActive);
+    gameSettings.saveClickedHexagon(q, r, s);
     console.log('Hexagon clicked');
     console.log(`"q": ${q}, "r": ${r}, "s": ${s}`);
     console.log("Current Hexagon biome:", fillColor);
-    //gameSettings.setBiomeForCoordinates(q,r,s, "Water");
-    gameSettings.saveClickedHexagon(q,r,s);
+    
   };
   
-  // Disable onClick event handler for Water hexagons
   const clickable = fillColor !== 'Water';
-  // Set cursor style to 'auto' for Water hexagons
   const cursorStyle = clickable ? 'pointer' : 'auto';
-
-  // Define the class name for the hexagon dynamically based on its biome
-  const hexagonClass = `inGameHex ${isActive ? 'active' : ''} ${fillColor === 'Water' ? 'water' : ''}`;
+  const hexagonClass = `inGameHex ${isSelected ? 'active' : ''} ${fillColor === 'Water' ? 'water' : ''}`;
 
   return (
     <Hexagon
@@ -44,9 +48,9 @@ const InteractiveHexagon = ({ q, r, s }) => {
       s={s}
       size={configs.hexSize}
       fill={fillColor}
-      onClick={clickable ? handleClick : null} // Conditionally assign onClick handler
-      className={hexagonClass} // Assign the dynamic class name
-      style={{ cursor: cursorStyle }} // Set cursor style based on clickable
+      onClick={clickable ? handleClick : null}
+      className={hexagonClass}
+      style={{ cursor: cursorStyle }}
     >
       <Text className="hexagon-text">{`${q},${r},${s}`}</Text>
     </Hexagon>

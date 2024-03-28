@@ -38,6 +38,7 @@ class Board extends Component {
                 patternTransform="scale(1.16)"
               >
                 <image href={images[key]} width="6" height="6" preserveAspectRatio="xMidYMid slice"/>
+                <rect width="100%" height="100%" fill="rgba(0, 0, 0, 0)" class="rect-overlay"/>
               </pattern>
             ))}
           </defs>

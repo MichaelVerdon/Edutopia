@@ -17,22 +17,22 @@ function Store ({storeModal, close}) {
 
     const customStyles = {
       overlay: {
-        backgroundColor: 'transparent', // Make overlay transparent
-        pointerEvents: 'none', // Allow clicks to pass through the overlay
+        backgroundColor: 'transparent', 
+        pointerEvents: 'none', 
       },
       content: {
         padding: '15px',
         transform: 'translate(-50%, -25%)',
-        width: 'auto', // Set width as percentage of viewport width
+        width: 'auto',
         height: 'auto',
-        pointerEvents: 'auto', // Allow clicks to pass through the
+        pointerEvents: 'auto',
       }
     };
     const customStyles2 = {
       content: {
         padding: '15px',
         transform: 'translate(-50%, -25%)',
-        width: '100%', // Set width as percentage of viewport width
+        width: '100%',
         height: 'auto',
         
       }
@@ -155,7 +155,7 @@ function Store ({storeModal, close}) {
 
   const handleClosePopup = () => {
     setShowPopup(false);
-    setPhase(0); // Reset phase to initial state
+    setPhase(0);
   };
 
   useEffect(() => {
