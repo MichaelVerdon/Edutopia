@@ -1,0 +1,108 @@
+.storeModal {
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto; /* Adjusted to auto */
+  max-width: 60%; /* Adjusted according to the content size you prefer */
+  height: auto; /* Adjusted to auto to fit the content */
+  max-height: 90vh;
+  background-color: #f2de7f; /* This sets the yellow color */
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  z-index: 1001; /* Ensure it's above other content */
+  
+}
+
+.modalDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  text-align: center;
+  width: 16.67%;
+  box-sizing: border-box;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.07);
+}
+
+.table-container {
+  overflow-y: auto;
+  max-height: 60vh;
+}
+
+.table img {
+  max-width: 100%;
+  height: auto;
+}
+
+.table:hover {
+  cursor: pointer;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px 15px 10px 15px;
+  font-size: 30px;
+  background-color: rgb(179, 37, 37);
+  border: none;
+  color: white;
+  cursor: pointer;
+  z-index: 1000;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  border: 2px solid darkred;
+}
+
+.close-btn-small{
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px;
+  font-size: 10px;
+  background-color: rgb(179, 37, 37);
+  border: none;
+  color: white;
+  cursor: pointer;
+  z-index: 1000;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  border: 2px solid darkred;
+}
+
+.close-btn:hover {
+  background-color: darkred;
+}
+
+.phase-popup {
+  background-color: #ffffff;
+  border: 2px solid #000000;
+  width: auto; /* Adjusted to auto to fit the content */
+  height: auto; /* Adjusted to auto to fit the content */
+  font-size: 10px;
+  text-align: center;
+  position: relative; /* Adjust
+  border-radius: 10px; /* Optional: added to match the modal's style */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Optional: added for consistency */
+  
+
+}
+

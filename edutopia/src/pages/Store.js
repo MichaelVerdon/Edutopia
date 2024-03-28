@@ -3,16 +3,40 @@ import Modal from 'react-modal';
 import { PlayerContext } from './Game';
 import PlayerObject from './game/PlayerObject';
 import gameSettings from './game/GameSettings';
+import './Store.css';
 Modal.setAppElement('#root'); 
+
 
 function Store ({storeModal, close}) {
 
     const [phase, setPhase] = useState(0);
     const [reason, setReason] = useState("");
     const [selectedItem, setSelectedItem] = useState(null);
-
     const { player, setPlayer } = useContext(PlayerContext);
+    const [showPopup, setShowPopup] = useState(false);
 
+    const customStyles = {
+      overlay: {
+        backgroundColor: 'transparent', // Make overlay transparent
+        pointerEvents: 'none', // Allow clicks to pass through the overlay
+      },
+      content: {
+        padding: '15px',
+        transform: 'translate(-50%, -25%)',
+        width: 'auto', // Set width as percentage of viewport width
+        height: 'auto',
+        pointerEvents: 'auto', // Allow clicks to pass through the
+      }
+    };
+    const customStyles2 = {
+      content: {
+        padding: '15px',
+        transform: 'translate(-50%, -25%)',
+        width: '100%', // Set width as percentage of viewport width
+        height: 'auto',
+        
+      }
+    };
    
     const JsonData = [
       {
@@ -103,7 +127,8 @@ function Store ({storeModal, close}) {
   
 
   function handleRowClick(row) {
-    setSelectedItem(row)
+    setSelectedItem(row);
+    setShowPopup(true);
     //checks if u have enough resources, if not tells u u cant buy
     if(player.getTechPoints < row.techPoints || player.getFoodPoints < row.foodPoints || player.getWoodPoints < row.woodPoints || player.getMetalPoints < row.metalPoints){
       setReason("you don't have enough resources");
@@ -127,6 +152,11 @@ function Store ({storeModal, close}) {
       //console.log(phase);
     }
   } 
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setPhase(0); // Reset phase to initial state
+  };
 
   useEffect(() => {
     console.log(phase);
@@ -194,7 +224,13 @@ function Store ({storeModal, close}) {
 
   if(phase === 0){
     return(
-        <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
+        <Modal 
+          isOpen={storeModal} 
+          onRequestClose={close} 
+          contentLabel="Store" 
+          className="storeModal"
+          >
+            <button className="close-btn" onClick={close}>X</button> {/* Top right X close button */}
           <div  className="modalDiv">
             <h1>Store</h1>
             <table class="table table-striped" >
@@ -212,51 +248,40 @@ function Store ({storeModal, close}) {
                     {DisplayData}
                 </tbody>
             </table>
-            <button onClick={close} className="btn">Close</button>
           </div>
         </Modal>
     );
-  }else if(phase ===1){
-    return(
-      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
-      <div className="modalDiv">
-        <h1>You can't buy this because {reason}</h1>
-        <button onClick={backToMain} className="btn">Go back</button>
-        <button onClick={close} className="btn">Close</button>
-      </div>
-      </Modal>
+  } else if (phase === 1) {
+    return (
+      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal" style={customStyles2}>
+        <div className="phase-popup">
+            <h1>You can't buy this because {reason}</h1>
+            <button onClick={backToMain} className="btn">Go back</button>
+            <button className="close-btn-small" onClick={close}>X</button> {/* Top right X close button */}
+        </div>
+        </Modal>
     );
+} else if (phase === 2) {
+    return (
+      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal" style={customStyles}>
+        <div className="phase-popup">
+            <h1>Pick a land</h1>
+            <button onClick={saveSelection} className="btn">Save selection</button>
+            <button className="close-btn-small" onClick={close}>X</button> {/* Top right X close button */}
+        </div>
+        </Modal>
+    );
+} else if (phase === 3) {
+    return (
+      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal" style={customStyles}>
+        <div className="phase-popup">
+            <h1>Are you sure you want to purchase this?</h1>
+            <button onClick={purchase} className="btn">Yes</button>
+            <button className="close-btn-small" onClick={close}>X</button> {/* Top right X close button */}
+        </div>
+        </Modal>
+    );
+}
 
-  }else if(phase ===2){
-    return(
-      
-        <div className="modalDiv">
-          <h1>Pick a land</h1>
-          <button onClick={saveSelection} className="btn">Save selection</button>
-          <button onClick={close} className="btn">Close</button>
-        </div>
-      
-    );
-
-  }else if(phase ===3){
-    return(
-      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
-        <div className="modalDiv">
-          <h1>Are you sure you want to purchase this?</h1>
-          <button onClick={purchase} className="btn">Yes</button> 
-          <button onClick={close} className="btn">No</button>
-        </div>
-      </Modal>
-    );
-  }else{
-    return(
-      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
-        <div className="modalDiv">
-            <p>error</p>
-            <button className="btn" onClick={close}>close</button>
-        </div>
-      </Modal>
-    );
-  }
 }
 export default Store;
