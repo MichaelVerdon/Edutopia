@@ -1,35 +1,42 @@
 .ResourceBarContainer {
+    position: absolute;
+    top: 10px;
+    right: 10px;
     display: flex;
     align-items: center;
 }
 
-.ResourceContainer {
-    position: relative;
+.ResourceGroup {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    padding: 15px;
-    /*border: 1px solid #ccc; */
-    /* This border was here for testing purposes */
+    padding: 3px;
     margin: 5px;
+    border: 2px solid rgba(0, 0, 0, 0.5); /* Add stroke around each resource group */
+
+    border-radius: 10px;
+  }
+
+.ResourceContainer {
+    display: flex;
+    align-items: center;
+    margin-right: 5px; /* Add margin to space out the resources */
 }
 
 .ResourceInfoIcon {
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-size: 1.5rem;
+    font-size: 0.8rem;
     cursor: pointer;
+    margin-left: 5px; /* Add margin to space out the info icon */
 }
 
 .ResourceInfoText {
     display: none;
     position: absolute;
-    top: 1.5rem;
+    top: calc(100% + 5px);
     left: 50%;
     transform: translateX(-50%);
     padding: 5px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.7); /* Adjust the opacity here */
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 0.8rem;
@@ -37,4 +44,19 @@
 
 .ResourceInfoIcon:hover + .ResourceInfoText {
     display: block;
+}
+
+.btn {
+    font-size: 0.8rem;
+    padding: 8px 15px;
+    background-color: #f2de7f;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 5px; /* Add margin to space out the buttons */
+}
+
+.btn:hover {
+    background-color: #e9c46a;
 }

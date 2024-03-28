@@ -15,6 +15,7 @@ body {
   pointer-events: all;
   stroke: black; /* Border color */
   stroke-width: 0.1px; /* Border width */
+  
 }
 
 .inGameHex.active polygon,
