@@ -7,6 +7,9 @@ import Store from './Store';
 import ResourceBar from './ResourceBar';
 import './Game.css';
 import GameHandler from './game/GameHandler';
+import gameConfig from '../pages/game/configurations.json';
+import NotificationManager from '../pages/game/NotificationManager';
+
 
 export const PlayerContext = createContext();
 
@@ -15,6 +18,8 @@ function Game() {
   const [question, setQuestion] = useState('');
   const [score, setScore] = useState(0)
   const [selectedTopics, setSelectedTopics] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  
 
   const [player, setPlayer] = useState(new PlayerObject(1));
 
@@ -88,12 +93,14 @@ function Game() {
    const toggleStoreModal = () => {
      setStoreModal(!storeModal);
    };
+   
  
  
    if(storeModal) {
      document.body.classList.add('active-storeModal')
    } else {
      document.body.classList.remove('active-storeModal')
+     //NotificationManager.showSuccessNotification("Test");
    }
 
   function gameLoop(){
@@ -141,17 +148,17 @@ function Game() {
         <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
 
         <div className='hudElementContainer'>
-
+        <div className='buttons-container'> {/* New container for the buttons */}
           <button onClick={questionAndToggle} className="btn-modal">
-          question
+          Question
           </button>
 
           <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
-          store
+          Store
           </button>
+        </div>
 
-          <p>GAMEEEE</p>
-          <p>Score: {score}</p>
+          <p class='Score-text'>Score: {score}</p>
         
           <ResourceBar techPoints={player.techPoints} woodPoints={player.woodPoints} foodPoints={player.foodPoints} metalPoints={player.metalPoints}>
           </ResourceBar>

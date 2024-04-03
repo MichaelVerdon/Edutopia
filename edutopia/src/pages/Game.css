@@ -1,20 +1,25 @@
 .hudContainer {
     align-items: center;
-    height: 15%;
+    height: 10vh;
     width: 100%;
     position: fixed;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0; /* Align to the left instead of centering */
     z-index: 1;
-    background-color: rgba(255, 255, 255, 0.9);;
     display: flex;
-    justify-content: center;
+    background-image: url('../pages/images/sprites/hud.png');
+    background-color: rgba(0, 0, 0, 0.2); /* Use rgba for transparency */
+    
 }
 
 .hudElementContainer {
     display: flex;
-    gap: 3rem;
+    justify-content: flex-start; /* Align items to the left */
+    align-items: center;
+    width: 100%; /* Take full width to utilize space */
+    padding-left: 1rem; /* Add padding to the left */
+    gap: 1rem; /* Space between elements */
+    flex-wrap: wrap; 
 }
 
 .boardContainer {
@@ -31,7 +36,50 @@
     position: relative;
 }
 
-.btn-modal{
-    display: inline-block;
-    padding: 1rem;
+/* Container for the buttons to align them side by side */
+.buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align to the left side */
+    gap: 1rem; /* Adjust the space between buttons */
+    padding-left: 1rem; /* Add some space from the left edge */
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.btn-modal {
+    font-family: 'Arial', sans-serif; /* Specify a font family */
+    font-size: 1.5rem; /* Larger font size */
+    font-weight: bold; /* Bold font weight */
+    color: #000; /* Font color - change as needed */
+    text-align: center; /* Center the text inside the button */
+    padding: 1.5rem 3rem; /* Adjust padding to increase button size */
+    margin: ; /* Remove any default margin */
+    border: 3px solid rgb(206, 143, 8); /* Thicker border */
+    background-color: #e9c46a;
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: background-color 0.3s ease; /* Smooth background color transition for hover effect */
+    border-radius: 1rem; /* Make the button rounded */
+}
+
+.btn-modal:hover {
+    background-color: #ffd166; /* Slightly lighter color on hover - adjust as needed */
+}
+
+.Score-text {
+    font-size: 3rem; /* Even larger font size for visibility */
+    font-weight: bold;
+    color: #ffd700; /* A gold-like color to stand out */
+    margin-left: auto; /* Push the score to the right */
+    margin-right: 3rem;
+    padding-right: 1rem; /* Add some padding to the right */
+    text-shadow: -1px -1px 0 rgb(0, 0, 0),  
+                  1px -1px 0 rgb(0, 0, 0),
+                 -1px 1px 0 rgb(0, 0, 0),
+                  1px 1px 0 rgb(0, 0, 0);
+}
+
+/* Add this if the container for the score needs to be adjusted */
+.score-container {
+    margin-left: auto; /* Push the container to the right */
 }

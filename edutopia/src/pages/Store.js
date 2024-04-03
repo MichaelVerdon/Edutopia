@@ -4,6 +4,7 @@ import { PlayerContext } from './Game';
 import PlayerObject from './game/PlayerObject';
 import gameSettings from './game/GameSettings';
 import './Store.css';
+import NotificationManager from '../pages/game/NotificationManager';
 Modal.setAppElement('#root'); 
 
 
@@ -177,6 +178,10 @@ function Store ({storeModal, close}) {
       //TODO: add for different colors
       const { q, r, s } = gameSettings.getClickedHexagon();
       gameSettings.setBiomeForCoordinates(q,r,s,selectedItem.landNew + "_Blue");
+      NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);
+    }
+    else{
+      NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful`);
     }
     tempPlayer.ownedTiles = player.ownedTiles;
     tempPlayer.liveStatus = player.liveStatus;
@@ -185,6 +190,7 @@ function Store ({storeModal, close}) {
     tempPlayer.woodPoints = (player.getWoodPoints - selectedItem.woodPoints);
     tempPlayer.metalPoints = (player.getMetalPoints - selectedItem.metalPoints); 
     setPlayer(tempPlayer)
+
 
     close();
   }
