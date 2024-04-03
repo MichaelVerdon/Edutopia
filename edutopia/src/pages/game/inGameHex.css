@@ -1,6 +1,6 @@
-/* inGameHex.css */
+/*inGameHex.css */
 body {
-  /* Set background image */
+  
   background-color: rgba(255, 255, 255, 0);
   background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('../images/sprites/background.png');
   /* STUFF TO ADD TO CHANGE BACKGROUND------------OPINION NEEDED*/ 
@@ -13,22 +13,22 @@ body {
 .inGameHex polygon,
 .inGameHex {
   pointer-events: all;
-  stroke: black; /* Border color */
-  stroke-width: 0.1px; /* Border width */
+  stroke: black;
+  stroke-width: 0.1px; 
   
 }
 
 .inGameHex.active polygon,
 .inGameHex.active {
-  fill: 'fillColor'; /* Hexagon fill color when active */
+  fill: 'fillColor';
 }
 
 .inGameHex:hover polygon,
 .inGameHex:hover path {
-  cursor: pointer; /* Change cursor on hover */
+  cursor: pointer;
 }
 
-/* Add a slight highlight effect */
+
 .inGameHex:hover,
 .inGameHex.active{
   filter: brightness(130%);
@@ -38,18 +38,18 @@ body {
 
 .inGameHex .hexagon-text {
   cursor: pointer;
-  fill: black; /* Text color */
-  user-select: none; /* Prevent text selection */
-  font-family: 'Arial', sans-serif; /* Font for the text */
-  font-size: 1.5px; /* Size of the text */
+  fill: black;
+  user-select: none; 
+  font-family: 'Arial', sans-serif; 
+  font-size: 1.5px;
 }
 
 .board {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%; /* Change '100%' to 'calc(100% - 20px)' */
-  padding: 200px 0px 200px 400px; /* Add padding to the left and right sides */
+  width: 100%;
+  padding: 200px 0px 200px 400px;
 }
 
 

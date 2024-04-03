@@ -16,7 +16,7 @@ const NotificationManager = {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      style: { fontSize: '20px', padding: '20px' },
+      style: { fontSize: '20px'},
     });
   },
 

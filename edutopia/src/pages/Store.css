@@ -4,11 +4,11 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: auto; /* Adjusted to auto */
-  max-width: 60%; /* Adjusted according to the content size you prefer */
-  height: auto; /* Adjusted to auto to fit the content */
+  width: auto;
+  max-width: 60%; 
+  height: auto; 
   max-height: 90vh;
-  background-color: #f2de7f; /* This sets the yellow color */
+  background-color: #f2de7f;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   overflow-y: auto;
@@ -96,13 +96,12 @@
 .phase-popup {
   background-color: #ffffff;
   border: 2px solid #000000;
-  width: auto; /* Adjusted to auto to fit the content */
-  height: auto; /* Adjusted to auto to fit the content */
+  width: auto;
+  height: auto; 
   font-size: 10px;
   text-align: center;
-  position: relative; /* Adjust
-  border-radius: 10px; /* Optional: added to match the modal's style */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Optional: added for consistency */
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   
 
 }
