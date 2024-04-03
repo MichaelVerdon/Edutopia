@@ -3,15 +3,15 @@ import PopUp from './PopUp';
 import Question from './Question';
 import Battle from './Battle';
 import PlayerObject from './game/PlayerObject.js';
+import Board from './game/Board';
+import './Game.css';
+import GameHandler from './game/GameHandler';
 
 function Game() {
-  const api_link = "http://localhost:9020/get_question?topic_id=";
   const api_link = "http://localhost:9020/get_question?topic_id=";
   const [question, setQuestion] = useState('');
   const [score, setScore] = useState(0)
   const [selectedTopics, setSelectedTopics] = useState([]);
-
-  const playerEx = new PlayerObject(1);
 
   const playerEx = new PlayerObject(1);
 
@@ -61,7 +61,6 @@ function Game() {
   };
  //score add
  const addScore = (time) => {
- const addScore = (time) => {
   setScore(score + 1);
   };
 
@@ -79,6 +78,23 @@ function Game() {
     document.body.classList.add('questionModal')
   } else {
     document.body.classList.remove('questionModal')
+  }
+
+  //battle modal
+  const [battleModal, setBattleModal] = useState(false);
+  const toggleBattleModal = () => {
+    setBattleModal(!battleModal);
+  };
+
+  const questionAndBattle = async () => {
+    await getQuestionClick();
+    toggleBattleModal();
+  };
+
+  if(battleModal) {
+    document.body.classList.add('battleModal')
+  } else {
+    document.body.classList.remove('battleModal')
   }
 
   //battle modal
@@ -122,13 +138,13 @@ function Game() {
       <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
       
 
-      {modal && (
-        <div id="questionModal" class="modal">
-          <div className="overlay">
-            <Question questionJson={question} close={toggleModal} scoreAdd={addScore}></Question>
-            </div>
-        </div>
-      )}
+        {modal && (
+          <div id="questionModal" class="modal">
+            <div className="overlay">
+              <Question questionJson={question} close={toggleModal} scoreAdd={addScore}></Question>
+              </div>
+          </div>
+        )}
 
       {battleModal && (
         <div id="battleModal" class="battleModal">
