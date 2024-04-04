@@ -9,6 +9,7 @@ import './Game.css';
 import GameHandler from './game/GameHandler';
 import gameConfig from '../pages/game/configurations.json';
 import NotificationManager from '../pages/game/NotificationManager';
+import GameSettings from './game/GameSettings';
 
 
 export const PlayerContext = createContext({
@@ -102,8 +103,12 @@ function Game() {
    //store modal
    const [storeModal, setStoreModal] = useState(false);
    const toggleStoreModal = () => {
-     setStoreModal(!storeModal);
-   };
+    setStoreModal(!storeModal); // Toggle the visibility of the store modal
+
+    // If we are opening the store, set the source to 'HUD', otherwise reset it
+    const newSource = !storeModal ? 'HUD' : null;
+    GameSettings.saveSourceOfStore(newSource);
+};
 
  
  
@@ -146,7 +151,7 @@ function Game() {
         {storeModal && (
         <div id="storeModal" class="storeModal">
           <div className="overlay">
-            <Store storeModal={storeModal} isOpen={storeModal} close={toggleStoreModal}></Store>
+            <Store storeModal={storeModal} isOpen={storeModal} close={toggleStoreModal} ></Store>
             </div>
         </div>
         )}

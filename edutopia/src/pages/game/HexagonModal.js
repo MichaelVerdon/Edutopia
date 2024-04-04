@@ -5,7 +5,15 @@ import ShopIcon from '../images/sprites/ShopIcon.png';
 const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, hexData, position, openStore}) => {
   if (!isOpen) return null;
   
-
+ const StoreFunction = () => {
+  if (gameSettings.saveSourceOfStore !== 'HUD'){
+    openStore();
+    
+  }
+  else {
+    return null;
+  }
+}
   
 
   const modalStyle = {
@@ -62,11 +70,16 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, hexData, pos
           backgroundColor: 'rgba(255, 204, 102, 1)',
           borderRadius: '10px',
         }} 
-        onClick={() => {openStore();
+        onClick={() => {
+          StoreFunction();
           onCloseWithoutDeselecting();
           gameSettings.saveClickedHexagon(hexData.q, hexData.r, hexData.s, 'HM');
+          gameSettings.saveSourceOfStore('MiniMenu')
           console.log('Shop');
-          console.log(gameSettings.getClickedHexagon())}
+          console.log(gameSettings.getClickedHexagon())
+          console.log('THE SOURCE OF THIS IS: ',gameSettings.getSourceOfStore());
+          
+          }
         }>
           <img
            src = {ShopIcon}

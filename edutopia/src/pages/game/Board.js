@@ -24,6 +24,7 @@ class Board extends Component {
 
 
   handleHexagonClick = (hexData) => {
+    // Only open the HexagonModal if the source is not 'HUD'
     if (gameSettings.getSourceOfStore() !== 'HUD') {
       if (hexData.active) {
         this.setState({ selectedHex: hexData, showModal: true });
@@ -31,6 +32,7 @@ class Board extends Component {
         this.setState({ showModal: false });
       }
     } else {
+      // If the source is 'HUD', perhaps reset the source to null to allow future interactions
       gameSettings.saveSourceOfStore(null);
     }
   };
@@ -38,10 +40,19 @@ class Board extends Component {
   handleCloseModal = () => {
     gameSettings.clearClickedHexagon();
     this.setState({ showModal: false, selectedHex: null });
+
+    this.props.toggleStoreModal();
   };
+
+  forceCloseModal = () => {
+    this.setState({ showModal: false, selectedHex: null });
+    gameSettings.clearClickedHexagon();
+  }
+
 
   handleCloseWithoutDeselecting = () => {
     this.setState({ showModal: false });
+    gameSettings.saveSourceOfStore(null); // Resetting the source
   };
 
   selectHexagon = (hexData) => {
@@ -109,7 +120,7 @@ class Board extends Component {
         {showModal && selectedHex && (
           <HexagonModal
             isOpen={showModal}
-            onClose={this.handleCloseModal}
+            onClose={this.forceCloseModal}
             onCloseWithoutDeselecting={this.handleCloseWithoutDeselecting}
             hexData={selectedHex}
             position={selectedHex.position}

@@ -11,7 +11,7 @@ const gapCoordinates = gapData.gapCoordinates;
 const GameSettings = {
   customBiomes: {},
   clickedHexagon: null,
-  sourceOfStores: null,
+  sourceOfStore: null,
 
   getBiomeForCoordinates: (q, r, s) => {
     if (gapCoordinates.some(coord => coord.q === q && coord.r === r && coord.s === s)) {
@@ -70,7 +70,7 @@ const GameSettings = {
     if (GameSettings.clickedHexagon && GameSettings.clickedHexagon.q === q && GameSettings.clickedHexagon.r === r && GameSettings.clickedHexagon.s === s &&GameSettings.clickedHexagon.source === source) {
       GameSettings.clickedHexagon = null; 
     } else {
-      GameSettings.clickedHexagon = { q, r, s };
+      GameSettings.clickedHexagon = { q, r, s};
     }
   
     GameSettings.notifyBiomeChanges(); 
@@ -91,6 +91,10 @@ const GameSettings = {
   getSourceOfStore() {
     return GameSettings.sourceOfStore;
   },
+
+  clearSourceOfStore() {
+    GameSettings.sourceOfStore = null;
+  }
 
 };
 
