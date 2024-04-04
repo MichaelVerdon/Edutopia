@@ -4,7 +4,11 @@ import InteractiveHexagon from './InteractiveHexagon';
 import configs from './configurations';
 import gapData from './gapCoordinates.json';
 import images from './imageImports';
+import gameSettings from './GameSettings';
 import './inGameHex.css';
+import HexagonModal from './HexagonModal';
+import game from '../Game';
+
 
 class Board extends Component {
   constructor(props) {
@@ -15,11 +19,57 @@ class Board extends Component {
     const gapCoordinates = gapData.gapCoordinates;
     const gapSet = new Set(gapCoordinates.map(coord => `${coord.q},${coord.r},${coord.s}`));
     const hexagons = hexCoordinates.filter(hexCoord => !gapSet.has(`${hexCoord.q},${hexCoord.r},${hexCoord.s}`));
-    this.state = { hexagons, config, viewBox: `${config.viewBox.x} ${config.viewBox.y} ${config.viewBox.width} ${config.viewBox.height}` };
+    this.state = { hexagons, config, viewBox: `${config.viewBox.x} ${config.viewBox.y} ${config.viewBox.width} ${config.viewBox.height}`, selectedHex: null, showModal: false };
   }
 
+
+  handleHexagonClick = (hexData) => {
+    if (gameSettings.getSourceOfStore() !== 'HUD') {
+      if (hexData.active) {
+        this.setState({ selectedHex: hexData, showModal: true });
+      } else {
+        this.setState({ showModal: false });
+      }
+    } else {
+      gameSettings.saveSourceOfStore(null);
+    }
+  };
+
+  handleCloseModal = () => {
+    gameSettings.clearClickedHexagon();
+    this.setState({ showModal: false, selectedHex: null });
+  };
+
+  handleCloseWithoutDeselecting = () => {
+    this.setState({ showModal: false });
+  };
+
+  selectHexagon = (hexData) => {
+    this.setState({ selectedHex: hexData });
+  };
+
+  componentDidMount() {
+    document.addEventListener('click', this.handleOutsideClick, false);
+  }
+  
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleOutsideClick, false);
+  }
+  
+  handleOutsideClick = (e) => {
+    if (this.state.selectedHex && !e.target.closest('.hexagon-modal, .hexagon')) {
+      this.clearSelectedHexagon();
+    }
+  }
+
+  clearSelectedHexagon = () => {
+    this.setState({ selectedHex: null });
+  };
+  
+
+
   render() {
-    const { hexagons, config, viewBox } = this.state;
+    const { hexagons, config, viewBox, selectedHex, showModal} = this.state;
     const size = { x: config.layout.width, y: config.layout.height };
   
     return (
@@ -49,10 +99,23 @@ class Board extends Component {
                 q={hex.q}
                 r={hex.r}
                 s={hex.s}
+                onClick={this.handleHexagonClick}
+                
               />
             ))}
           </Layout>
         </HexGrid>
+        
+        {showModal && selectedHex && (
+          <HexagonModal
+            isOpen={showModal}
+            onClose={this.handleCloseModal}
+            onCloseWithoutDeselecting={this.handleCloseWithoutDeselecting}
+            hexData={selectedHex}
+            position={selectedHex.position}
+            openStore={this.props.toggleStoreModal}
+          />
+        )}
       </div>
     );
   }

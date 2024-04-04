@@ -1,4 +1,3 @@
-// GameSettings.js
 import gapData from './gapCoordinates.json';
 import images from './imageImports';
 import hexagonData from './hexagonData.json';
@@ -12,6 +11,7 @@ const gapCoordinates = gapData.gapCoordinates;
 const GameSettings = {
   customBiomes: {},
   clickedHexagon: null,
+  sourceOfStores: null,
 
   getBiomeForCoordinates: (q, r, s) => {
     if (gapCoordinates.some(coord => coord.q === q && coord.r === r && coord.s === s)) {
@@ -66,8 +66,8 @@ const GameSettings = {
     GameSettings.notifyBiomeChanges();
   },
 
-  saveClickedHexagon: (q, r, s) => {
-    if (GameSettings.clickedHexagon && GameSettings.clickedHexagon.q === q && GameSettings.clickedHexagon.r === r && GameSettings.clickedHexagon.s === s) {
+  saveClickedHexagon: (q, r, s, source) => {
+    if (GameSettings.clickedHexagon && GameSettings.clickedHexagon.q === q && GameSettings.clickedHexagon.r === r && GameSettings.clickedHexagon.s === s &&GameSettings.clickedHexagon.source === source) {
       GameSettings.clickedHexagon = null; 
     } else {
       GameSettings.clickedHexagon = { q, r, s };
@@ -77,6 +77,19 @@ const GameSettings = {
   },
   getClickedHexagon: () => {
     return GameSettings.clickedHexagon;
+  },
+
+  clearClickedHexagon: () => {
+    GameSettings.clickedHexagon = null;
+    GameSettings.notifyBiomeChanges(); 
+  },
+
+  saveSourceOfStore(source) {
+    GameSettings.sourceOfStore = source;
+  },
+  
+  getSourceOfStore() {
+    return GameSettings.sourceOfStore;
   },
 
 };

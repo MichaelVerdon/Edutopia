@@ -11,7 +11,10 @@ import gameConfig from '../pages/game/configurations.json';
 import NotificationManager from '../pages/game/NotificationManager';
 
 
-export const PlayerContext = createContext();
+export const PlayerContext = createContext({
+  player: {},
+  setPlayer: () => {},
+});
 
 function Game() {
   const api_link = "http://localhost:9000/get_question?topic_id=";
@@ -19,13 +22,15 @@ function Game() {
   const [score, setScore] = useState(0)
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [selectedHex, setSelectedHex] = useState(null);
+  const [shouldTriggerSaveSelection, setShouldTriggerSaveSelection] = useState(false);
+  
   
 
   const [player, setPlayer] = useState(new PlayerObject(1));
 
-  // This function will be passed to the PopUp component
   const handleTopicsChange = (newTopics) => {
-    // Update the selected topics in the parent component
+    
     setSelectedTopics(newTopics);
   };
 
@@ -59,6 +64,7 @@ function Game() {
 
   const [isModalOpen, setModalOpen] = useState(false); 
 
+
   // Use useEffect to open the modal on page load
   useEffect(() => {
     setModalOpen(true);
@@ -82,6 +88,11 @@ function Game() {
     toggleModal();
   };
 
+  const saveSelection = () => {
+    console.log("Selection Saved");
+    toggleStoreModal();
+  };
+
   if(modal) {
     document.body.classList.add('active-modal')
   } else {
@@ -93,7 +104,7 @@ function Game() {
    const toggleStoreModal = () => {
      setStoreModal(!storeModal);
    };
-   
+
  
  
    if(storeModal) {
@@ -122,8 +133,8 @@ function Game() {
   }
 
   return (
-    <PlayerContext.Provider value={{player, setPlayer}}>
-
+    <PlayerContext.Provider value={{player, setPlayer,}}>
+    
       {modal && (
           <div className="modal">
             <div className="overlay">
@@ -135,7 +146,7 @@ function Game() {
         {storeModal && (
         <div id="storeModal" class="storeModal">
           <div className="overlay">
-            <Store storeModal={storeModal} close={toggleStoreModal}></Store>
+            <Store storeModal={storeModal} isOpen={storeModal} close={toggleStoreModal}></Store>
             </div>
         </div>
         )}
@@ -166,7 +177,7 @@ function Game() {
 
     </div>
     <div className='hexContainer'>
-        <Board/>
+        <Board saveSelection={saveSelection} toggleStoreModal={toggleStoreModal}/>
       </div>
   </div>
   </PlayerContext.Provider>
