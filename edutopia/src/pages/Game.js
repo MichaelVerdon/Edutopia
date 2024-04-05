@@ -79,6 +79,9 @@ function Game() {
   setScore(score + 1);
   };
 
+  const deselect = () => {
+    GameSettings.clearClickedHexagon();
+  };
   //question modal
   const [modal, setModal] = useState(false);
   const toggleModal = () => {
@@ -151,7 +154,7 @@ function Game() {
         {storeModal && (
         <div id="storeModal" class="storeModal">
           <div className="overlay">
-            <Store storeModal={storeModal} isOpen={storeModal} close={toggleStoreModal} ></Store>
+            <Store storeModal={storeModal} isOpen={storeModal} close={() => { toggleStoreModal(); deselect(); }} ></Store>
             </div>
         </div>
         )}
