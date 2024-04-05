@@ -15,6 +15,9 @@ function Store ({storeModal, close}) {
     const [selectedItem, setSelectedItem] = useState(null);
     const { player, setPlayer } = useContext(PlayerContext);
     const [showPopup, setShowPopup] = useState(false);
+    const { selectedHex, setSelectedHex } = useContext(PlayerContext);
+    const { shouldTriggerSaveSelection, triggerSaveSelection } = useContext(PlayerContext);
+    const source = gameSettings.getSourceOfStore();
 
     const customStyles = {
       overlay: {
@@ -130,6 +133,7 @@ function Store ({storeModal, close}) {
   function handleRowClick(row) {
     setSelectedItem(row);
     setShowPopup(true);
+    
     //checks if u have enough resources, if not tells u u cant buy
     if(player.getTechPoints < row.techPoints || player.getFoodPoints < row.foodPoints || player.getWoodPoints < row.woodPoints || player.getMetalPoints < row.metalPoints){
       setReason("you don't have enough resources");
@@ -144,7 +148,13 @@ function Store ({storeModal, close}) {
         setPhase(1);
       }else{
       //if yes asks u to pick a land
-      setPhase(2);
+      if (source === 'MiniMenu') {
+        setPhase(3);
+        console.log('----------------------- Source:', source);
+      }
+      else {setPhase(2);}
+      console.log(source);
+
       //console.log(phase);
     }
     }else{
@@ -159,9 +169,18 @@ function Store ({storeModal, close}) {
     setPhase(0);
   };
 
+  
+
+  
+
   useEffect(() => {
     console.log(phase);
-  }, [phase]);
+    console.log("Selected Hexagon for Store:", selectedHex);
+    if (shouldTriggerSaveSelection) {
+      saveSelection();
+      triggerSaveSelection(false);
+    }
+  }, [phase, storeModal, selectedHex, shouldTriggerSaveSelection]);
 
   const backToMain = () => {
     setPhase(0);
@@ -191,6 +210,8 @@ function Store ({storeModal, close}) {
     tempPlayer.metalPoints = (player.getMetalPoints - selectedItem.metalPoints); 
     setPlayer(tempPlayer)
 
+    gameSettings.clearClickedHexagon();
+    gameSettings.saveSourceOfStore(null);
 
     close();
   }
@@ -206,13 +227,17 @@ function Store ({storeModal, close}) {
         setReason("you don't have enough resources");
         setSelectedItem(null)
         setPhase(1);
+        gameSettings.saveSourceOfStore(null);
       }else{
         setPhase(3);
+        gameSettings.saveSourceOfStore(null);
       }  
     } else {
       setReason("you don't own the correct land for this purchase or you selected an incorrect land");
       setPhase(1);
+      gameSettings.saveSourceOfStore(null);
     }
+    
   }
 
 
@@ -229,6 +254,7 @@ function Store ({storeModal, close}) {
   ));
 
   if(phase === 0){
+    
     return(
         <Modal 
           isOpen={storeModal} 
@@ -256,6 +282,7 @@ function Store ({storeModal, close}) {
             </table>
           </div>
         </Modal>
+        
     );
   } else if (phase === 1) {
     return (
@@ -270,7 +297,7 @@ function Store ({storeModal, close}) {
 } else if (phase === 2) {
     return (
       <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal" style={customStyles}>
-        <div className="phase-popup">
+      <div className="phase-popup">
             <h1>Pick a land</h1>
             <button onClick={saveSelection} className="btn">Save selection</button>
             <button className="close-btn-small" onClick={close}>X</button> {/* Top right X close button */}
