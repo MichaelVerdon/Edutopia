@@ -75,8 +75,13 @@ const GameSettings = {
   
     GameSettings.notifyBiomeChanges(); 
   },
+
   getClickedHexagon: () => {
     return GameSettings.clickedHexagon;
+  },
+
+  getClickedHexagonTroops: () => {
+    return 10;
   },
 
 };

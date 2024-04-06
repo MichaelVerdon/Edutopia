@@ -4,11 +4,13 @@ import Question from './Question';
 import Board from './game/Board';
 import PlayerObject from './game/PlayerObject';
 import Store from './Store';
+import Battle from './Battle';
 import ResourceBar from './ResourceBar';
 import './Game.css';
 import GameHandler from './game/GameHandler';
 import gameConfig from '../pages/game/configurations.json';
 import NotificationManager from '../pages/game/NotificationManager';
+
 
 
 export const PlayerContext = createContext();
@@ -22,6 +24,11 @@ function Game() {
   
 
   const [player, setPlayer] = useState(new PlayerObject(1));
+  const [opponent, setOpponent] = useState(new PlayerObject(2));
+  useEffect(()=>{
+    player.addOwnedTiles = [0,0,0];
+    opponent.addOwnedTiles = [1,0,-1];
+  },[])
 
   // This function will be passed to the PopUp component
   const handleTopicsChange = (newTopics) => {
@@ -88,6 +95,23 @@ function Game() {
     document.body.classList.remove('active-modal')
   }
 
+  //battle modal
+  const [battleModal, setBattleModal] = useState(false);
+  const toggleBattleModal = () => {
+    setBattleModal(!battleModal);
+  };
+
+  const questionAndBattle = async () => {
+    await getQuestionClick();
+    toggleBattleModal();
+  };
+
+  if(battleModal) {
+    document.body.classList.add('battleModal')
+  } else {
+    document.body.classList.remove('battleModal')
+  }
+
    //store modal
    const [storeModal, setStoreModal] = useState(false);
    const toggleStoreModal = () => {
@@ -122,7 +146,14 @@ function Game() {
   }
 
   return (
-    <PlayerContext.Provider value={{player, setPlayer}}>
+    <PlayerContext.Provider value={{player, setPlayer, opponent, setOpponent}}>
+      {battleModal && (
+        <div id="battleModal" class="battleModal">
+          <div className="overlay">
+            <Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
+            </div>
+        </div>
+      )}
 
       {modal && (
           <div className="modal">
@@ -132,14 +163,13 @@ function Game() {
           </div>
         )}
 
-        {storeModal && (
+      {storeModal && (
         <div id="storeModal" class="storeModal">
           <div className="overlay">
             <Store storeModal={storeModal} close={toggleStoreModal}></Store>
             </div>
         </div>
         )}
-
 
       <div className="game">
 
@@ -155,6 +185,10 @@ function Game() {
 
           <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
           Store
+          </button>
+
+          <button onClick={toggleBattleModal} className="btn-modal" href="battleModal">
+          Battle
           </button>
         </div>
 

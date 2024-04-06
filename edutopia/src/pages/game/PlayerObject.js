@@ -5,6 +5,7 @@ class PlayerObject{
     constructor(playerId, randomTile) {
         this.playerId = playerId;
         this.liveStatus = true;
+        this.color = "_Blue"
         this.techPoints = 100; // Points
         this.foodPoints = 100;
         this.woodPoints = 100;
@@ -16,6 +17,9 @@ class PlayerObject{
 
     // Return Player ID For checks
     get getPlayerID(){return this.player_id;}
+
+    // Get color of the player
+    get getColor(){return this.color;}
 
     // Get Methods for resource points
     get getTechPoints(){return this.techPoints;}
@@ -34,11 +38,28 @@ class PlayerObject{
     set setFoodPoints(setPoints){this.foodPoints = setPoints;}
     set setWoodPoints(setPoints){this.woodPoints = setPoints;}
     set setMetalPoints(setPoints){this.metalPoints = setPoints;}
-
-    set setOwnedTiles(ownedTiles){this.ownedTiles = ownedTiles;}
     set setFreeTroops(freeTroops){this.freeTroops = freeTroops;}
 
+    set addOwnedTiles(ownedTile){
+        let notInArr = true;
+        for(let i = 0; i<this.ownedTiles.length; i++){
+            if (this.ownedTiles[i]===ownedTile){
+                notInArr = false;
+                break;
+            }
+        }
+        if(notInArr){this.ownedTiles.push(ownedTile);}}
+    set removeOwnedTiles(removeTile){
+        for(let i = 0; i<this.ownedTiles.length; i++){
+            if (this.ownedTiles[i]===removeTile){
+                this.ownedTiles.splice(i,1);
+                break;
+            }
+        }
+    }
+
     set setLiveStatus(status){this.alive = status;}
+    set setColor(playerColor){this.color = playerColor;}
 
     // Method to calculate resources generated per turn based on owned tiles
     calculateResourcesPerTurn() {

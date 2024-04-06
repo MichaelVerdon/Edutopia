@@ -16,6 +16,7 @@ class Tile {
             metalPoints: 0,
             };
         this.biome = GameSettings.getBiomeForCoordinates(q, r);
+        this.troops = 0;
     }
   
     // Method to check if the tile is owned by any player
@@ -46,6 +47,10 @@ class Tile {
     setMetalPoints(amount) {
       this.resources.metalPoints = amount;
     }
+
+    setTroops(amount) {
+      this.troops = amount;
+    }
   
     
       // Getter methods for resource points
@@ -64,6 +69,10 @@ class Tile {
       getMetalPoints() {
         return this.resources.metalPoints;
       }
+
+      getTroops() {
+        return this.troops;
+      }
   
       getTileInfo() {
         const coords = `Coordinates: (x: ${this.q}, y: ${this.r}, z: ${this.s})`;
@@ -76,8 +85,9 @@ class Tile {
       
         // Now resourcesText can be used in the template literal
         const resourcesInfo = `Resources: ${resourcesText}`;
+        const troopsInfo = `Troops: ${this.troops}`;
       
-        return `${coords}, ${biomeInfo}, ${resourcesInfo}`;
+        return `${coords}, ${biomeInfo}, ${resourcesInfo}, ${troopsInfo}`;
       }
   }
 

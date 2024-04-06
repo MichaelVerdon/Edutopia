@@ -230,13 +230,8 @@ function Store ({storeModal, close}) {
 
   if(phase === 0){
     return(
-        <Modal 
-          isOpen={storeModal} 
-          onRequestClose={close} 
-          contentLabel="Store" 
-          className="storeModal"
-          >
-            <button className="close-btn" onClick={close}>X</button> {/* Top right X close button */}
+        <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
+          <button className="close-btn" onClick={close}>X</button> {/* Top right X close button */}
           <div  className="modalDiv">
             <h1>Store</h1>
             <table class="table table-striped" >
