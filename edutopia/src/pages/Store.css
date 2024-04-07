@@ -17,24 +17,6 @@
   
 }
 
-.battleModal{
-  display: block;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: auto;
-  max-width: 60%; 
-  height: auto; 
-  max-height: 90vh;
-  background-color: #f2de7f;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  overflow-y: auto;
-  border: 2px solid #000000;
-  font-weight: bold;
-  
-}
 
 .modalDiv {
   display: flex;

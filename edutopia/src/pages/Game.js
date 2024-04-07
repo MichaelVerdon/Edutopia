@@ -29,12 +29,8 @@ function Game() {
   
   
 
-  const [player, setPlayer] = useState(new PlayerObject(1));
-  const [opponent, setOpponent] = useState(new PlayerObject(2));
-  useEffect(()=>{
-    player.addOwnedTiles = [0,0,0];
-    opponent.addOwnedTiles = [1,0,-1];
-  },[])
+  const [player, setPlayer] = useState(new PlayerObject(1, [-0,0,0]));
+  const [opponent, setOpponent] = useState(new PlayerObject(2, [1,0,-1]));
 
   const handleTopicsChange = (newTopics) => {
     
@@ -112,6 +108,7 @@ function Game() {
   //battle modal
   const [battleModal, setBattleModal] = useState(false);
   const toggleBattleModal = () => {
+    deselect();
     setBattleModal(!battleModal);
   };
 

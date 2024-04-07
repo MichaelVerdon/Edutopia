@@ -95,11 +95,11 @@ const GameSettings = {
 
   clearSourceOfStore() {
     GameSettings.sourceOfStore = null;
-  }
-
-  getClickedHexagonTroops: () => {
-    return 10;
   },
+
+  getClickedHexagonTroops() {
+    return 10;
+  }
 
 };
 

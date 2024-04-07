@@ -39,6 +39,7 @@ class PlayerObject{
     set setWoodPoints(setPoints){this.woodPoints = setPoints;}
     set setMetalPoints(setPoints){this.metalPoints = setPoints;}
     set setFreeTroops(freeTroops){this.freeTroops = freeTroops;}
+    set setOwnedTiles(setTile){this.ownedTiles = setTile;}
 
     set addOwnedTiles(ownedTile){
         let notInArr = true;
@@ -49,6 +50,7 @@ class PlayerObject{
             }
         }
         if(notInArr){this.ownedTiles.push(ownedTile);}}
+
     set removeOwnedTiles(removeTile){
         for(let i = 0; i<this.ownedTiles.length; i++){
             if (this.ownedTiles[i]===removeTile){
@@ -56,6 +58,17 @@ class PlayerObject{
                 break;
             }
         }
+    }
+
+    OwnsTileCheck(tile){
+        for(let i = 0; i<this.ownedTiles.length; i++){
+            console.log(this.ownedTiles[i][0]);
+            console.log(tile[0]);
+            if (this.ownedTiles[i][0]===tile[0] && this.ownedTiles[i][1]===tile[1] && this.ownedTiles[i][2]===tile[2]){
+                return(true);
+            }
+        }
+        return(false);
     }
 
     set setLiveStatus(status){this.alive = status;}
