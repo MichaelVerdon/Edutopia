@@ -4,7 +4,7 @@ import Question from './Question';
 import Board from './game/Board';
 import PlayerObject from './game/PlayerObject';
 import Store from './Store';
-import Battle from './Battle';
+//import Battle from './Battle';
 import ResourceBar from './ResourceBar';
 import './Game.css';
 import GameHandler from './game/GameHandler';
@@ -159,13 +159,13 @@ function Game() {
       // End turn Logic
     }
   }
-
+  //<Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
   return (
     <PlayerContext.Provider value={{player, setPlayer, opponent, setOpponent}}>
       {battleModal && (
         <div id="battleModal" class="battleModal">
           <div className="overlay">
-            <Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
+            
             </div>
         </div>
       )}
