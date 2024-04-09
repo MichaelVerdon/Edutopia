@@ -27,6 +27,7 @@ function Game() {
   const [selectedHex, setSelectedHex] = useState(null);
   const [shouldTriggerSaveSelection, setShouldTriggerSaveSelection] = useState(false);
   
+  let gameHandler = new GameHandler();
   
 
   const [player, setPlayer] = useState(new PlayerObject(1, [-0,0,0]));
@@ -62,11 +63,9 @@ function Game() {
         setQuestion(data);
       })
       .catch(error => console.error('Error fetching question:', error));
-      
   }
 
   const [isModalOpen, setModalOpen] = useState(false); 
-
 
   // Use useEffect to open the modal on page load
   useEffect(() => {
@@ -77,9 +76,6 @@ function Game() {
     setModalOpen(false);
   };
  //score add
- const addScore = () => {
-  setScore(score + 1);
-  };
 
   const deselect = () => {
     GameSettings.clearClickedHexagon();
@@ -173,7 +169,7 @@ function Game() {
       {modal && (
           <div className="modal">
             <div className="overlay">
-              <Question questionJson={question} close={toggleModal} scoreAdd={addScore}></Question>
+              <Question questionJson={question} close={toggleModal}></Question>
               </div>
           </div>
         )}

@@ -5,7 +5,7 @@ class GameHandler{
 
     constructor(players){
         // Hard-coded for now for testing purposes (Will change it to array of players)
-        this.player1 = new Player(1);
+        this.player1 = new Player(1); // Player 1 is human player
         this.player2 = new aiPlayer(2);
         this.player3 = new aiPlayer(3);
         this.player4 = new aiPlayer(4);
@@ -16,10 +16,8 @@ class GameHandler{
     }
 
     // Increment Points if answered correctly
-    static questionAnswered(status){
-        if(status){
-            this.player1.techPoints(this.player1.techPoints + 1)
-        }
+    static questionCorrect(){
+        this.player1.techPoints(this.player1.techPoints + 5);
     }
 
     // Add plot to a players ownedTiles array
