@@ -26,11 +26,11 @@ function Game() {
   const [notifications, setNotifications] = useState([]);
   const [selectedHex, setSelectedHex] = useState(null);
   const [shouldTriggerSaveSelection, setShouldTriggerSaveSelection] = useState(false);
-  
-  let gameHandler = new GameHandler();
+  const gameHandler = new GameHandler();
   
 
   const [player, setPlayer] = useState(new PlayerObject(1, [-0,0,0]));
+  //const [player, setPlayer] = useState(gameHandler.player1);
   const [opponent, setOpponent] = useState(new PlayerObject(2, [1,0,-1]));
 
   const handleTopicsChange = (newTopics) => {
@@ -169,7 +169,7 @@ function Game() {
       {modal && (
           <div className="modal">
             <div className="overlay">
-              <Question questionJson={question} close={toggleModal}></Question>
+              <Question questionJson={question} close={toggleModal} gameHandler={gameHandler}></Question>
               </div>
           </div>
         )}
