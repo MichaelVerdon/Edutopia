@@ -4,8 +4,8 @@ import PlayerObject from "./PlayerObject";
 // You will be able to treat this as a PlayerObject class and use same funcs and vars.
 class aiPlayer extends PlayerObject{
 
-    constructor (playerId, randomTile){
-        super(playerId, randomTile)
+    constructor (playerId){
+        super(playerId)
         this.difficulty = this.setDifficulty();
     }
 
