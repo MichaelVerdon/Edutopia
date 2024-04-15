@@ -11,11 +11,14 @@ import GameHandler from './game/GameHandler';
 import gameConfig from '../pages/game/configurations.json';
 import NotificationManager from '../pages/game/NotificationManager';
 import GameSettings from './game/GameSettings';
+import Battle from './Battle';
 
 
 export const PlayerContext = createContext({
   player: {},
   setPlayer: () => {},
+  opponent: {},
+  setOpponent: () => {},
 });
 
 function Game() {
@@ -160,7 +163,7 @@ function Game() {
       {battleModal && (
         <div id="battleModal" class="battleModal">
           <div className="overlay">
-            
+             <Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
             </div>
         </div>
       )}
