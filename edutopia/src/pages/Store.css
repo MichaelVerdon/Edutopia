@@ -107,3 +107,31 @@
 
 }
 
+.imageParent {
+  position: relative;
+  top: 0;
+  left: 0;
+  padding: 10px;
+}
+
+.nonFlipImage {
+  position: relative;
+  top: 0;
+  left: -40px;
+}
+
+.flipImage {
+  position: absolute;
+  top: 0;
+  left: 100px;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  padding-top: 10px;
+}
+
+.star {
+  position: absolute;
+  top: 20px;
+  left: 90px;
+}
+

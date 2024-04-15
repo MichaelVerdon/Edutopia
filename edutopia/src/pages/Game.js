@@ -29,8 +29,8 @@ function Game() {
   
   
 
-  const [player, setPlayer] = useState(new PlayerObject(1, [-0,0,0]));
-  const [opponent, setOpponent] = useState(new PlayerObject(2, [1,0,-1]));
+  const [player, setPlayer] = useState(new PlayerObject(1, [-0,0,0], "_Blue"));
+  const [opponent, setOpponent] = useState(new PlayerObject(2, [1,0,-1], "_Pink"));
 
   const handleTopicsChange = (newTopics) => {
     

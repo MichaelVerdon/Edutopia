@@ -2,10 +2,10 @@ import Tile from './Tile';
 
 class PlayerObject{
 
-    constructor(playerId, randomTile) {
+    constructor(playerId, randomTile, playerColor) {
         this.playerId = playerId;
         this.liveStatus = true;
-        this.color = "_Blue"
+        this.color = playerColor;
         this.techPoints = 100; // Points
         this.foodPoints = 100;
         this.woodPoints = 100;
