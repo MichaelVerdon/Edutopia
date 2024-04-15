@@ -137,7 +137,7 @@ function Game() {
      //NotificationManager.showSuccessNotification("Test");
    }
 
-  function gameLoop(){
+  async function gameLoop(){
     var gameOver = false;
     //let gameHandler = new GameHandler();
     while(!gameOver){
@@ -201,8 +201,6 @@ function Game() {
           Battle
           </button>
         </div>
-
-          <p class='Score-text'>Score: {score}</p>
         
           <ResourceBar techPoints={player.techPoints} woodPoints={player.woodPoints} foodPoints={player.foodPoints} metalPoints={player.metalPoints}>
           </ResourceBar>
