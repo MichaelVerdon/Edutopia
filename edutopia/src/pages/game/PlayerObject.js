@@ -11,7 +11,7 @@ class PlayerObject{
         this.woodPoints = 100;
         this.metalPoints = 100;
         // A list of tile objects
-        this.ownedTiles = [randomTile]; // We need to assign a random starting tile
+        this.ownedTiles = []; // We need to assign a random starting tile
         this.freeTroops = 10;
     }
 
@@ -34,12 +34,12 @@ class PlayerObject{
     get getLiveStatus(){return this.alive}
 
     // Set Methods for resource points
-    set setTechPoints(setPoints){this.techPoints = setPoints;}
-    set setFoodPoints(setPoints){this.foodPoints = setPoints;}
-    set setWoodPoints(setPoints){this.woodPoints = setPoints;}
-    set setMetalPoints(setPoints){this.metalPoints = setPoints;}
-    set setFreeTroops(freeTroops){this.freeTroops = freeTroops;}
-    set setOwnedTiles(setTile){this.ownedTiles = setTile;}
+    set setTechPoints(setPoints) { this.techPoints = setPoints; }
+    set setFoodPoints(setPoints) { this.foodPoints = setPoints; }
+    set setWoodPoints(setPoints) { this.woodPoints = setPoints; }
+    set setMetalPoints(setPoints) { this.metalPoints = setPoints; }
+    set setFreeTroops(freeTroops) { this.freeTroops = freeTroops; }
+    set setOwnedTiles(setTile) { this.ownedTiles = setTile; }
 
     set addOwnedTiles(ownedTile){
         let notInArr = true;

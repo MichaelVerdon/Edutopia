@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Question ({questionJson, close, scoreAdd}) {
+function Question ({questionJson, close, gameHandler}) {
     
     const [question, setQuestion] = useState(questionJson); //question_id, topic_id, question_text, option_one, option_two, option_three, option four, correct
     const [answer, setAnswer] = useState(3) //id of the clicked button, now set to 1 bc otherwise error
@@ -36,7 +36,8 @@ function Question ({questionJson, close, scoreAdd}) {
         setAnswer(answer)
         if (question[answer] === question[7]){
             setColor('#68e868') //green
-            scoreAdd()
+            gameHandler.questionCorrect();
+            
         }else{
             setColor('#e86868') //red
         }

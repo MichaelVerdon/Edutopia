@@ -4,7 +4,7 @@ import Question from './Question';
 import Board from './game/Board';
 import PlayerObject from './game/PlayerObject';
 import Store from './Store';
-import Battle from './Battle';
+//import Battle from './Battle';
 import ResourceBar from './ResourceBar';
 import './Game.css';
 import GameHandler from './game/GameHandler';
@@ -26,7 +26,7 @@ function Game() {
   const [notifications, setNotifications] = useState([]);
   const [selectedHex, setSelectedHex] = useState(null);
   const [shouldTriggerSaveSelection, setShouldTriggerSaveSelection] = useState(false);
-  
+  const gameHandler = new GameHandler();
   
 
   const [player, setPlayer] = useState(new PlayerObject(1, [-0,0,0], "_Blue"));
@@ -62,11 +62,9 @@ function Game() {
         setQuestion(data);
       })
       .catch(error => console.error('Error fetching question:', error));
-      
   }
 
   const [isModalOpen, setModalOpen] = useState(false); 
-
 
   // Use useEffect to open the modal on page load
   useEffect(() => {
@@ -77,9 +75,6 @@ function Game() {
     setModalOpen(false);
   };
  //score add
- const addScore = () => {
-  setScore(score + 1);
-  };
 
   const deselect = () => {
     GameSettings.clearClickedHexagon();
@@ -159,13 +154,13 @@ function Game() {
       // End turn Logic
     }
   }
-
+  //<Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
   return (
     <PlayerContext.Provider value={{player, setPlayer, opponent, setOpponent}}>
       {battleModal && (
         <div id="battleModal" class="battleModal">
           <div className="overlay">
-            <Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
+            
             </div>
         </div>
       )}
@@ -173,7 +168,7 @@ function Game() {
       {modal && (
           <div className="modal">
             <div className="overlay">
-              <Question questionJson={question} close={toggleModal} scoreAdd={addScore}></Question>
+              <Question questionJson={question} close={toggleModal} gameHandler={gameHandler}></Question>
               </div>
           </div>
         )}
