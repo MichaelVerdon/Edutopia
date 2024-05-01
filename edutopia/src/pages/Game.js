@@ -29,9 +29,7 @@ function Game() {
   const [notifications, setNotifications] = useState([]);
   const [selectedHex, setSelectedHex] = useState(null);
   const [shouldTriggerSaveSelection, setShouldTriggerSaveSelection] = useState(false);
-  const gameHandler = new GameHandler();
   
-
   const [player, setPlayer] = useState(new PlayerObject(1, [-0,0,0], "_Blue"));
   const [opponent, setOpponent] = useState(new PlayerObject(2, [1,0,-1], "_Pink"));
 
@@ -140,23 +138,6 @@ function Game() {
      //NotificationManager.showSuccessNotification("Test");
    }
 
-  async function gameLoop(){
-    var gameOver = false;
-    //let gameHandler = new GameHandler();
-    while(!gameOver){
-      // Question Logic
-
-      // Points Logic
-
-      // Tile Claiming Logic
-
-      // Buying Logic
-
-      // Battle Logic
-
-      // End turn Logic
-    }
-  }
   //<Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
   return (
     <PlayerContext.Provider value={{player, setPlayer, opponent, setOpponent}}>
@@ -171,7 +152,7 @@ function Game() {
       {modal && (
           <div className="modal">
             <div className="overlay">
-              <Question questionJson={question} close={toggleModal} gameHandler={gameHandler}></Question>
+              <Question questionJson={question} close={toggleModal}></Question>
               </div>
           </div>
         )}
