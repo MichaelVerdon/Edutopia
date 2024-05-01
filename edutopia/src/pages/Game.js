@@ -7,7 +7,6 @@ import Store from './Store';
 //import Battle from './Battle';
 import ResourceBar from './ResourceBar';
 import './Game.css';
-import GameHandler from './game/GameHandler';
 import gameConfig from '../pages/game/configurations.json';
 import NotificationManager from '../pages/game/NotificationManager';
 import GameSettings from './game/GameSettings';
@@ -32,6 +31,11 @@ function Game() {
   
   const [player, setPlayer] = useState(new PlayerObject(1, [-0,0,0], "_Blue"));
   const [opponent, setOpponent] = useState(new PlayerObject(2, [1,0,-1], "_Pink"));
+  const [gameOver, setGameState] = useState(true);
+
+  const toggleGameState = () => {
+    setGameState(!gameOver);
+  }
 
   const handleTopicsChange = (newTopics) => {
     
@@ -139,6 +143,14 @@ function Game() {
    }
 
   //<Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
+
+  // Handles events in sequence
+  const gameLoop = () => {
+    //toggleGameState();
+    questionAndToggle();
+    
+  }
+  
   return (
     <PlayerContext.Provider value={{player, setPlayer, opponent, setOpponent}}>
       {battleModal && (
@@ -173,9 +185,12 @@ function Game() {
 
         <div className='hudElementContainer'>
         <div className='buttons-container'> {/* New container for the buttons */}
-          <button onClick={questionAndToggle} className="btn-modal">
-          Question
-          </button>
+
+        {gameOver && (
+        <button onClick={gameLoop} className="btn-modal">
+        Start Game
+        </button>
+        )}
 
           <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
           Store
