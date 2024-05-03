@@ -169,10 +169,6 @@ function Store ({storeModal, close}) {
     setPhase(0);
   };
 
-  
-
-  
-
   useEffect(() => {
     console.log(phase);
     console.log("Selected Hexagon for Store:", selectedHex);

@@ -26,8 +26,6 @@ function ResourceBar(){
     },[player]);
     // Tech, Food, Wood, Metal
 
-    // TO DO: ADD INFO ICON
-
     return(
         <div className='ResourceBarContainer'>
             <div className='ResourceContainer'>

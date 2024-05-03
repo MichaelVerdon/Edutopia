@@ -7,7 +7,6 @@ import Store from './Store';
 //import Battle from './Battle';
 import ResourceBar from './ResourceBar';
 import './Game.css';
-import GameHandler from './game/GameHandler';
 import gameConfig from '../pages/game/configurations.json';
 import NotificationManager from '../pages/game/NotificationManager';
 import GameSettings from './game/GameSettings';
@@ -29,11 +28,14 @@ function Game() {
   const [notifications, setNotifications] = useState([]);
   const [selectedHex, setSelectedHex] = useState(null);
   const [shouldTriggerSaveSelection, setShouldTriggerSaveSelection] = useState(false);
-  const gameHandler = new GameHandler();
   
-
   const [player, setPlayer] = useState(new PlayerObject(1, [-0,0,0], "_Blue"));
   const [opponent, setOpponent] = useState(new PlayerObject(2, [1,0,-1], "_Pink"));
+  const [gameOver, setGameState] = useState(true);
+
+  const toggleGameState = () => {
+    setGameState(!gameOver);
+  }
 
   const handleTopicsChange = (newTopics) => {
     
@@ -140,24 +142,15 @@ function Game() {
      //NotificationManager.showSuccessNotification("Test");
    }
 
-  async function gameLoop(){
-    var gameOver = false;
-    //let gameHandler = new GameHandler();
-    while(!gameOver){
-      // Question Logic
-
-      // Points Logic
-
-      // Tile Claiming Logic
-
-      // Buying Logic
-
-      // Battle Logic
-
-      // End turn Logic
-    }
-  }
   //<Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
+
+  // Handles events in sequence
+  const gameLoop = () => {
+    //toggleGameState();
+    questionAndToggle();
+    
+  }
+  
   return (
     <PlayerContext.Provider value={{player, setPlayer, opponent, setOpponent}}>
       {battleModal && (
@@ -171,7 +164,7 @@ function Game() {
       {modal && (
           <div className="modal">
             <div className="overlay">
-              <Question questionJson={question} close={toggleModal} gameHandler={gameHandler}></Question>
+              <Question questionJson={question} close={toggleModal}></Question>
               </div>
           </div>
         )}
@@ -192,9 +185,12 @@ function Game() {
 
         <div className='hudElementContainer'>
         <div className='buttons-container'> {/* New container for the buttons */}
-          <button onClick={questionAndToggle} className="btn-modal">
-          Question
-          </button>
+
+        {gameOver && (
+        <button onClick={gameLoop} className="btn-modal">
+        Start Game
+        </button>
+        )}
 
           <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
           Store

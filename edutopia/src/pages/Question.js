@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { PlayerContext } from './Game';
+import PlayerObject from './game/PlayerObject';
 
-function Question ({questionJson, close, gameHandler}) {
+function Question ({questionJson, close}) {
     
+    const { player, setPlayer } = useContext(PlayerContext);
     const [question, setQuestion] = useState(questionJson); //question_id, topic_id, question_text, option_one, option_two, option_three, option four, correct
     const [answer, setAnswer] = useState(3) //id of the clicked button, now set to 1 bc otherwise error
     const [color, setColor] = useState('#e9c46a') //yellow, buttons original color
@@ -36,7 +39,15 @@ function Question ({questionJson, close, gameHandler}) {
         setAnswer(answer)
         if (question[answer] === question[7]){
             setColor('#68e868') //green
-            gameHandler.questionCorrect();
+            let tempPlayer = new PlayerObject(player.getPlayerID);
+            tempPlayer.ownedTiles = player.ownedTiles;
+            tempPlayer.liveStatus = player.liveStatus;
+            tempPlayer.techPoints = player.getTechPoints + 1;
+            tempPlayer.foodPoints = player.getFoodPoints;
+            tempPlayer.woodPoints = player.getWoodPoints;
+            tempPlayer.metalPoints = player.getMetalPoints;
+            tempPlayer.freeTroops = player.freeTroops;
+            setPlayer(tempPlayer);
             
         }else{
             setColor('#e86868') //red

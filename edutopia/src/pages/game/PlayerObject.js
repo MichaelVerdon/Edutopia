@@ -6,7 +6,7 @@ class PlayerObject{
         this.playerId = playerId;
         this.liveStatus = true;
         this.color = playerColor;
-        this.techPoints = 100; // Points
+        this.techPoints = 10; // Points
         this.foodPoints = 100;
         this.woodPoints = 100;
         this.metalPoints = 100;
