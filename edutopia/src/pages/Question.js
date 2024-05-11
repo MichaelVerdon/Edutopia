@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { PlayerContext } from './Game';
 import PlayerObject from './game/PlayerObject';
+import Modal from 'react-modal';
+import './Store.css';
 
-function Question ({questionJson, close}) {
+function Question ({questionJson, isOpen, close}) {
     
     const { player, setPlayer } = useContext(PlayerContext);
     const [question, setQuestion] = useState(questionJson); //question_id, topic_id, question_text, option_one, option_two, option_three, option four, correct
@@ -56,27 +58,53 @@ function Question ({questionJson, close}) {
         close();
     }
 
+    const customStyles = {
+        overlay: {
+          backgroundColor: 'transparent', 
+          pointerEvents: 'none', 
+        },
+        content: {
+          padding: '15px',
+          transform: 'translate(-50%, -25%)',
+          width: 'auto',
+          height: 'auto',
+          pointerEvents: 'auto',
+        }
+      };
+      const customStyles2 = {
+        content: {
+            padding: '15px',
+            transform: 'translate(-50%, -25%)',
+            width: 'auto',
+            height: 'auto',
+            pointerEvents: 'auto',
+          
+        }
+      };
+
     //changing color of a button
     useEffect(()=>{
-        document.getElementById(answer).style.backgroundColor =color},[color,answer])
+        document.getElementById(answer).style.backgroundColor =color},[color,answer]);
         
     //the page html
     return(
-        <div className='QuestionField'>
-            <small>Timer </small>
-            <small>
+        
+        <div className="questionModal" style={customStyles}>
+            <div className="phase-popup" style={{ margin: "20px" }}>
+            <small style={{ fontSize: 16 }}>Timer </small>
+            <small style={{ fontSize: 16 }}>
                 {minutes}:{seconds}
             </small>
             <h1>Question:</h1>
             <h2>{question[2]}</h2>
             <div>
-                <button className='btn' id='3' disabled={isDisabled} onClick={() => onAnswerClick(3)}>{question[3]}</button>
-                <button className='btn' id='4' disabled={isDisabled} onClick={() => onAnswerClick(4)}>{question[4]}</button>
-                <button className='btn' id='5' disabled={isDisabled} onClick={() => onAnswerClick(5)}>{question[5]}</button>
-                <button className='btn' id='6' disabled={isDisabled} onClick={() => onAnswerClick(6)}>{question[6]}</button>
+                <button className='btn' id='3' disabled={isDisabled} onClick={() => onAnswerClick(3)} style={{ margin: "10px" }}>{question[3]}</button>
+                <button className='btn' id='4' disabled={isDisabled} onClick={() => onAnswerClick(4)} style={{ margin: "10px" }}>{question[4]}</button>
+                <button className='btn' id='5' disabled={isDisabled} onClick={() => onAnswerClick(5)} style={{ margin: "10px" }}>{question[5]}</button>
+                <button className='btn' id='6' disabled={isDisabled} onClick={() => onAnswerClick(6)} style={{ margin: "10px" }}>{question[6]} </button>
+            </div>
             </div>
         </div>
-
     );
 }
 export default Question;

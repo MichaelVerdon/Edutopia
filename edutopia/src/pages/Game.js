@@ -164,7 +164,7 @@ function Game() {
       {modal && (
           <div className="modal">
             <div className="overlay">
-              <Question questionJson={question} close={toggleModal}></Question>
+              <Question questionJson={question} isOpen={modal} close={toggleModal}></Question>
               </div>
           </div>
         )}
