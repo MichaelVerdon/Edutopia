@@ -156,43 +156,48 @@ function Battle ({close, isOpen}) {
         try{
             const { q, r, s }  = gameSettings.getClickedHexagon();
             let currentPlayer = await playersTurn();
-            if(opponent.OwnsTileCheck([q,r,s]) && opponent.playerId !== currentPlayer.playerId){
-                const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
-                setAttackedPlayer(2);
-                setOpponentLand([q,r,s]);
-                setOpponentTroops(clickedHexagonTroops);
-                setTroopIconOpponent(selectColorTroop(2)); //TODO change when real opponents implemented
-                await randomlyChoose(clickedHexagonTroops, [q,r,s]);
-                //changePhase();
-                OpponentAliveCheck();
-            }else if(opponent1.OwnsTileCheck([q,r,s]) && opponent1.playerId !== currentPlayer.playerId){
-                const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
-                setAttackedPlayer(3);
-                setOpponentLand([q,r,s]);
-                setOpponentTroops(clickedHexagonTroops);
-                setTroopIconOpponent(selectColorTroop(3)); //TODO change when real opponents implemented
-                await randomlyChoose(clickedHexagonTroops, [q,r,s]);
-                //changePhase();
-                OpponentAliveCheck();
-            }else if(opponent2.OwnsTileCheck([q,r,s]) && opponent2.playerId !== currentPlayer.playerId){
-                const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
-                setAttackedPlayer(4);
-                setOpponentLand([q,r,s]);
-                setOpponentTroops(clickedHexagonTroops);
-                setTroopIconOpponent(selectColorTroop(4)); //TODO change when real opponents implemented
-                await randomlyChoose(clickedHexagonTroops, [q,r,s]);
-                //changePhase();
-                OpponentAliveCheck();
-            }else if(player.OwnsTileCheck([q,r,s]) && player.playerId !== currentPlayer.playerId){
-                const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
-                setAttackedPlayer(1);
-                setOpponentLand([q,r,s]);
-                setOpponentTroops(clickedHexagonTroops);
-                setTroopIconOpponent(selectColorTroop(1)); //TODO change when real opponents implemented
-                await randomlyChoose(clickedHexagonTroops, [q,r,s]);
-                //changePhase();
-                OpponentAliveCheck();
-            }else {
+            let adjacent = await gameSettings.areTilesAdjacent(attackLand[0], attackLand[1], attackLand[2], q, r, s);
+            if (adjacent){
+                if(opponent.OwnsTileCheck([q,r,s]) && opponent.playerId !== currentPlayer.playerId){
+                    const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
+                    setAttackedPlayer(2);
+                    setOpponentLand([q,r,s]);
+                    setOpponentTroops(clickedHexagonTroops);
+                    setTroopIconOpponent(selectColorTroop(2)); //TODO change when real opponents implemented
+                    await randomlyChoose(clickedHexagonTroops, [q,r,s]);
+                    //changePhase();
+                    OpponentAliveCheck();
+                }else if(opponent1.OwnsTileCheck([q,r,s]) && opponent1.playerId !== currentPlayer.playerId){
+                    const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
+                    setAttackedPlayer(3);
+                    setOpponentLand([q,r,s]);
+                    setOpponentTroops(clickedHexagonTroops);
+                    setTroopIconOpponent(selectColorTroop(3)); //TODO change when real opponents implemented
+                    await randomlyChoose(clickedHexagonTroops, [q,r,s]);
+                    //changePhase();
+                    OpponentAliveCheck();
+                }else if(opponent2.OwnsTileCheck([q,r,s]) && opponent2.playerId !== currentPlayer.playerId){
+                    const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
+                    setAttackedPlayer(4);
+                    setOpponentLand([q,r,s]);
+                    setOpponentTroops(clickedHexagonTroops);
+                    setTroopIconOpponent(selectColorTroop(4)); //TODO change when real opponents implemented
+                    await randomlyChoose(clickedHexagonTroops, [q,r,s]);
+                    //changePhase();
+                    OpponentAliveCheck();
+                }else if(player.OwnsTileCheck([q,r,s]) && player.playerId !== currentPlayer.playerId){
+                    const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
+                    setAttackedPlayer(1);
+                    setOpponentLand([q,r,s]);
+                    setOpponentTroops(clickedHexagonTroops);
+                    setTroopIconOpponent(selectColorTroop(1)); //TODO change when real opponents implemented
+                    await randomlyChoose(clickedHexagonTroops, [q,r,s]);
+                    //changePhase();
+                    OpponentAliveCheck();
+                }else {
+                    throw new Error("Invalid land selection.");
+                }
+            }else if (!adjacent){
                 throw new Error("Invalid land selection.");
             }
         }catch(error){
