@@ -46,6 +46,7 @@ function Game() {
   const [battleModal, setBattleModal] = useState(false);
   const [storeModal, setStoreModal] = useState(false);
   const [gameLoopStep, setGameLoopStep] = useState(-1);
+  const [shopAndTroopTime, setShopAndTroopTime] = useState(false);
 
   const toggleGameState = () => {
     setGameState(!gameOver);
@@ -176,9 +177,26 @@ function Game() {
       return (1);
     }
   }
- 
 
-  
+  const continueGame = () =>{
+    let cont = true;
+    let deadCount = 0;
+    console.log(player.liveStatus);
+
+    if (player.liveStatus === false){
+      cont = false;
+    }else if (opponent.liveStatus === false){
+      deadCount = deadCount + 1;
+    }else if (opponent1.liveStatus === false){
+      deadCount = deadCount + 1;
+    }else if (opponent2.liveStatus === false){
+      deadCount = deadCount + 1;
+    }
+    if(deadCount === 3){
+      cont = false
+    }
+    return(cont);
+  }
 
 useEffect( () => {
     const fce = async () => {
@@ -192,18 +210,37 @@ useEffect( () => {
         await questionAndToggle();
       }else if(gameLoopStep===2){
         setGameText('Time to shop and assign troops');
+        setShopAndTroopTime(true);
         toggleGameLoopModal();
         await delay(2000);
         setGameLoopModal(false);
         //setGameLoopStep(3);
       }else if(gameLoopStep===4 && battleModal===false){
+        setShopAndTroopTime(false);
         toggleBattleModal();
       }else if(gameLoopStep===5){
-        setGameText('Next players turn');
-        toggleGameLoopModal();
-        await delay(2000);
-        setGameLoopModal(false);
-        setTurn(await playersTurn());
+        let cont = continueGame();
+        if (cont === true){
+          setGameText('Next players turn');
+          toggleGameLoopModal();
+          await delay(2000);
+          setGameLoopModal(false);
+          setTurn(await playersTurn());
+        }else if (cont === false){
+          gameOver(true);
+          if(player.liveStatus === false){
+            setGameText('You lost');
+            toggleGameLoopModal();
+            await delay(2000);
+            setGameLoopModal(false);
+          }else if(player.liveStatus === true){
+            setGameText('You win');
+            toggleGameLoopModal();
+            await delay(2000);
+            setGameLoopModal(false);
+          }
+        }
+        
         //nextPlayer();
         //setGameLoopStep(0);
       
@@ -305,17 +342,18 @@ useEffect( () => {
         </button>
         )}
 
-          <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
-          Store
-          </button>
-
-          <button onClick={toggleBattleModal} className="btn-modal" href="battleModal">
+        {shopAndTroopTime && (
+          <><button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
+                  Store
+                </button><button onClick={() => setGameLoopStep(4)} className="btn-modal" href="battleModal">
+                    Ready
+                  </button></>
+        )}
+          {/* <button onClick={toggleBattleModal} className="btn-modal" href="battleModal">
           Battle
-          </button>
+          </button> */}
 
-          <button onClick={() => setGameLoopStep(4)} className="btn-modal" href="battleModal">
-            Ready
-          </button>
+          
         </div>
         
           <ResourceBar techPoints={player.techPoints} woodPoints={player.woodPoints} foodPoints={player.foodPoints} metalPoints={player.metalPoints}>

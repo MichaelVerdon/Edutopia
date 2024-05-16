@@ -280,25 +280,25 @@ function Battle ({close, isOpen}) {
     function OpponentAliveCheck(){
         //TODO: connect it so some dead player fce when game handler finished
 
-        if (attackedPlayer === 0){
+        if (attackedPlayer === 2){
             if(opponent.getOwnedTiles.length === 0){
                 setOpponentDead(true);
                 opponent.setAliveStatus = false;
                 console.log('dead');
             }
-        }else if (attackedPlayer === 1){
+        }else if (attackedPlayer === 3){
             if(opponent1.getOwnedTiles.length === 0){
                 setOpponentDead(true);
                 opponent1.setAliveStatus = false;
                 console.log('dead');
             }
-        }else if (attackedPlayer === 2){
+        }else if (attackedPlayer === 4){
             if(opponent2.getOwnedTiles.length === 0){
                 setOpponentDead(true);
                 opponent2.setAliveStatus = false;
                 console.log('dead');
             }
-        }else{
+        }else if (attackedPlayer === 1){
             if(player.getOwnedTiles.length === 0){
                 setOpponentDead(true);
                 player.setAliveStatus = false;
