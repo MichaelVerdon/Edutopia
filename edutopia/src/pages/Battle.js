@@ -18,13 +18,14 @@ Modal.setAppElement('#root');
 
 function Battle ({close, isOpen}) {
     const [phase, setPhase] = useState(0);//phase of pop up that is returned
-    const {player, setPlayer, opponent, setOpponent } = useContext(PlayerContext);
+    const {player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn} = useContext(PlayerContext);
     const [winner, setWinner] = useState(0);
+    const [attackedPlayer, setAttackedPlayer] = useState(3);
     const [attackLand, setAttackLand] = useState(null);
     const [attackTroops, setAttackTroops] = useState(0);
     const [opponentDead, setOpponentDead] = useState(false);
-    //const [opponentLand, setOpponentLand] = useState(null);
-    //const [opponentTroops, setOpponentTroops] = useState(0);
+    const [opponentLand, setOpponentLand] = useState(null);
+    const [opponentTroops, setOpponentTroops] = useState(0);
     const [notifications, setNotifications] = useState([]);
     const [TroopIconAttacker, setTroopIconAttacker] = useState('');
     const [TroopIconOpponent, setTroopIconOpponent] = useState('');
@@ -41,7 +42,7 @@ function Battle ({close, isOpen}) {
     },[phase]);
 
     const enterAnimation = (async(callback)=>{
-        if(phase == 3){
+        if(phase === 3){
             //slash 1
             await animate('#flipTroop', {scaleX: -1});
             animate("#star",{opacity: [0,0.8]},{transition: {duration:0.25}} );
@@ -99,36 +100,49 @@ function Battle ({close, isOpen}) {
       
     //increases phase by 1
     const changePhase = () => {
-        setPhase(phase + 1)
+        setPhase(phase + 1);
       };
 
     const errorPhase = () => {
-        setPhase(4)
+        setPhase(4);
     };
 
     function selectColorTroop(color){
-        if (color === '_Blue'){
+        if (color === 1){
             return TroopIconBlue;
-        } else if(color === '_Yellow'){
+        } else if(color === 2){
             return TroopIconYellow;
-        } else if (color === '_Pink'){
+        } else if (color === 3){
             return TroopIconPink;
         }else{
             return TroopIconCyan;
         }
     }
 
+    const playersTurn = async () => {
+        if (turn === 1){
+          return (player);
+        } else if (turn === 2){
+          return (opponent);
+        }else if (turn === 3){
+          return (opponent1);
+        }else{
+          return (opponent2);
+        }
+      }
+
     //land selecting
-    function attackLandSelected(){
+    async function attackLandSelected(){
         try{
-        const { q, r, s }  = gameSettings.getClickedHexagon();
-            if(player.OwnsTileCheck([q,r,s])){
+            const { q, r, s }  = gameSettings.getClickedHexagon();
+            let currentPlayer = await playersTurn();
+            if(currentPlayer.OwnsTileCheck([q,r,s])){
                 const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
                 gameSettings.clearClickedHexagon();
                 setAttackLand([q,r,s]);
                 setAttackTroops(clickedHexagonTroops);
                 changePhase();
-                setTroopIconAttacker(selectColorTroop(player.getColor));
+                setTroopIconAttacker(selectColorTroop(turn));
             }else {
                 throw new Error("Invalid land selection.");
             }
@@ -138,16 +152,45 @@ function Battle ({close, isOpen}) {
         }
       }
 
-    function opponentLandSelected(){
+    async function opponentLandSelected(){
         try{
             const { q, r, s }  = gameSettings.getClickedHexagon();
-                if(opponent.OwnsTileCheck([q,r,s])){
+            let currentPlayer = await playersTurn();
+            if(opponent.OwnsTileCheck([q,r,s]) && opponent.playerId !== currentPlayer.playerId){
                 const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
-                //setOpponentLand([q,r,s]);
-                //setOpponentTroops(clickedHexagonTroops);
-                setTroopIconOpponent(selectColorTroop(opponent.getColor)); //TODO change when real opponents implemented
-                randomlyChoose(clickedHexagonTroops, [q,r,s]);
-                changePhase();
+                setAttackedPlayer(2);
+                setOpponentLand([q,r,s]);
+                setOpponentTroops(clickedHexagonTroops);
+                setTroopIconOpponent(selectColorTroop(2)); //TODO change when real opponents implemented
+                await randomlyChoose(clickedHexagonTroops, [q,r,s]);
+                //changePhase();
+                OpponentAliveCheck();
+            }else if(opponent1.OwnsTileCheck([q,r,s]) && opponent1.playerId !== currentPlayer.playerId){
+                const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
+                setAttackedPlayer(3);
+                setOpponentLand([q,r,s]);
+                setOpponentTroops(clickedHexagonTroops);
+                setTroopIconOpponent(selectColorTroop(3)); //TODO change when real opponents implemented
+                await randomlyChoose(clickedHexagonTroops, [q,r,s]);
+                //changePhase();
+                OpponentAliveCheck();
+            }else if(opponent2.OwnsTileCheck([q,r,s]) && opponent2.playerId !== currentPlayer.playerId){
+                const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
+                setAttackedPlayer(4);
+                setOpponentLand([q,r,s]);
+                setOpponentTroops(clickedHexagonTroops);
+                setTroopIconOpponent(selectColorTroop(4)); //TODO change when real opponents implemented
+                await randomlyChoose(clickedHexagonTroops, [q,r,s]);
+                //changePhase();
+                OpponentAliveCheck();
+            }else if(player.OwnsTileCheck([q,r,s]) && player.playerId !== currentPlayer.playerId){
+                const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
+                setAttackedPlayer(1);
+                setOpponentLand([q,r,s]);
+                setOpponentTroops(clickedHexagonTroops);
+                setTroopIconOpponent(selectColorTroop(1)); //TODO change when real opponents implemented
+                await randomlyChoose(clickedHexagonTroops, [q,r,s]);
+                //changePhase();
                 OpponentAliveCheck();
             }else {
                 throw new Error("Invalid land selection.");
@@ -159,30 +202,108 @@ function Battle ({close, isOpen}) {
     }
 
     //comparing nums of troops selected
-    function randomlyChoose(opponentTroopCount, land) {
+    async function randomlyChoose(opponentTroopCount, land) {
+        let currentPlayer = await playersTurn();
         const chanceOptionAttacker = (attackTroops/((attackTroops+opponentTroopCount)/100))/100;
         // Generate a random number between 0 and 1
         const randomValue = Math.random();
         // If the random number is less than the chance of option1, choose option1
         if (randomValue <= chanceOptionAttacker) {
-            setWinner(1);
-            player.addOwnedTiles = land; //TODO: later replace with game handler functions later
-            opponent.setOwnedTiles = []; //TODO: later replace with game handler functions later
-            NotificationManager.showSuccessNotification(`Player 1 now owns ${player.getOwnedTiles.length} tiles (player 2 owns ${opponent.getOwnedTiles.length})`);
+            setWinner(turn);
+            if (turn === 1){
+                player.addOwnedTiles = land; //TODO: later replace with game handler functions later
+                if (attackedPlayer === 2){
+                    opponent.setOwnedTiles = []; //TODO: later replace with game handler functions later
+                    NotificationManager.showSuccessNotification(`Player 1`);
+                }else if (attackedPlayer === 3){
+                    opponent1.setOwnedTiles = [];//TODO: later replace with game handler functions later
+                    NotificationManager.showSuccessNotification(`Player 1`);
+                }else{
+                    opponent2.setOwnedTiles = []; //TODO: later replace with game handler functions later
+                    NotificationManager.showSuccessNotification(`Player 1`);
+                }
+            }else if (turn === 2){
+                opponent.addOwnedTiles = land; //TODO: later replace with game handler functions later
+                if (attackedPlayer === 1){
+                    player.setOwnedTiles = []; //TODO: later replace with game handler functions later
+                    NotificationManager.showSuccessNotification(`Player 2`);
+                }else if (attackedPlayer === 3){
+                    opponent1.setOwnedTiles = []; //TODO: later replace with game handler functions later
+                    NotificationManager.showSuccessNotification(`Player 2`);
+                }else{
+                    opponent2.setOwnedTiles = []; //TODO: later replace with game handler functions later
+                    NotificationManager.showSuccessNotification(`Player 2`);
+                }
+            }else if (turn === 3){
+                opponent1.addOwnedTiles = land; //TODO: later replace with game handler functions later
+                if (attackedPlayer === 1){
+                    player.setOwnedTiles = []; //TODO: later replace with game handler functions later
+                    NotificationManager.showSuccessNotification(`Player 3`);
+                }else if (attackedPlayer=== 2){
+                    opponent.setOwnedTiles = []; //TODO: later replace with game handler functions later
+                    NotificationManager.showSuccessNotification(`Player 3`);
+                }else{
+                    opponent2.setOwnedTiles = []; //TODO: later replace with game handler functions later
+                    NotificationManager.showSuccessNotification(`Player 3`);
+                }
+            }else{
+                opponent2.addOwnedTiles = land; //TODO: later replace with game handler functions later
+                if (attackedPlayer === 1){
+                    player.setOwnedTiles = []; //TODO: later replace with game handler functions later
+                    NotificationManager.showSuccessNotification(`Player 4 now owns ${opponent2.getOwnedTiles.length} tiles (player 2 owns ${player.getOwnedTiles.length})`);
+                }else if (attackedPlayer === 2){
+                    opponent.setOwnedTiles = []; //TODO: later replace with game handler functions later
+                    NotificationManager.showSuccessNotification(`Player 4 now owns ${opponent2.getOwnedTiles.length} tiles (player 2 owns ${opponent.getOwnedTiles.length})`);
+                }else{
+                    opponent1.setOwnedTiles = []; //TODO: later replace with game handler functions later
+                    NotificationManager.showSuccessNotification(`Player 4 now owns ${opponent2.getOwnedTiles.length} tiles (player 2 owns ${opponent1.getOwnedTiles.length})`);
+                }
+            }
+             
         } else {
             // Otherwise, choose option2
-            setWinner(2);
+            setWinner(attackedPlayer); //TODO
             
         }
+        //changePhase();
     }
+
+    useEffect(() => {
+        if (phase===2) {
+          // Perform your effect when variable changes from true to false
+          // This block will run only when variable changes from true to false
+          changePhase();
+        }
+      }, [winner]); 
 
     //check if after the player wins the opponent still has tiles left
     function OpponentAliveCheck(){
         //TODO: connect it so some dead player fce when game handler finished
-        if(opponent.getOwnedTiles.length === 0){
-            setOpponentDead(true);
-            opponent.setAliveStatus = false;
-            console.log('dead');
+
+        if (attackedPlayer === 0){
+            if(opponent.getOwnedTiles.length === 0){
+                setOpponentDead(true);
+                opponent.setAliveStatus = false;
+                console.log('dead');
+            }
+        }else if (attackedPlayer === 1){
+            if(opponent1.getOwnedTiles.length === 0){
+                setOpponentDead(true);
+                opponent1.setAliveStatus = false;
+                console.log('dead');
+            }
+        }else if (attackedPlayer === 2){
+            if(opponent2.getOwnedTiles.length === 0){
+                setOpponentDead(true);
+                opponent2.setAliveStatus = false;
+                console.log('dead');
+            }
+        }else{
+            if(player.getOwnedTiles.length === 0){
+                setOpponentDead(true);
+                player.setAliveStatus = false;
+                console.log('dead');
+            }
         }
     }
    

@@ -1,16 +1,16 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useReducer, useState, useEffect, createContext, useContext, useRef } from 'react';
 import PopUp from './PopUp';
 import Question from './Question';
 import Board from './game/Board';
 import PlayerObject from './game/PlayerObject';
 import Store from './Store';
-//import Battle from './Battle';
 import ResourceBar from './ResourceBar';
 import './Game.css';
 import gameConfig from '../pages/game/configurations.json';
 import NotificationManager from '../pages/game/NotificationManager';
 import GameSettings from './game/GameSettings';
 import Battle from './Battle';
+import GameLoopModal from './GameLoopModal';
 
 
 export const PlayerContext = createContext({
@@ -18,25 +18,39 @@ export const PlayerContext = createContext({
   setPlayer: () => {},
   opponent: {},
   setOpponent: () => {},
+  opponent1: {},
+  setOpponent1: () => {},
+  opponent2: {},
+  setOpponent2: () => {},
+  turn: {},
+  setTurn: () => {},
 });
 
 function Game() {
   const api_link = "http://localhost:9000/get_question?topic_id=";
-  const [question, setQuestion] = useState('');
-  const [score, setScore] = useState(0)
-  const [selectedTopics, setSelectedTopics] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [selectedHex, setSelectedHex] = useState(null);
-  const [shouldTriggerSaveSelection, setShouldTriggerSaveSelection] = useState(false);
   
-  const [player, setPlayer] = useState(new PlayerObject(1, [-0,0,0], "_Blue"));
-  const [opponent, setOpponent] = useState(new PlayerObject(2, [1,0,-1], "_Pink"));
+  const [player, setPlayer] = useState(new PlayerObject(1, [0, 0, 0], "_Blue"));
+  const [opponent, setOpponent] = useState(new PlayerObject(2, [1, 0, -1], "_Pink"));
+  const [opponent1, setOpponent1] = useState(new PlayerObject(3, [0, 1, -1], "_Cyan"));
+  const [opponent2, setOpponent2] = useState(new PlayerObject(4, [1, 1, -2], "_Yellow"));
+  //const [currentPlayer, setCurrentPlayer] = useState(player);
+  const [turn, setTurn] = useState(0);
   const [gameOver, setGameState] = useState(true);
+  const [gameText, setGameText] = useState('');
+  const [question, setQuestion] = useState("");
+  const [selectedTopics, setSelectedTopics] = useState([]);
+
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [gameLoopModal, setGameLoopModal] = useState(false);
+  const [battleModal, setBattleModal] = useState(false);
+  const [storeModal, setStoreModal] = useState(false);
+  const [gameLoopStep, setGameLoopStep] = useState(-1);
 
   const toggleGameState = () => {
     setGameState(!gameOver);
   }
-
+ 
   const handleTopicsChange = (newTopics) => {
     
     setSelectedTopics(newTopics);
@@ -67,9 +81,7 @@ function Game() {
         setQuestion(data);
       })
       .catch(error => console.error('Error fetching question:', error));
-  }
-
-  const [isModalOpen, setModalOpen] = useState(false); 
+  } 
 
   // Use useEffect to open the modal on page load
   useEffect(() => {
@@ -85,14 +97,15 @@ function Game() {
     GameSettings.clearClickedHexagon();
   };
   //question modal
-  const [modal, setModal] = useState(false);
   const toggleModal = () => {
     setModal(!modal);
   };
   const questionAndToggle = async () => {
     await getQuestionClick();
-    toggleModal();
+    setModal(!modal);
+
   };
+
 
   const saveSelection = () => {
     console.log("Selection Saved");
@@ -105,16 +118,22 @@ function Game() {
     document.body.classList.remove('active-modal')
   }
 
+  //generic modal 
+  const toggleGameLoopModal = () => {
+    deselect();
+    setGameLoopModal(!gameLoopModal);
+  };
+
+  if(gameLoopModal) {
+    document.body.classList.add('gameLoopModal')
+  } else {
+    document.body.classList.remove('gameLoopModal')
+  }
+
   //battle modal
-  const [battleModal, setBattleModal] = useState(false);
   const toggleBattleModal = () => {
     deselect();
     setBattleModal(!battleModal);
-  };
-
-  const questionAndBattle = async () => {
-    await getQuestionClick();
-    toggleBattleModal();
   };
 
   if(battleModal) {
@@ -124,7 +143,6 @@ function Game() {
   }
 
    //store modal
-   const [storeModal, setStoreModal] = useState(false);
    const toggleStoreModal = () => {
     setStoreModal(!storeModal); // Toggle the visibility of the store modal
 
@@ -144,15 +162,102 @@ function Game() {
 
   //<Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
 
-  // Handles events in sequence
-  const gameLoop = () => {
-    //toggleGameState();
-    questionAndToggle();
-    
+  //shortcut function for delay
+  const delay = ms => new Promise(res => setTimeout(res, ms));
+
+   const playersTurn = async () => {
+    if (turn === 1){
+      return (2);
+    } else if (turn === 2){
+      return (3);
+    }else if (turn === 3){
+      return (4);
+    }else{
+      return (1);
+    }
   }
+ 
+
+  
+
+useEffect( () => {
+    const fce = async () => {
+      if(gameLoopStep===0){
+        setGameText("It is player's " + turn + " turn");
+        toggleGameLoopModal();
+        await delay(2000);
+        setGameLoopModal(false);
+        //setGameLoopStep(1);
+      } else if(gameLoopStep===1 && modal===false){
+        await questionAndToggle();
+      }else if(gameLoopStep===2){
+        setGameText('Time to shop and assign troops');
+        toggleGameLoopModal();
+        await delay(2000);
+        setGameLoopModal(false);
+        //setGameLoopStep(3);
+      }else if(gameLoopStep===4 && battleModal===false){
+        toggleBattleModal();
+      }else if(gameLoopStep===5){
+        setGameText('Next players turn');
+        toggleGameLoopModal();
+        await delay(2000);
+        setGameLoopModal(false);
+        setTurn(await playersTurn());
+        //nextPlayer();
+        //setGameLoopStep(0);
+      
+      } 
+    }
+    if (gameOver === false && gameLoopStep >= 0){
+        fce();
+    }
+    
+
+  }, [gameOver, gameLoopStep]);
+ 
+  useEffect(() => {
+    if (!gameLoopModal && gameLoopStep === 0) {
+      // Perform your effect when variable changes from true to false
+      // This block will run only when variable changes from true to false
+      setGameLoopStep(1);
+    }else if (!gameLoopModal && gameLoopStep === 2) {
+      // Perform your effect when variable changes from true to false
+      // This block will run only when variable changes from true to false
+      setGameLoopStep(3);
+    }else if (!gameLoopModal && gameLoopStep === 5) {
+      // Perform your effect when variable changes from true to false
+      // This block will run only when variable changes from true to false
+      setGameLoopStep(0);
+    }
+  }, [gameLoopModal]); // Only run this effect when variable changes
+
+  useEffect(() => {
+    if (!modal) {
+      // Perform your effect when variable changes from true to false
+      // This block will run only when variable changes from true to false
+      setGameLoopStep(2);
+    }
+  }, [modal]); // Only run this effect when variable changes
+
+  useEffect(() => {
+    if (!battleModal) {
+      // Perform your effect when variable changes from true to false
+      // This block will run only when variable changes from true to false
+      setGameLoopStep(5);
+    }
+  }, [battleModal]); // Only run this effect when variable changes
+  
+  // Handles events in sequence
+  const gameLoop = async () => {
+    toggleGameState();
+    setTurn(1);
+    setGameLoopStep(0);
+  }
+
   
   return (
-    <PlayerContext.Provider value={{player, setPlayer, opponent, setOpponent}}>
+    <PlayerContext.Provider value={{player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn}}>
       {battleModal && (
         <div id="battleModal" class="battleModal">
           <div className="overlay">
@@ -177,6 +282,14 @@ function Game() {
         </div>
         )}
 
+        {gameLoopModal && (
+          <div className="gameLoopModal">
+            <div className="overlay">
+              <GameLoopModal text={gameText} isOpen={gameLoopModal} close={toggleGameLoopModal}></GameLoopModal>
+              </div>
+          </div>
+        )}
+
       <div className="game">
 
       <div className='hudContainer'>
@@ -187,7 +300,7 @@ function Game() {
         <div className='buttons-container'> {/* New container for the buttons */}
 
         {gameOver && (
-        <button onClick={gameLoop} className="btn-modal">
+        <button onClick={gameLoop} className="btn-modal"> 
         Start Game
         </button>
         )}
@@ -198,6 +311,10 @@ function Game() {
 
           <button onClick={toggleBattleModal} className="btn-modal" href="battleModal">
           Battle
+          </button>
+
+          <button onClick={() => setGameLoopStep(4)} className="btn-modal" href="battleModal">
+            Ready
           </button>
         </div>
         
