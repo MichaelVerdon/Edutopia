@@ -99,8 +99,25 @@ const GameSettings = {
 
   getClickedHexagonTroops() {
     return 10;
-  }
+  },
 
+  areTilesAdjacent: (q1, r1, s1, q2, r2, s2) => {
+    const deltaQ = q2 - q1;
+    const deltaR = r2 - r1;
+    const deltaS = s2 - s1;
+
+    // Tiles are adjacent if they are one step away in any of the hexagon directions
+    
+    const adjacent = 
+      (Math.abs(deltaQ) === 1 && deltaR === 0 && deltaS === -1) ||
+      (Math.abs(deltaR) === 1 && deltaQ === 0 && deltaS === -1) ||
+      (Math.abs(deltaS) === 1 && deltaQ === -1 && deltaR === 0) ||
+      (Math.abs(deltaQ) === 1 && deltaR === -1 && deltaS === 0) ||
+      (Math.abs(deltaR) === 1 && deltaQ === -1 && deltaS === 0) ||
+      (Math.abs(deltaS) === 1 && deltaQ === 0 && deltaR === -1);
+    
+    return adjacent;
+  }
 };
 
 export default GameSettings;
