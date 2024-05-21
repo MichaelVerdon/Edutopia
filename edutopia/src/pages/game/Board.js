@@ -8,7 +8,8 @@ import gameSettings from './GameSettings';
 import './inGameHex.css';
 import HexagonModal from './HexagonModal';
 import game from '../Game';
-
+import Tile from './Tile';
+import TileInfoModal from './TileInfoModal';
 
 class Board extends Component {
   constructor(props) {
@@ -19,23 +20,41 @@ class Board extends Component {
     const gapCoordinates = gapData.gapCoordinates;
     const gapSet = new Set(gapCoordinates.map(coord => `${coord.q},${coord.r},${coord.s}`));
     const hexagons = hexCoordinates.filter(hexCoord => !gapSet.has(`${hexCoord.q},${hexCoord.r},${hexCoord.s}`));
-    this.state = { hexagons, config, viewBox: `${config.viewBox.x} ${config.viewBox.y} ${config.viewBox.width} ${config.viewBox.height}`, selectedHex: null, showModal: false };
+    this.state = { hexagons, config, viewBox: `${config.viewBox.x} ${config.viewBox.y} ${config.viewBox.width} ${config.viewBox.height}`, selectedHex: null, showModal: false, tileInfoModalOpen: false, selectedTile: null };
   }
+
+  openTileInfo = () => {
+    if (this.state.selectedHex) {
+      const hexData = this.state.selectedHex;
+      const tile = new Tile(hexData.q, hexData.r, hexData.s);
+      this.setState({
+        selectedTile: tile,
+        tileInfoModalOpen: true
+      });
+    }
+  };
+
+  resetSelection = () => {
+    this.setState({ selectedHex: null, showModal: false, tileInfoModalOpen: false });
+  };
+  
+
+closeTileInfo = () => {
+    this.setState({
+        tileInfoModalOpen: false,
+        selectedTile: null
+    });
+};
 
 
   handleHexagonClick = (hexData) => {
-    // Only open the HexagonModal if the source is not 'HUD'
-    if (gameSettings.getSourceOfStore() !== 'HUD') {
-      if (hexData.active) {
-        this.setState({ selectedHex: hexData, showModal: true });
-      } else {
-        this.setState({ showModal: false });
-      }
-    } else {
-      // If the source is 'HUD', perhaps reset the source to null to allow future interactions
-      gameSettings.saveSourceOfStore(null);
-    }
+  if (gameSettings.getSourceOfStore() !== 'HUD') {
+    this.setState({ selectedHex: hexData, showModal: true });
+  } else {
+    gameSettings.saveSourceOfStore(null);
+  }
   };
+
 
   handleCloseModal = () => {
     gameSettings.clearClickedHexagon();
@@ -46,13 +65,14 @@ class Board extends Component {
 
   forceCloseModal = () => {
     this.setState({ showModal: false, selectedHex: null });
+    this.resetSelection();
     gameSettings.clearClickedHexagon();
   }
 
 
   handleCloseWithoutDeselecting = () => {
     this.setState({ showModal: false });
-    gameSettings.saveSourceOfStore(null); // Resetting the source
+    gameSettings.saveSourceOfStore(null);
   };
 
   selectHexagon = (hexData) => {
@@ -80,7 +100,8 @@ class Board extends Component {
 
 
   render() {
-    const { hexagons, config, viewBox, selectedHex, showModal} = this.state;
+    
+    const { hexagons, config, viewBox, selectedHex, showModal, tileInfoModalOpen, selectedTile} = this.state;
     const size = { x: config.layout.width, y: config.layout.height };
   
     return (
@@ -116,16 +137,28 @@ class Board extends Component {
             ))}
           </Layout>
         </HexGrid>
+        {tileInfoModalOpen && selectedTile && (
+                    <TileInfoModal
+                        isOpen={this.state.showModal}
+                        onClose={this.forceCloseModal}
+                        tile={selectedTile}
+                        
+                    />
+        )}
+
         
         {showModal && selectedHex && (
           <HexagonModal
-            isOpen={showModal}
-            onClose={this.forceCloseModal}
-            onCloseWithoutDeselecting={this.handleCloseWithoutDeselecting}
-            hexData={selectedHex}
-            position={selectedHex.position}
-            openStore={this.props.toggleStoreModal}
-          />
+          isOpen={showModal}
+          onClose={this.forceCloseModal}
+          onCloseWithoutDeselecting={this.handleCloseWithoutDeselecting}
+          onOpenTileInfo={this.openTileInfo}
+          hexData={selectedHex}
+          position={selectedHex.position}
+          openStore={this.props.toggleStoreModal}
+        />
+        
+        
         )}
       </div>
     );

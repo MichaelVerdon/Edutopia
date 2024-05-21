@@ -2,19 +2,16 @@ import React from 'react';
 import gameSettings from './GameSettings';
 import ShopIcon from '../images/sprites/ShopIcon.png';
 
-const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, hexData, position, openStore}) => {
+const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileInfo, hexData, position, openStore }) => {
   if (!isOpen) return null;
-  
- const StoreFunction = () => {
-  if (gameSettings.saveSourceOfStore !== 'HUD'){
-    openStore();
-    
-  }
-  else {
-    return null;
-  }
-}
-  
+
+  const StoreFunction = () => {
+    if (gameSettings.getSourceOfStore() !== 'HUD') {
+      openStore();
+    } else {
+      return null;
+    }
+  };
 
   const modalStyle = {
     position: 'fixed',
@@ -28,14 +25,12 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, hexData, pos
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    
   };
-
 
   return (
     <div style={modalStyle} className="hexagon-modal">
-      
-      <button style={{
+      <button
+        style={{
           position: 'relative',
           top: '-20px',
           right: '90px',
@@ -49,11 +44,11 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, hexData, pos
           border: '1px solid',
           cursor: 'pointer',
           fontWeight: 'bolder'
-        }} onClick={() => console.log('Tile Info')}>1</button>
+        }}
+        onClick={onOpenTileInfo}>Tile Info</button>
 
-
-
-      <button style={{
+      <button
+        style={{
           position: 'relative',
           top: '-20px',
           right: '60px',
@@ -69,29 +64,19 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, hexData, pos
           fontWeight: 'bolder',
           backgroundColor: 'rgba(255, 204, 102, 1)',
           borderRadius: '10px',
-        }} 
-        onClick={() => {
-          StoreFunction();
-          onCloseWithoutDeselecting();
-          gameSettings.saveClickedHexagon(hexData.q, hexData.r, hexData.s, 'HM');
-          gameSettings.saveSourceOfStore('MiniMenu')
-          console.log('Shop');
-          console.log(gameSettings.getClickedHexagon())
-          console.log('THE SOURCE OF THIS IS: ',gameSettings.getSourceOfStore());
-          
-          }
-        }>
-          <img
-           src = {ShopIcon}
-           alt = 'Shop'
-           style={{
+        }}
+        onClick={StoreFunction}
+      >
+        <img
+          src={ShopIcon}
+          alt='Shop'
+          style={{
             maxWidth: '100%',
             maxHeight: '100%',
-           }}
-          />
+          }}
+        />
       </button>
-      
-      
+
       <button
         style={{
           position: 'relative',
@@ -106,14 +91,13 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, hexData, pos
           padding: 0,
           border: 'none',
           backgroundColor: 'red',
-          border:'1px solid darkred',
+          border: '1px solid darkred',
           cursor: 'pointer',
           color: 'white',
           fontWeight: 'bold'
         }}
         onClick={onClose}>X
       </button>
-
     </div>
   );
 };
