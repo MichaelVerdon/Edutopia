@@ -13,7 +13,7 @@ function Store ({storeModal, close}) {
     const [phase, setPhase] = useState(0);
     const [reason, setReason] = useState("");
     const [selectedItem, setSelectedItem] = useState(null);
-    const { player, setPlayer } = useContext(PlayerContext);
+    const { player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn} = useContext(PlayerContext);
     const [showPopup, setShowPopup] = useState(false);
     const { selectedHex, setSelectedHex } = useContext(PlayerContext);
     const { shouldTriggerSaveSelection, triggerSaveSelection } = useContext(PlayerContext);
@@ -47,24 +47,24 @@ function Store ({storeModal, close}) {
           "id": 1,
           "item": "./images/sprites/Troop_Blue.png",
           "name":"1 Troop",
-          "techPoints": 10, 
-          "foodPoints": 10,
-          "woodPoints": 10,
-          "metalPoints": 10,
+          "techPoints": 5, 
+          "foodPoints": 5,
+          "woodPoints": 5,
+          "metalPoints": 5,
           "land": false,
-          "landNeeded": "",
-          "landNew": "GrasslandWithFarm"
+          "landNeeded": [""],
+          "landNew": ""
       },
       {
         "id": 2,
         "item": "./images/sprites/GrasslandWithFarm_Blue.png",
         "name":"Farm",
         "techPoints": 10, 
-        "foodPoints": 10,
+        "foodPoints": 15,
         "woodPoints": 10,
-        "metalPoints": 10,
+        "metalPoints": 5,
         "land": true,
-        "landNeeded": "Grassland",
+        "landNeeded": ["Grassland"],
         "landNew": "GrasslandWithFarm"
       },
       {
@@ -73,10 +73,10 @@ function Store ({storeModal, close}) {
         "name":"Mine",
         "techPoints": 10, 
         "foodPoints": 10,
-        "woodPoints": 10,
-        "metalPoints": 10,
+        "woodPoints": 5,
+        "metalPoints": 15,
         "land": true,
-        "landNeeded": "Rocky",
+        "landNeeded": ["Rocky"],
         "landNew": "RockyWithMine"
       },
       {
@@ -84,43 +84,55 @@ function Store ({storeModal, close}) {
         "item": "./images/sprites/WoodsWithSawmill_Blue.png",
         "name":"Sawmill",
         "techPoints": 10, 
-        "foodPoints": 10,
-        "woodPoints": 10,
+        "foodPoints": 5,
+        "woodPoints": 15,
         "metalPoints": 10,
         "land": true,
-        "landNeeded": "Woods",
+        "landNeeded": ["Woods"],
         "landNew": "WoodsWithSawmill"
       },
       {
         "id": 5,
-        "item": "./images/sprites/VillageWithTrainingGrounds_Blue.png",
-        "name":"Training Grounds",
-        "techPoints": 10, 
-        "foodPoints": 10,
-        "woodPoints": 10,
-        "metalPoints": 10,
+        "item": "./images/sprites/Village_Blue.png",
+        "name":"Village",
+        "techPoints": 15, 
+        "foodPoints": 15,
+        "woodPoints": 15,
+        "metalPoints": 15,
         "land": true,
-        "landNeeded": "Village",
-        "landNew": "VillageWithTrainingGrounds"
+        "landNeeded": ["GrasslandWithFarm"],
+        "landNew": "Village"
       },
       {
         "id": 6,
-        "item": "./images/sprites/VillageWithPotionShop_Blue.png",
-        "name":"Potion Shop",
+        "item": "./images/sprites/VillageWithTrainingGrounds_Blue.png",
+        "name":"Training Grounds",
         "techPoints": 10, 
-        "foodPoints": 10,
-        "woodPoints": 10,
+        "foodPoints": 15,
+        "woodPoints": 15,
         "metalPoints": 10,
         "land": true,
-        "landNeeded": "Village",
-        "landNew": "GVillageWithPotionShop"
+        "landNeeded": ["Village"],
+        "landNew": "VillageWithTrainingGrounds"
       },
       {
         "id": 7,
-        "item": "./images/sprites/VillageWithTrainingGroundsAndPotionShop_Blue.png",
+        "item": "./images/sprites/VillageWithPotionShop_Blue.png",
         "name":"Potion Shop",
-        "techPoints": 10, 
+        "techPoints": 15, 
         "foodPoints": 10,
+        "woodPoints": 10,
+        "metalPoints": 15,
+        "land": true,
+        "landNeeded": ["Village"],
+        "landNew": "VillageWithPotionShop"
+      },
+      {
+        "id": 8,
+        "item": "./images/sprites/VillageWithTrainingGroundsAndPotionShop_Blue.png",
+        "name":"Complete village",
+        "techPoints": 15, 
+        "foodPoints": 15,
         "woodPoints": 10,
         "metalPoints": 10,
         "land": true,
@@ -130,33 +142,27 @@ function Store ({storeModal, close}) {
   ];
   
 
-  function handleRowClick(row) {
+  async function handleRowClick(row) {
     setSelectedItem(row);
     setShowPopup(true);
-    
+    let currentPlayer = await playersTurn();
     //checks if u have enough resources, if not tells u u cant buy
-    if(player.getTechPoints < row.techPoints || player.getFoodPoints < row.foodPoints || player.getWoodPoints < row.woodPoints || player.getMetalPoints < row.metalPoints){
+    if(currentPlayer.getTechPoints < row.techPoints || currentPlayer.getFoodPoints < row.foodPoints || currentPlayer.getWoodPoints < row.woodPoints || currentPlayer.getMetalPoints < row.metalPoints){
       setReason("you don't have enough resources");
       setSelectedItem(null)
       setPhase(1);
     }
     else if (row.land === true){
-      
-      //checks if u have that sort of land, if not tells u u cant buy
-      if(false){
-        setReason("you don't have the kind of land needed");
-        setPhase(1);
-      }else{
       //if yes asks u to pick a land
-      if (source === 'MiniMenu') {
-        setPhase(3);
-        console.log('----------------------- Source:', source);
-      }
-      else {setPhase(2);}
-      console.log(source);
+        if (source === 'MiniMenu') {
+          setPhase(3);
+          console.log('----------------------- Source:', source);
+        }
+        else {setPhase(2);}
+        console.log(source);
 
       //console.log(phase);
-    }
+    
     }else{
       //asks u if u r down to buy, if yes gives u your purchase takes away your money
       setPhase(3);
@@ -182,29 +188,53 @@ function Store ({storeModal, close}) {
     setPhase(0);
   }
 
-  function purchase(){
-    let tempPlayer = new PlayerObject(player.getPlayerID);
-    if(selectedItem.id===1){
-      tempPlayer.freeTroops = player.freeTroops +1;
+  const playersTurn = async () => {
+    if (turn === 1){
+      return (player);
+    } else if (turn === 2){
+      return (opponent);
+    }else if (turn === 3){
+      return (opponent1);
     }else{
-      tempPlayer.freeTroops = player.freeTroops;
+      return (opponent2);
+    }
+  }
+
+  async function purchase(){
+    let currentPlayer = await playersTurn();
+    let tempPlayer = new PlayerObject(turn);
+    if(selectedItem.id===1){
+      tempPlayer.freeTroops = currentPlayer.freeTroops +1;
+    }else{
+      tempPlayer.freeTroops = currentPlayer.freeTroops;
     }
     if(selectedItem.land){
       //TODO: add for different colors
       const { q, r, s } = gameSettings.getClickedHexagon();
-      gameSettings.setBiomeForCoordinates(q,r,s,selectedItem.landNew + "_Blue");
+      gameSettings.setBiomeForCoordinates(q,r,s,selectedItem.landNew + '_Blue');
       NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);
     }
     else{
       NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful`);
     }
-    tempPlayer.ownedTiles = player.ownedTiles;
-    tempPlayer.liveStatus = player.liveStatus;
-    tempPlayer.techPoints = (player.getTechPoints - selectedItem.techPoints);
-    tempPlayer.foodPoints = (player.getFoodPoints - selectedItem.foodPoints);
-    tempPlayer.woodPoints = (player.getWoodPoints - selectedItem.woodPoints);
-    tempPlayer.metalPoints = (player.getMetalPoints - selectedItem.metalPoints); 
-    setPlayer(tempPlayer)
+    tempPlayer.playerId = turn;
+    tempPlayer.ownedTiles = currentPlayer.ownedTiles;
+    tempPlayer.liveStatus = currentPlayer.liveStatus;
+    tempPlayer.techPoints = (currentPlayer.getTechPoints - selectedItem.techPoints);
+    tempPlayer.foodPoints = (currentPlayer.getFoodPoints - selectedItem.foodPoints);
+    tempPlayer.woodPoints = (currentPlayer.getWoodPoints - selectedItem.woodPoints);
+    tempPlayer.metalPoints = (currentPlayer.getMetalPoints - selectedItem.metalPoints); 
+    
+    if (turn === 1){
+      setPlayer(tempPlayer);
+      console.log('pp');
+    } else if (turn === 2){
+      setOpponent(tempPlayer);
+    }else if (turn === 3){
+      setOpponent1(tempPlayer);
+    }else{
+      setOpponent2(tempPlayer);
+    }
 
     gameSettings.clearClickedHexagon();
     gameSettings.saveSourceOfStore(null);
@@ -212,14 +242,22 @@ function Store ({storeModal, close}) {
     close();
   }
 
-  function saveSelection(){
-    const { q, r, s } = gameSettings.getClickedHexagon();
-    const clickedHexagonBiome = gameSettings.getBiomeForCoordinates(q, r, s);
+  async function saveSelection(){
+    let { q, r, s } = gameSettings.getClickedHexagon();
+    let clickedHexagonBiome = gameSettings.getBiomeForCoordinates(q, r, s);
+    console.log(clickedHexagonBiome);
 
-    //TODO: add checking for if the player owns the tile not just _Unclaimed
-
-    if (clickedHexagonBiome === selectedItem.landNeeded + "_Unclaimed") {
-      if(player.getTechPoints < selectedItem.techPoints || player.getFoodPoints < selectedItem.foodPoints || player.getWoodPoints < selectedItem.woodPoints || player.getMetalPoints < selectedItem.metalPoints){
+    let ableToPurchase = false;
+    for(let i = 0; i<selectedItem.landNeeded.length; i++){
+      if(clickedHexagonBiome === selectedItem.landNeeded + "_Unclaimed"){
+        ableToPurchase = true;
+      }if(clickedHexagonBiome === selectedItem.landNeeded + "_Blue"){
+        ableToPurchase = true;
+      }
+    }
+    let currentPlayer = await playersTurn();
+    if (ableToPurchase) {
+      if(currentPlayer.getTechPoints < selectedItem.techPoints || currentPlayer.getFoodPoints < selectedItem.foodPoints || currentPlayer.getWoodPoints < selectedItem.woodPoints || currentPlayer.getMetalPoints < selectedItem.metalPoints){
         setReason("you don't have enough resources");
         setSelectedItem(null)
         setPhase(1);

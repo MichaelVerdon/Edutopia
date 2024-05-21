@@ -44,7 +44,7 @@ function Question ({questionJson, isOpen, close}) {
             let tempPlayer = new PlayerObject(player.getPlayerID);
             tempPlayer.ownedTiles = player.ownedTiles;
             tempPlayer.liveStatus = player.liveStatus;
-            tempPlayer.techPoints = player.getTechPoints + 1;
+            tempPlayer.techPoints = player.getTechPoints + 5;
             tempPlayer.foodPoints = player.getFoodPoints;
             tempPlayer.woodPoints = player.getWoodPoints;
             tempPlayer.metalPoints = player.getMetalPoints;
