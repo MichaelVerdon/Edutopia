@@ -217,21 +217,21 @@ function Store ({storeModal, close}) {
     let tempPlayer = new PlayerObject(turn);
     if(selectedItem.id===1){
       tempPlayer.freeTroops = currentPlayer.freeTroops +1;
-    }else{
-      tempPlayer.freeTroops = currentPlayer.freeTroops;
-    }
-    if(selectedItem.land){
+    }else if(selectedItem.land){
       //TODO: add for different colors
       const { q, r, s } = gameSettings.getClickedHexagon();
       gameSettings.setBiomeForCoordinates(q,r,s,selectedItem.landNew + await colorTurn());
       NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);
+      tempPlayer.ownedTiles = await currentPlayer.ownedTiles.push([q, r, s]);
     }
     else{
-      NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful`);
+      NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} unsuccessful`);
+      return;
     }
     tempPlayer.playerId = turn;
     tempPlayer.ownedTiles = currentPlayer.ownedTiles;
     tempPlayer.liveStatus = currentPlayer.liveStatus;
+    tempPlayer.freeTroops = currentPlayer.freeTroops;
     tempPlayer.techPoints = (currentPlayer.getTechPoints - selectedItem.techPoints);
     tempPlayer.foodPoints = (currentPlayer.getFoodPoints - selectedItem.foodPoints);
     tempPlayer.woodPoints = (currentPlayer.getWoodPoints - selectedItem.woodPoints);
@@ -268,7 +268,7 @@ function Store ({storeModal, close}) {
       }
     }
     let currentPlayer = await playersTurn();
-    if (ableToPurchase) {
+    if (ableToPurchase && currentPlayer.OwnsTileCheck([q,r,s])) {
       if(currentPlayer.getTechPoints < selectedItem.techPoints || currentPlayer.getFoodPoints < selectedItem.foodPoints || currentPlayer.getWoodPoints < selectedItem.woodPoints || currentPlayer.getMetalPoints < selectedItem.metalPoints){
         setReason("you don't have enough resources");
         setSelectedItem(null)
