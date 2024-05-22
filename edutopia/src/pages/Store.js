@@ -200,6 +200,18 @@ function Store ({storeModal, close}) {
     }
   }
 
+  const colorTurn = async () => {
+    if (turn === 1){
+      return ('_Blue');
+    } else if (turn === 2){
+      return ('_Pink');
+    }else if (turn === 3){
+      return ('_Cyan');
+    }else{
+      return ('_Yellow');
+    }
+  }
+
   async function purchase(){
     let currentPlayer = await playersTurn();
     let tempPlayer = new PlayerObject(turn);
@@ -211,7 +223,7 @@ function Store ({storeModal, close}) {
     if(selectedItem.land){
       //TODO: add for different colors
       const { q, r, s } = gameSettings.getClickedHexagon();
-      gameSettings.setBiomeForCoordinates(q,r,s,selectedItem.landNew + '_Blue');
+      gameSettings.setBiomeForCoordinates(q,r,s,selectedItem.landNew + await colorTurn());
       NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);
     }
     else{
@@ -251,7 +263,7 @@ function Store ({storeModal, close}) {
     for(let i = 0; i<selectedItem.landNeeded.length; i++){
       if(clickedHexagonBiome === selectedItem.landNeeded + "_Unclaimed"){
         ableToPurchase = true;
-      }if(clickedHexagonBiome === selectedItem.landNeeded + "_Blue"){
+      }if(clickedHexagonBiome === selectedItem.landNeeded + "_Blue" || clickedHexagonBiome === selectedItem.landNeeded + "_Yellow" || clickedHexagonBiome === selectedItem.landNeeded + "_Cyan" || clickedHexagonBiome === selectedItem.landNeeded + "_Pink"){
         ableToPurchase = true;
       }
     }

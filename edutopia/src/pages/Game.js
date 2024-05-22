@@ -33,7 +33,7 @@ function Game() {
   const [opponent, setOpponent] = useState(new PlayerObject(2, [1, 0, -1], "_Pink"));
   const [opponent1, setOpponent1] = useState(new PlayerObject(3, [0, 1, -1], "_Cyan"));
   const [opponent2, setOpponent2] = useState(new PlayerObject(4, [1, 1, -2], "_Yellow"));
-  //const [currentPlayer, setCurrentPlayer] = useState(player);
+
   const [turn, setTurn] = useState(0);
   const [gameOver, setGameState] = useState(true);
   const [gameText, setGameText] = useState('');
