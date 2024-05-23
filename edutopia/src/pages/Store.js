@@ -216,23 +216,25 @@ function Store ({storeModal, close}) {
     let currentPlayer = await playersTurn();
     let tempPlayer = new PlayerObject(turn);
     if(selectedItem.id===1){
-      tempPlayer.freeTroops = currentPlayer.freeTroops +1;
+      let troops = await currentPlayer.freeTroops +1;
+      tempPlayer.freeTroops = 11;
+      
       
     }else if(selectedItem.land){
-      //TODO: add for different colors
       const { q, r, s } = gameSettings.getClickedHexagon();
       gameSettings.setBiomeForCoordinates(q,r,s,selectedItem.landNew + await colorTurn());
       NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);
       tempPlayer.ownedTiles = await currentPlayer.ownedTiles.push([q, r, s]);
+      tempPlayer.freeTroops = await currentPlayer.freeTroops;
     }
     else{
       NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} unsuccessful`);
       return;
     }
     tempPlayer.playerId = turn;
+    tempPlayer.color = await colorTurn();
     tempPlayer.ownedTiles = currentPlayer.ownedTiles;
     tempPlayer.liveStatus = currentPlayer.liveStatus;
-    tempPlayer.freeTroops = currentPlayer.freeTroops;
     tempPlayer.techPoints = (currentPlayer.getTechPoints - selectedItem.techPoints);
     tempPlayer.foodPoints = (currentPlayer.getFoodPoints - selectedItem.foodPoints);
     tempPlayer.woodPoints = (currentPlayer.getWoodPoints - selectedItem.woodPoints);
@@ -240,7 +242,6 @@ function Store ({storeModal, close}) {
     
     if (turn === 1){
       setPlayer(tempPlayer);
-      console.log('pp');
     } else if (turn === 2){
       setOpponent(tempPlayer);
     }else if (turn === 3){
