@@ -246,6 +246,7 @@ useEffect( () => {
       
       } 
     }
+    //add ai player part
     if (gameOver === false && gameLoopStep >= 0){
         fce();
     }
