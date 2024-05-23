@@ -2,6 +2,7 @@
 
 //q r and s are equivalent to x y and z coordinates
 import GameSettings from './GameSettings';
+import biomeStats from './biomeStats'; 
 
 class Tile {
   constructor(q, r, s) {
@@ -18,49 +19,7 @@ class Tile {
       this.biome = GameSettings.getBiomeForCoordinates(q, r, s);
       this.troops = 0;
 
-                      // Initialize resources based on biome
-                      switch(this.biome) {
-                        case "Water":
-                            this.resources = {
-                                techPoints: 0,
-                                foodPoints: 0,
-                                woodPoints: 0,
-                                metalPoints: 0
-                            };
-                            break;
-                        case "Grassland_Unclaimed":
-                            this.resources = {
-                                techPoints: 0,
-                                foodPoints: 20,
-                                woodPoints: 5,
-                                metalPoints: 10
-                            };
-                            break;
-                        case "Rocky_Unclaimed":
-                            this.resources = {
-                                techPoints: 0,
-                                foodPoints: 5,
-                                woodPoints: 5,
-                                metalPoints: 25
-                            };
-                            break;
-                        case "Woods_Unclaimed":
-                            this.resources = {
-                                techPoints: 0,
-                                foodPoints: 10,
-                                woodPoints: 20,
-                                metalPoints: 5
-                            };
-                            break;
-                        default:
-                            // Default case if biome is not recognized
-                            this.resources = {
-                                techPoints: 0,
-                                foodPoints: 0,
-                                woodPoints: 0,
-                                metalPoints: 0
-                            };
-                    }
+      this.resources = {...biomeStats[this.biome]};
   }
 
   // Method to update the biome and resources based on purchase
