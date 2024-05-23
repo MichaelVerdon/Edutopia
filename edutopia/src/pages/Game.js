@@ -45,7 +45,7 @@ function Game() {
   const [gameLoopModal, setGameLoopModal] = useState(false);
   const [battleModal, setBattleModal] = useState(false);
   const [storeModal, setStoreModal] = useState(false);
-  const [gameLoopStep, setGameLoopStep] = useState(-1);
+  const [gameLoopStep, setGameLoopStep] = useState(-2);
   const [shopAndTroopTime, setShopAndTroopTime] = useState(false);
 
   const toggleGameState = () => {
@@ -222,6 +222,12 @@ function Game() {
 
 useEffect( () => {
     const fce = async () => {
+      if(gameLoopStep===-1){
+        setGameText("Your starting tile is " + JSON.stringify(player.ownedTiles[0].getCoords()));
+        toggleGameLoopModal();
+        await delay(2000);
+        setGameLoopModal(false);
+      }
       if(gameLoopStep===0){
         setGameText("It is player's " + turn + " turn");
         generateResourcesPerTurn();
@@ -270,7 +276,7 @@ useEffect( () => {
       } 
     }
     //add ai player part
-    if (gameOver === false && gameLoopStep >= 0){
+    if (gameOver === false && gameLoopStep >= -1){
         fce();
     }
     
@@ -278,7 +284,11 @@ useEffect( () => {
   }, [gameOver, gameLoopStep]);
  
   useEffect(() => {
-    if (!gameLoopModal && gameLoopStep === 0) {
+    if (!gameLoopModal && gameLoopStep === -1) {
+      // Perform your effect when variable changes from true to false
+      // This block will run only when variable changes from true to false
+      setGameLoopStep(0);
+    }else if (!gameLoopModal && gameLoopStep === 0) {
       // Perform your effect when variable changes from true to false
       // This block will run only when variable changes from true to false
       setGameLoopStep(1);
@@ -313,7 +323,7 @@ useEffect( () => {
   const gameLoop = async () => {
     toggleGameState();
     setTurn(1);
-    setGameLoopStep(0);
+    setGameLoopStep(-1);
   }
 
   

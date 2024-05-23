@@ -105,6 +105,10 @@ class Tile {
       
         return `${coords}, ${biomeInfo}, ${resourcesInfo}, ${troopsInfo}`;
       }
+
+      getCoords(){
+        return `x: ${this.q}, y: ${this.r}, z: ${this.s}`;
+      }
   }
 
 export default Tile;
