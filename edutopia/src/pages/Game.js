@@ -51,7 +51,29 @@ function Game() {
   const toggleGameState = () => {
     setGameState(!gameOver);
   }
- 
+
+  // Function to calculate and update resources per turn based on owned tiles
+  const generateResourcesPerTurn = () => {
+    // Calculate resources generated per turn based on owned tiles
+    player.calculateResourcesPerTurn();
+
+    // Log or perform any other actions as needed
+    console.log(player)
+    console.log(`Resources generated for player ${player} per turn:`);
+    console.log(`Food Points: ${player.getFoodPoints}`);
+    console.log(`Wood Points: ${player.getWoodPoints}`);
+    console.log(`Metal Points: ${player.getMetalPoints}`);
+
+    // Only log player's owned tiles if the player ID is 1
+    if (player.playerId === 1) {
+      console.log(`Player ${player.playerId} owned tiles:`);
+      player.ownedTiles.forEach((tile, index) => {
+        console.log(`Tile ${index + 1}: (${tile.x}, ${tile.y}, ${tile.z})`);
+      });
+
+    }
+    };
+
   const handleTopicsChange = (newTopics) => {
     
     setSelectedTopics(newTopics);
@@ -202,6 +224,7 @@ useEffect( () => {
     const fce = async () => {
       if(gameLoopStep===0){
         setGameText("It is player's " + turn + " turn");
+        generateResourcesPerTurn();
         toggleGameLoopModal();
         await delay(2000);
         setGameLoopModal(false);
