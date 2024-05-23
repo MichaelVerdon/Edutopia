@@ -40,7 +40,7 @@ body {
   fill: black;
   user-select: none; 
   font-family: 'Arial', sans-serif; 
-  font-size: 1.5px;
+  font-size: 1px;
   -webkit-user-select: none;  /* Safari */
   -moz-user-select: none;     /* Firefox */
   -ms-user-select: none;      /* IE/Edge */
