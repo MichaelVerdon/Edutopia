@@ -15,13 +15,11 @@ const InteractiveHexagon = ({ q, r, s, onClick }) => {
 
   useEffect(() => {
     const updateBiome = () => {
-      setFillColor(gameSettings.customBiomes[`${q},${r},${s}`] || gameSettings.getBiomeForCoordinates(q, r, s));
+      setFillColor(gameSettings.getBiomeForCoordinates(q, r, s));
     };
 
-  
     gameSettings.subscribeToBiomeChanges(updateBiome);
     gameSettings.subscribeToBiomeChanges(checkSelected);
-
 
     return () => {
       gameSettings.unsubscribeFromBiomeChanges(updateBiome);

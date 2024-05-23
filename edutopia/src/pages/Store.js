@@ -217,6 +217,7 @@ function Store ({storeModal, close}) {
     let tempPlayer = new PlayerObject(turn);
     if(selectedItem.id===1){
       tempPlayer.freeTroops = currentPlayer.freeTroops +1;
+      
     }else if(selectedItem.land){
       //TODO: add for different colors
       const { q, r, s } = gameSettings.getClickedHexagon();

@@ -1,6 +1,7 @@
 import React from 'react';
 import gameSettings from './GameSettings';
-import ShopIcon from '../images/sprites/ShopIcon.png';
+import ShopIcon from '../images/sprites/Shop_Icon.png';
+import TileInfo from '../images/sprites/Tile_Info.png';
 
 const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileInfo, hexData, position, openStore }) => {
   if (!isOpen) return null;
@@ -40,12 +41,26 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 20,
-          border: '1px solid',
+          padding: '2px',
+          border: '2px solid rgba(0, 0, 0, 0)',
           cursor: 'pointer',
-          fontWeight: 'bolder'
+          fontWeight: 'bolder',
+          backgroundColor: 'rgba(255, 204, 0, 0)',
+          borderRadius: '10px',
+          
         }}
-        onClick={onOpenTileInfo}>Tile Info</button>
+        onClick={onOpenTileInfo}
+        >
+        <img
+          src={TileInfo}
+          alt='TileInfo'
+          style={{
+            width: '46px',
+            height: '46px',
+            background: 'transparent',
+          }}
+        />
+      </button>
 
       <button
         style={{
@@ -90,7 +105,7 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
           justifyContent: 'center',
           padding: 0,
           border: 'none',
-          backgroundColor: 'red',
+          backgroundColor: 'darkred',
           border: '1px solid darkred',
           cursor: 'pointer',
           color: 'white',

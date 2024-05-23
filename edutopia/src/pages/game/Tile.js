@@ -4,37 +4,50 @@
 import GameSettings from './GameSettings';
 
 class Tile {
-    constructor(q, r, s) {
-        this.q = q;
-        this.r = r;
-        this.s = s; 
-        this.owner = null;
-        this.resources = {
-            techPoints: 0,
-            foodPoints: 0,
-            woodPoints: 0,
-            metalPoints: 0,
-            };
-        this.biome = GameSettings.getBiomeForCoordinates(q, r);
-        this.troops = 0;
-    }
+  constructor(q, r, s) {
+      this.q = q;
+      this.r = r;
+      this.s = s; 
+      this.owner = null;
+      this.resources = {
+          techPoints: 0,
+          foodPoints: 0,
+          woodPoints: 0,
+          metalPoints: 0,
+      };
+      this.biome = GameSettings.getBiomeForCoordinates(q, r, s);
+      this.troops = 0;
+  }
+
+  // Method to update the biome and resources based on purchase
+  updateTile(biome, resources, troops) {
+      if (biome) this.biome = biome;
+      this.resources.techPoints += resources.techPoints || 0;
+      this.resources.foodPoints += resources.foodPoints || 0;
+      this.resources.woodPoints += resources.woodPoints || 0;
+      this.resources.metalPoints += resources.metalPoints || 0;
+      this.troops += troops || 0;
+  }
   
     // Method to check if the tile is owned by any player
     isOwned() {
         return this.owner !== null;
       }
     
-      // Method to set the owner of the tile
-      setOwner(player) {
-        this.owner = player;
-      }
+    // Method to set the owner of the tile
+    setOwner(player) {
+      this.owner = player;
+    }
+    addTroops(number) {
+      this.troops += number;
+    }
+  
+    // Method to set the biome of the tile
+    setBiome(biome) {
+      this.biome = biome;
+    }
     
-      // Method to set the biome of the tile
-      setBiome(biome) {
-        this.biome = biome;
-      }
-    
-      // Methods to set resource points 
+    // Methods to set resource points 
   
     setFoodPoints(amount) {
       this.resources.foodPoints = amount;

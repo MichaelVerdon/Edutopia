@@ -1,62 +1,67 @@
 import React from 'react';
 import Modal from 'react-modal';
 import images from './imageImports';
-import GameSettings from './GameSettings';
 
 const TileInfoModal = ({ isOpen, tile, onClose }) => {
   if (!isOpen || !tile) return null;
 
-  
-
-  
   const tileImage = images[tile.biome];
+
+  // Modal content style
+  const modalContentStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 'auto',
+    maxWidth: '60%',
+    height: 'auto',
+    maxHeight: '90vh',
+    backgroundColor: '#f2de7f', // Yellow background color
+    borderRadius: '10px',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+    overflow: 'hidden',
+    border: '2px solid #000000',
+    fontWeight: 'bold',
+    padding: '20px',
+    fontFamily: 'Arial, sans-serif',
+    color: '#333',
+    textAlign: 'center',
+  };
+
+  // Overlay style
+  const overlayStyle = {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', // White-ish semi-transparent background
+    pointerEvents: 'auto', // Ensures the overlay blocks interactions and is clickable itself
+  };
+
+  const rowStyle = (index) => ({
+    backgroundColor: index % 2 === 0 ? '#ffeb99' : '#fdd835',
+    padding: '10px',
+    fontSize: '16px',
+    borderRadius: '5px',
+    margin: '10px 0',
+    width: '100%',
+  });
 
   return (
     <Modal
       isOpen={isOpen}
-      
+      onRequestClose={onClose}
       contentLabel="Tile Information"
       ariaHideApp={false}
-      style={{
-        content: {
-          position: 'absolute',
-          top: '40%',
-          left: '50%',
-          right: 'auto',
-          bottom: 'auto',
-          marginRight: '-50%',
-          transform: 'translate(-50%, -50%)',
-          border: '1px solid #ccc',
-          background: '#fff',
-          overflow: 'auto',
-          WebkitOverflowScrolling: 'touch',
-          borderRadius: '4px',
-          outline: 'none',
-          padding: '20px',
-          width: '400px'
-        },
-        overlay: {
-          backgroundColor: 'rgba(0, 0, 0, 0.75)'
-        }
-      }}
+      style={{ content: modalContentStyle, overlay: overlayStyle }}
     >
-      <h2>Tile Information</h2>
-      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', marginBottom: '20px' }}>
-        <img src={tileImage} alt={tile.biome} style={{ width: '100px', height: '100px' }} />
-        <div>
-          <p>Biome: {tile.biome}</p>
-          <p>Owner: {tile.owner || 'Unclaimed'}</p>
-        </div>
-      </div>
-      <div>
-        <p>Troops: {tile.getTroops()}</p>
-        <p>Resources:</p>
-        <p>Tech: {tile.getTechPoints()}</p>
-        <p>Food: {tile.getFoodPoints()}</p>
-        <p>Wood: {tile.getWoodPoints()}</p>
-        <p>Metal: {tile.getMetalPoints()}</p>
-      </div>
-      <button onClick={onClose} style={{ cursor: 'pointer' }}>Close</button>
+      <button onClick={onClose} style={{ position: 'absolute', top: '10px', right: '10px', cursor: 'pointer', backgroundColor: '#f44336', border: 'none', color: 'white', padding: '5px 10px', fontSize: '16px', borderRadius: '50%' }}>X</button>
+      <h2 style={{ fontSize: '24px' }}>Tile Information</h2>
+      <img src={tileImage} alt={tile.biome} style={{ width: '120px', height: '120px', margin: '10px auto' }} />
+      <div style={rowStyle(0)}>Biome: {tile.biome}</div>
+      <div style={rowStyle(1)}>Owner: {tile.owner || 'Unclaimed'}</div>
+      <div style={rowStyle(2)}>Troops: {tile.getTroops()}</div>
+      <div style={rowStyle(3)}>Tech: {tile.getTechPoints()}</div>
+      <div style={rowStyle(4)}>Food: {tile.getFoodPoints()}</div>
+      <div style={rowStyle(5)}>Wood: {tile.getWoodPoints()}</div>
+      <div style={rowStyle(6)}>Metal: {tile.getMetalPoints()}</div>
     </Modal>
   );
 };

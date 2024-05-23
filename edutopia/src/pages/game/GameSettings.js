@@ -14,28 +14,41 @@ const GameSettings = {
   sourceOfStore: null,
 
   getBiomeForCoordinates: (q, r, s) => {
+    // Check for a custom biome first
+    const customBiomeKey = `${q},${r},${s}`;
+    if (GameSettings.customBiomes.hasOwnProperty(customBiomeKey)) {
+      return GameSettings.customBiomes[customBiomeKey];
+    }
+  
+    // Check for water tiles in gapCoordinates
     if (gapCoordinates.some(coord => coord.q === q && coord.r === r && coord.s === s)) {
       return "Water";
-    } else {
-
-      const scale = 0.1;
-      const noiseValue = noise2D(q * scale, r * scale);
-
-      if (noiseValue < -0.5) {
-        return "Water";
-      } else if (noiseValue < -0.1) {
-        return "Grassland_Unclaimed";
-      } else if (noiseValue < 0.2) {
-        return "Rocky_Unclaimed";
-      } else if (noiseValue < 0.5) {
-        return "Woods_Unclaimed";
-      } else {
-        const hexagon = hexagonData.hexagons.find(hex => hex.q === q && hex.r === r && hex.s === s);
-      return hexagon ? hexagon.biome : "Grassland_Unclaimed"; //Default to Grassland_Unclaimed if not found
-      }
-
     }
+  
+    // Calculate biome based on noise
+    const scale = 0.1;
+    const noiseValue = noise2D(q * scale, r * scale);
+  
+    let biome;
+    if (noiseValue < -0.5) {
+      biome = "Water";
+    } else if (noiseValue < -0.1) {
+      biome = "Grassland_Unclaimed";
+    } else if (noiseValue < 0.2) {
+      biome = "Rocky_Unclaimed";
+    } else if (noiseValue < 0.5) {
+      biome = "Woods_Unclaimed";
+    } else {
+      // Lookup in hexagon data, default to Grassland_Unclaimed if not found
+      const hexagon = hexagonData.hexagons.find(hex => hex.q === q && hex.r === r && hex.s === s);
+      biome = hexagon ? hexagon.biome : "Grassland_Unclaimed";
+    }
+  
+    // Update the custom biomes object to ensure the biome change is persistent
+    GameSettings.customBiomes[customBiomeKey] = biome;
+    return biome;
   },
+  
 
   setBiome: (q, r, s, biome) => {
     const key = `${q},${r},${s}`;
