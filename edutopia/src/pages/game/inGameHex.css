@@ -1,25 +1,19 @@
 body {
-  
   background-color: rgba(255, 255, 255, 0);
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('../images/sprites/background.png');
-  /* STUFF TO ADD TO CHANGE BACKGROUND------------OPINION NEEDED*/ 
-  /*background-position: center center; /* 'absolute' is not a valid value for background-position */
-  /*background-repeat: no-repeat; /* If you don't want the image to repeat */
-  /*background-attachment: fixed; /* If you want the image to stay in place while scrolling */
-  /*background-size: cover;*/
-  
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url("../images/sprites/background.png");
 }
+
 .inGameHex polygon,
 .inGameHex {
   pointer-events: all;
   stroke: black;
-  stroke-width: 0.1px; 
-  
+  stroke-width: 0.1px;
 }
 
 .inGameHex.active polygon,
 .inGameHex.active {
-  fill: 'fillColor';
+  fill: "fillColor";
 }
 
 .inGameHex:hover polygon,
@@ -27,26 +21,22 @@ body {
   cursor: pointer;
 }
 
-
 .inGameHex:hover,
-.inGameHex.active{
+.inGameHex.active {
   filter: brightness(130%);
 }
-
-
 
 .inGameHex .hexagon-text {
   cursor: pointer;
   fill: black;
-  user-select: none; 
-  font-family: 'Arial', sans-serif; 
+  user-select: none;
+  font-family: "Arial", sans-serif;
   font-size: 1.5px;
-  -webkit-user-select: none;  /* Safari */
-  -moz-user-select: none;     /* Firefox */
-  -ms-user-select: none;      /* IE/Edge */
-  user-select: none;  
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+  user-select: none;
 }
-
 
 .board {
   display: flex;
@@ -57,11 +47,41 @@ body {
   position: relative;
 }
 
-
 .board-container {
   width: 100%;
   position: relative;
   overflow-x: auto;
-  
 }
+
+.hexagon-owner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  font-size: 0.2em;
+  pointer-events: none;
+}
+
+
+.hexagon-owner.owner-1 {
+  fill: blue;
+}
+
+.hexagon-owner.owner-2 {
+  fill: red;
+}
+
+.hexagon-owner.owner-3 {
+  fill: green;
+}
+
+.hexagon-owner.owner-4 {
+  fill: yellow;
+}
+
 

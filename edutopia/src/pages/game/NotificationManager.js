@@ -1,6 +1,6 @@
 //NotificationManager.js
 
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 const NotificationManager = {
   showNotification: (message, options = {}) => {
@@ -16,11 +16,9 @@ const NotificationManager = {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      style: { fontSize: '20px'},
+      style: { fontSize: "20px" },
     });
   },
-
-  
 };
 
 export default NotificationManager;

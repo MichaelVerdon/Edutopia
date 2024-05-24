@@ -1,11 +1,10 @@
-import gapData from './gapCoordinates.json';
-import images from './imageImports';
-import hexagonData from './hexagonData.json';
-import { createNoise2D } from 'simplex-noise';
+import gapData from "./gapCoordinates.json";
+import images from "./imageImports";
+import hexagonData from "./hexagonData.json";
+import { createNoise2D } from "simplex-noise";
 
 const noise2D = createNoise2D();
 const biomes = Object.keys(images);
-
 
 const gapCoordinates = gapData.gapCoordinates;
 const GameSettings = {
@@ -13,29 +12,33 @@ const GameSettings = {
   clickedHexagon: null,
   sourceOfStore: null,
 
-  getBiomeForCoordinates: (q, r, s) => {
-    if (gapCoordinates.some(coord => coord.q === q && coord.r === r && coord.s === s)) {
+getBiomeForCoordinates: (q, r, s) => {
+  if (
+    gapCoordinates.some(
+      (coord) => coord.q === q && coord.r === r && coord.s === s
+    )
+  ) {
+    return "Water";
+  } else {
+    const scale = 0.1;
+    const noiseValue = noise2D(q * scale, r * scale);
+
+    if (noiseValue < -0.5) {
       return "Water";
+    } else if (noiseValue < -0.1) {
+      return "Grassland_Unclaimed";
+    } else if (noiseValue < 0.2) {
+      return "Rocky_Unclaimed";
+    } else if (noiseValue < 0.5) {
+      return "Woods_Unclaimed";
     } else {
-
-      const scale = 0.1;
-      const noiseValue = noise2D(q * scale, r * scale);
-
-      if (noiseValue < -0.5) {
-        return "Water";
-      } else if (noiseValue < -0.1) {
-        return "Grassland_Unclaimed";
-      } else if (noiseValue < 0.2) {
-        return "Rocky_Unclaimed";
-      } else if (noiseValue < 0.5) {
-        return "Woods_Unclaimed";
-      } else {
-        const hexagon = hexagonData.hexagons.find(hex => hex.q === q && hex.r === r && hex.s === s);
-      return hexagon ? hexagon.biome : "Grassland_Unclaimed"; //Default to Grassland_Unclaimed if not found
-      }
-
+      const hexagon = hexagonData.hexagons.find(
+        (hex) => hex.q === q && hex.r === r && hex.s === s
+      );
+      return hexagon ? hexagon.biome : "Grassland_Unclaimed"; // Default to Grassland_Unclaimed if not found
     }
-  },
+  }
+},
 
   setBiome: (q, r, s, biome) => {
     const key = `${q},${r},${s}`;
@@ -45,35 +48,39 @@ const GameSettings = {
   subscribers: [],
 
   subscribeToBiomeChanges: (callback) => {
-    
     GameSettings.subscribers.push(callback);
   },
 
   unsubscribeFromBiomeChanges: (callback) => {
-    
-    GameSettings.subscribers = GameSettings.subscribers.filter(subscriber => subscriber !== callback);
+    GameSettings.subscribers = GameSettings.subscribers.filter(
+      (subscriber) => subscriber !== callback
+    );
   },
 
   notifyBiomeChanges: () => {
-    
-    GameSettings.subscribers.forEach(subscriber => subscriber());
+    GameSettings.subscribers.forEach((subscriber) => subscriber());
   },
 
   setBiomeForCoordinates: (q, r, s, biome) => {
     const key = `${q},${r},${s}`;
     GameSettings.customBiomes[key] = biome;
-    
     GameSettings.notifyBiomeChanges();
   },
 
   saveClickedHexagon: (q, r, s, source) => {
-    if (GameSettings.clickedHexagon && GameSettings.clickedHexagon.q === q && GameSettings.clickedHexagon.r === r && GameSettings.clickedHexagon.s === s &&GameSettings.clickedHexagon.source === source) {
-      GameSettings.clickedHexagon = null; 
+    if (
+      GameSettings.clickedHexagon &&
+      GameSettings.clickedHexagon.q === q &&
+      GameSettings.clickedHexagon.r === r &&
+      GameSettings.clickedHexagon.s === s &&
+      GameSettings.clickedHexagon.source === source
+    ) {
+      GameSettings.clickedHexagon = null;
     } else {
-      GameSettings.clickedHexagon = { q, r, s};
+      GameSettings.clickedHexagon = { q, r, s };
     }
-  
-    GameSettings.notifyBiomeChanges(); 
+
+    GameSettings.notifyBiomeChanges();
   },
 
   getClickedHexagon: () => {
@@ -82,13 +89,13 @@ const GameSettings = {
 
   clearClickedHexagon: () => {
     GameSettings.clickedHexagon = null;
-    GameSettings.notifyBiomeChanges(); 
+    GameSettings.notifyBiomeChanges();
   },
 
   saveSourceOfStore(source) {
     GameSettings.sourceOfStore = source;
   },
-  
+
   getSourceOfStore() {
     return GameSettings.sourceOfStore;
   },
@@ -107,17 +114,17 @@ const GameSettings = {
     const deltaS = s2 - s1;
 
     // Tiles are adjacent if they are one step away in any of the hexagon directions
-    
-    const adjacent = 
+
+    const adjacent =
       (Math.abs(deltaQ) === 1 && deltaR === 0 && deltaS === -1) ||
       (Math.abs(deltaR) === 1 && deltaQ === 0 && deltaS === -1) ||
       (Math.abs(deltaS) === 1 && deltaQ === -1 && deltaR === 0) ||
       (Math.abs(deltaQ) === 1 && deltaR === -1 && deltaS === 0) ||
       (Math.abs(deltaR) === 1 && deltaQ === -1 && deltaS === 0) ||
       (Math.abs(deltaS) === 1 && deltaQ === 0 && deltaR === -1);
-    
+
     return adjacent;
-  }
+  },
 };
 
 export default GameSettings;
