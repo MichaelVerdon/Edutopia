@@ -259,7 +259,6 @@ function Store ({storeModal, close}) {
     }else{
       setOpponent2(tempPlayer);
     }
-
     gameSettings.clearClickedHexagon();
     gameSettings.saveSourceOfStore(null);
 
