@@ -15,7 +15,7 @@ function Store ({storeModal, close}) {
     const [selectedItem, setSelectedItem] = useState(null);
     const { player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn} = useContext(PlayerContext);
     const [showPopup, setShowPopup] = useState(false);
-    const { selectedHex, setSelectedHex } = useContext(PlayerContext);
+    const [ selectedHex, setSelectedHex ] = useState(null);
     const { shouldTriggerSaveSelection, triggerSaveSelection } = useContext(PlayerContext);
     const source = gameSettings.getSourceOfStore();
 
@@ -168,16 +168,26 @@ function Store ({storeModal, close}) {
       setPhase(3);
       //console.log(phase);
     }
-  } 
+  }
 
   const handleClosePopup = () => {
     setShowPopup(false);
     setPhase(0);
   };
 
+  const changeSelectedHex = (selectedHex) => {
+    setSelectedHex(selectedHex);
+    console.log("yup this works too");
+  }
+
+  useEffect(() => {
+    changeSelectedHex(gameSettings.getClickedHexagon())
+    console.log("Selected tile: " + gameSettings.getClickedHexagon())
+  })
+
   useEffect(() => {
     console.log(phase);
-    console.log("Selected Hexagon for Store:", selectedHex);
+    console.log("Selected Hexagon for Store:", gameSettings.getClickedHexagon());
     if (shouldTriggerSaveSelection) {
       saveSelection();
       triggerSaveSelection(false);
@@ -257,7 +267,9 @@ function Store ({storeModal, close}) {
   }
 
   async function saveSelection(){
-    let { q, r, s } = gameSettings.getClickedHexagon();
+    let q = selectedHex.q;
+    let r = selectedHex.r;
+    let s = selectedHex.s;
     let clickedHexagonBiome = gameSettings.getBiomeForCoordinates(q, r, s);
     console.log(clickedHexagonBiome);
 
@@ -270,7 +282,7 @@ function Store ({storeModal, close}) {
       }
     }
     let currentPlayer = await playersTurn();
-    if (ableToPurchase && currentPlayer.OwnsTileCheck([q,r,s])) {
+    if (ableToPurchase){
       if(currentPlayer.getTechPoints < selectedItem.techPoints || currentPlayer.getFoodPoints < selectedItem.foodPoints || currentPlayer.getWoodPoints < selectedItem.woodPoints || currentPlayer.getMetalPoints < selectedItem.metalPoints){
         setReason("you don't have enough resources");
         setSelectedItem(null)
