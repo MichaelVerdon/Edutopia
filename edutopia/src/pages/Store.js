@@ -52,11 +52,51 @@ function Store ({storeModal, close}) {
           "woodPoints": 5,
           "metalPoints": 5,
           "land": false,
+          "new": false,
           "landNeeded": [""],
           "landNew": ""
       },
       {
         "id": 2,
+        "item": "./images/sprites/Grassland_Blue.png",
+        "name":"Grassland",
+        "techPoints": 10, 
+        "foodPoints": 15,
+        "woodPoints": 10,
+        "metalPoints": 5,
+        "land": true,
+        "new": true,
+        "landNeeded": ["Grassland"],
+        "landNew": "Grassland"
+      },
+      {
+        "id": 3,
+        "item": "./images/sprites/Rocky_Blue.png",
+        "name":"Rocky",
+        "techPoints": 10, 
+        "foodPoints": 10,
+        "woodPoints": 5,
+        "metalPoints": 15,
+        "land": true,
+        "new": true,
+        "landNeeded": ["Rocky"],
+        "landNew": "Rocky"
+      },
+      {
+        "id": 4,
+        "item": "./images/sprites/Woods_Blue.png",
+        "name":"Woods",
+        "techPoints": 10, 
+        "foodPoints": 5,
+        "woodPoints": 15,
+        "metalPoints": 10,
+        "land": true,
+        "new": true,
+        "landNeeded": ["Woods"],
+        "landNew": "Woods"
+      },
+      {
+        "id": 5,
         "item": "./images/sprites/GrasslandWithFarm_Blue.png",
         "name":"Farm",
         "techPoints": 10, 
@@ -64,11 +104,12 @@ function Store ({storeModal, close}) {
         "woodPoints": 10,
         "metalPoints": 5,
         "land": true,
+        "new": false,
         "landNeeded": ["Grassland"],
         "landNew": "GrasslandWithFarm"
       },
       {
-        "id": 3,
+        "id": 6,
         "item": "./images/sprites/RockyWithMine_Blue.png",
         "name":"Mine",
         "techPoints": 10, 
@@ -76,11 +117,12 @@ function Store ({storeModal, close}) {
         "woodPoints": 5,
         "metalPoints": 15,
         "land": true,
+        "new": false,
         "landNeeded": ["Rocky"],
         "landNew": "RockyWithMine"
       },
       {
-        "id": 4,
+        "id": 7,
         "item": "./images/sprites/WoodsWithSawmill_Blue.png",
         "name":"Sawmill",
         "techPoints": 10, 
@@ -88,11 +130,12 @@ function Store ({storeModal, close}) {
         "woodPoints": 15,
         "metalPoints": 10,
         "land": true,
+        "new": false,
         "landNeeded": ["Woods"],
         "landNew": "WoodsWithSawmill"
       },
       {
-        "id": 5,
+        "id": 8,
         "item": "./images/sprites/Village_Blue.png",
         "name":"Village",
         "techPoints": 15, 
@@ -100,11 +143,12 @@ function Store ({storeModal, close}) {
         "woodPoints": 15,
         "metalPoints": 15,
         "land": true,
+        "new": false,
         "landNeeded": ["GrasslandWithFarm"],
         "landNew": "Village"
       },
       {
-        "id": 6,
+        "id": 9,
         "item": "./images/sprites/VillageWithTrainingGrounds_Blue.png",
         "name":"Training Grounds",
         "techPoints": 10, 
@@ -112,11 +156,12 @@ function Store ({storeModal, close}) {
         "woodPoints": 15,
         "metalPoints": 10,
         "land": true,
+        "new": false,
         "landNeeded": ["Village"],
         "landNew": "VillageWithTrainingGrounds"
       },
       {
-        "id": 7,
+        "id": 10,
         "item": "./images/sprites/VillageWithPotionShop_Blue.png",
         "name":"Potion Shop",
         "techPoints": 15, 
@@ -124,11 +169,12 @@ function Store ({storeModal, close}) {
         "woodPoints": 10,
         "metalPoints": 15,
         "land": true,
+        "new": false,
         "landNeeded": ["Village"],
         "landNew": "VillageWithPotionShop"
       },
       {
-        "id": 8,
+        "id": 11,
         "item": "./images/sprites/VillageWithTrainingGroundsAndPotionShop_Blue.png",
         "name":"Complete village",
         "techPoints": 15, 
@@ -136,6 +182,7 @@ function Store ({storeModal, close}) {
         "woodPoints": 10,
         "metalPoints": 10,
         "land": true,
+        "new": false,
         "landNeeded": ["VillageWithPotionShop", "VillageWithTrainingGrounds"],
         "landNew": "VillageWithTrainingGroundsAndPotionShop"
       }
@@ -271,16 +318,17 @@ function Store ({storeModal, close}) {
     let s = selectedHex.s;
     let clickedHexagonBiome = gameSettings.getBiomeForCoordinates(q, r, s);
     console.log(clickedHexagonBiome);
+    let currentPlayer = await playersTurn();
 
     let ableToPurchase = false;
     for(let i = 0; i<selectedItem.landNeeded.length; i++){
-      if(clickedHexagonBiome === selectedItem.landNeeded + "_Unclaimed"){
+      if(selectedItem.new === true && clickedHexagonBiome === selectedItem.landNeeded[i] + "_Unclaimed"){
         ableToPurchase = true;
-      }if(clickedHexagonBiome === selectedItem.landNeeded + colorTurn()){
+      }if(selectedItem.new === false && clickedHexagonBiome === selectedItem.landNeeded[i] + await colorTurn()){
         ableToPurchase = true;
       }
     }
-    let currentPlayer = await playersTurn();
+    
     if (ableToPurchase){
       if(currentPlayer.getTechPoints < selectedItem.techPoints || currentPlayer.getFoodPoints < selectedItem.foodPoints || currentPlayer.getWoodPoints < selectedItem.woodPoints || currentPlayer.getMetalPoints < selectedItem.metalPoints){
         setReason("you don't have enough resources");
