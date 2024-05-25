@@ -276,7 +276,7 @@ function Store ({storeModal, close}) {
     for(let i = 0; i<selectedItem.landNeeded.length; i++){
       if(clickedHexagonBiome === selectedItem.landNeeded + "_Unclaimed"){
         ableToPurchase = true;
-      }if(clickedHexagonBiome === selectedItem.landNeeded + "_Blue" || clickedHexagonBiome === selectedItem.landNeeded + "_Yellow" || clickedHexagonBiome === selectedItem.landNeeded + "_Cyan" || clickedHexagonBiome === selectedItem.landNeeded + "_Pink"){
+      }if(clickedHexagonBiome === selectedItem.landNeeded + colorTurn()){
         ableToPurchase = true;
       }
     }
