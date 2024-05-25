@@ -55,23 +55,30 @@ function Game() {
   // Function to calculate and update resources per turn based on owned tiles
   const generateResourcesPerTurn = () => {
     // Calculate resources generated per turn based on owned tiles
-    player.calculateResourcesPerTurn();
-
-    // Log or perform any other actions as needed
-    console.log(player)
-    console.log(`Resources generated for player ${player} per turn:`);
-    console.log(`Food Points: ${player.getFoodPoints}`);
-    console.log(`Wood Points: ${player.getWoodPoints}`);
-    console.log(`Metal Points: ${player.getMetalPoints}`);
+    if (turn === 1){
+      player.calculateResourcesPerTurn();
+    } else if (turn === 2){
+      opponent.calculateResourcesPerTurn();
+    }else if (turn === 3){
+      opponent1.calculateResourcesPerTurn();
+    }else if (turn === 4){
+      opponent2.calculateResourcesPerTurn();
+    }
+   /*  // Log or perform any other actions as needed
+    console.log(currentPlayer)
+    console.log(`Resources generated for player ${currentPlayer} per turn:`);
+    console.log(`Food Points: ${currentPlayer.getFoodPoints}`);
+    console.log(`Wood Points: ${currentPlayer.getWoodPoints}`);
+    console.log(`Metal Points: ${currentPlayer.getMetalPoints}`);
 
     // Only log player's owned tiles if the player ID is 1
-    if (player.playerId === 1) {
-      console.log(`Player ${player.playerId} owned tiles:`);
-      player.ownedTiles.forEach((tile, index) => {
+    if (currentPlayer.playerId === 1) {
+      console.log(`Player ${currentPlayer.playerId} owned tiles:`);
+      currentPlayer.ownedTiles.forEach((tile, index) => {
         console.log(`Tile ${index + 1}: (${tile.x}, ${tile.y}, ${tile.z})`);
-      });
+      });} */
 
-    }
+    
     };
 
   const handleTopicsChange = (newTopics) => {

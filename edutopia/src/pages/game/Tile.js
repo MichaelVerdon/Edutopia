@@ -19,7 +19,7 @@ class Tile {
       this.biome = GameSettings.getBiomeForCoordinates(q, r, s);
       this.troops = 0;
 
-      this.resources = {...biomeStats[this.biome]};
+      this.resources = {...biomeStats[this.biome.replace(/\_.*/,'')]};
   }
 
   // Method to update the biome and resources based on purchase
