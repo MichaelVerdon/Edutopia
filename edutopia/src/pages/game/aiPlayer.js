@@ -1,11 +1,12 @@
 import PlayerObject from "./PlayerObject";
+import GameSettings from "./GameSettings";
 
 // Inherit from PlayerObject Class so they can have all functionalities of player class.
 // You will be able to treat this as a PlayerObject class and use same funcs and vars.
 class aiPlayer extends PlayerObject{
 
-    constructor (playerId){
-        super(playerId)
+    constructor(playerId, randomTile, playerColor) {
+        super(playerId, randomTile, playerColor);
         this.difficulty = this.setDifficulty();
     }
 
@@ -20,7 +21,7 @@ class aiPlayer extends PlayerObject{
         const randomValue = Math.random(); // Generate a random number between 0 and 1
         // Check if the probability is greater which means the answer is correct
         if (randomValue <= probability) {
-            this.setTechPoints(this.getTechPoints + 5) // Add five tech points for a successful answer.
+            this.techPoints = this.techPoints + 5; // Add five tech points for a successful answer.
         }
     }
 
@@ -38,7 +39,48 @@ class aiPlayer extends PlayerObject{
         let vacantTiles = [];
     }
 
+    shopping(){
+        //THIS IS JUST OPTIONAL IDEA
+        //if you can buy a troop and still have enough resources left to buy a tile
 
+        //buying a tile
+        //check unclaimed tiles around your tiles
+
+        //randomly select one tile
+
+        //buy the tile
+
+    }
+
+    async battleOthers(){
+        //check if any of the ai players tiles are touching another players tile
+        // get the list: [[tileOwned, tileTouching],[...]]
+        let touchingTiles = [];
+        for(let i=0; i<this.ownedTiles.length; i++){
+            let q = this.ownedTiles[i].q;
+            let r = this.ownedTiles[i].r;
+            let s = this.ownedTiles[i].s;
+
+            //TODO solve nonexistent tiles
+            if(await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_").pop() !== "_Unclaimed"){
+                touchingTiles.push([[q,r,s], [q-1,r+1,s]]);
+            }else if(await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_").pop() !== "_Unclaimed"){
+                touchingTiles.push([[q,r,s], [q,r+1,s-1]]);
+            }else if(await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_").pop() !== "_Unclaimed"){
+                touchingTiles.push([[q,r,s], [q-1,r,s+1]]);
+            }else if(await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_").pop() !== "_Unclaimed"){
+                touchingTiles.push([[q,r,s], [q+1,r,s-1]]);
+            }else if(await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_").pop() !== "_Unclaimed"){
+                touchingTiles.push([[q,r,s], [q,r-1,s+1]]);
+            }
+        }
+
+        //randomly select one of the tile combinations
+        let randomTilesIndex = Math.floor(Math.random() * touchingTiles.length);
+
+        //the attacking and the attacked tile returned
+        return touchingTiles[randomTilesIndex];
+    }
 }
 
 export default aiPlayer;

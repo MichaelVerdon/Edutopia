@@ -11,7 +11,8 @@ import NotificationManager from '../pages/game/NotificationManager';
 import GameSettings from './game/GameSettings';
 import Battle from './Battle';
 import GameLoopModal from './GameLoopModal';
-
+import aiPlayer from './game/aiPlayer';
+import Tile from './game/Tile';
 
 export const PlayerContext = createContext({
   player: {},
@@ -24,15 +25,16 @@ export const PlayerContext = createContext({
   setOpponent2: () => {},
   turn: {},
   setTurn: () => {},
+  battleTiles: {},
 });
 
 function Game() {
   const api_link = "http://localhost:9000/get_question?topic_id=";
   
-  const [player, setPlayer] = useState(new PlayerObject(1, [0, 0, 0], "_Blue"));
-  const [opponent, setOpponent] = useState(new PlayerObject(2, [1, 0, -1], "_Pink"));
-  const [opponent1, setOpponent1] = useState(new PlayerObject(3, [0, 1, -1], "_Cyan"));
-  const [opponent2, setOpponent2] = useState(new PlayerObject(4, [1, 1, -2], "_Yellow"));
+  const [player, setPlayer] = useState(new PlayerObject(1, new Tile(1, 1, -2), "_Blue"));
+  const [opponent, setOpponent] = useState(new aiPlayer(2,  new Tile(2, 0, -2), "_Pink"));
+  const [opponent1, setOpponent1] = useState(new aiPlayer(3,  new Tile(0, 1, -1), "_Cyan"));
+  const [opponent2, setOpponent2] = useState(new aiPlayer(4,  new Tile(0, 0, 0), "_Yellow"));
 
   const [turn, setTurn] = useState(0);
   const [gameOver, setGameState] = useState(true);
@@ -47,6 +49,7 @@ function Game() {
   const [storeModal, setStoreModal] = useState(false);
   const [gameLoopStep, setGameLoopStep] = useState(-2);
   const [shopAndTroopTime, setShopAndTroopTime] = useState(false);
+  const [battleTiles, setBattleTiles] = useState([]);
 
   const toggleGameState = () => {
     setGameState(!gameOver);
@@ -86,27 +89,26 @@ function Game() {
     setSelectedTopics(newTopics);
   };
 
-  const fetchQuestion = (topic_id) => {
-    return fetch(api_link + topic_id)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .catch(error => {
-        throw error;
-      });
+  const fetchQuestion = async (topic_id) => {
+    try {
+      const response = await fetch(api_link + topic_id);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return await response.json();
+    } catch (error) {
+      throw error;
+    }
   }
   
 
-  const getQuestionClick = async() => {
+  const getQuestionClick = () => {
     var topic = '1' // Default for safety?
     if (selectedTopics.length !== 0) {
       const randomIndex = Math.floor(Math.random() * selectedTopics.length);
       topic = selectedTopics[randomIndex];
     }
-    await fetchQuestion(topic)
+    fetchQuestion(topic)
       .then(data => {
         setQuestion(data);
       })
@@ -235,13 +237,12 @@ useEffect( () => {
         await delay(2000);
         setGameLoopModal(false);
       }
-      if(gameLoopStep===0){
+      else if(gameLoopStep===0){
         setGameText("It is player's " + turn + " turn");
         generateResourcesPerTurn();
         toggleGameLoopModal();
         await delay(2000);
         setGameLoopModal(false);
-        //setGameLoopStep(1);
       } else if(gameLoopStep===1 && modal===false){
         await questionAndToggle();
       }else if(gameLoopStep===2){
@@ -250,7 +251,6 @@ useEffect( () => {
         toggleGameLoopModal();
         await delay(2000);
         setGameLoopModal(false);
-        //setGameLoopStep(3);
       }else if(gameLoopStep===4 && battleModal===false){
         setShopAndTroopTime(false);
         toggleBattleModal();
@@ -276,15 +276,82 @@ useEffect( () => {
             setGameLoopModal(false);
           }
         }
-        
-        //nextPlayer();
-        //setGameLoopStep(0);
+
       
       } 
     }
+    const aiPlayerTurnFce = async () => {
+      if(gameLoopStep===0){
+        setGameText("It is player's " + turn + " turn");
+        generateResourcesPerTurn();
+        toggleGameLoopModal();
+        await delay(2000);
+        setGameLoopModal(false);
+      }else if(gameLoopStep===1 && modal===false){
+        if (turn === 2){
+          await questionAndToggle();
+          opponent.answerQuestion();
+          await delay(2000);
+          setModal(false);
+        }else if (turn===3){
+          await questionAndToggle();
+          opponent1.answerQuestion();
+          await delay(2000);
+          setModal(false);
+        }else if(turn===4){
+          await questionAndToggle();
+          opponent2.answerQuestion();
+          await delay(2000);
+          setModal(false);
+        }
+      }else if(gameLoopStep===2){
+        setGameText('Time to shop and assign troops');
+        setShopAndTroopTime(true);
+        toggleGameLoopModal();
+        await delay(2000);
+        setGameLoopModal(false);
+        //ai player shops
+      }else if(gameLoopStep===4 && battleModal===false){
+        setShopAndTroopTime(false);
+        if (turn === 2){
+          setBattleTiles(await opponent.battleOthers());
+          toggleBattleModal();
+        }else if (turn===3){
+          setBattleTiles(await opponent1.battleOthers());
+          toggleBattleModal();
+        }else if(turn===4){
+          setBattleTiles(await opponent2.battleOthers());
+          toggleBattleModal();
+        }
+      }else if(gameLoopStep===5){
+        let cont = continueGame();
+        if (cont === true){
+          setGameText('Next players turn');
+          toggleGameLoopModal();
+          await delay(2000);
+          setGameLoopModal(false);
+          setTurn(await playersTurn());
+        }else if (cont === false){
+          gameOver(true);
+          if(player.liveStatus === false){
+            setGameText('You lost');
+            toggleGameLoopModal();
+            await delay(2000);
+            setGameLoopModal(false);
+          }else if(player.liveStatus === true){
+            setGameText('You win');
+            toggleGameLoopModal();
+            await delay(2000);
+            setGameLoopModal(false);
+          }
+        }
+      }
+    }
     //add ai player part
-    if (gameOver === false && gameLoopStep >= -1){
-        fce();
+    if (gameOver === false && gameLoopStep >= -1 && turn === 1){
+      fce();
+    }else if (gameOver === false && gameLoopStep >= -1){
+      aiPlayerTurnFce();
     }
     
 
@@ -335,7 +402,7 @@ useEffect( () => {
 
   
   return (
-    <PlayerContext.Provider value={{player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn}}>
+    <PlayerContext.Provider value={{player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn, battleTiles}}>
       {battleModal && (
         <div id="battleModal" class="battleModal">
           <div className="overlay">

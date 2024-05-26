@@ -11,7 +11,7 @@ class PlayerObject{
         this.woodPoints = 100;
         this.metalPoints = 100;
         // A list of tile objects
-        this.ownedTiles = [new Tile(0,0,0)]; // We need to assign a random starting tile
+        this.ownedTiles = [randomTile]; // We need to assign a random starting tile
         this.freeTroops = 10;
     }
 
@@ -62,9 +62,9 @@ class PlayerObject{
 
     OwnsTileCheck(tile){
         for(let i = 0; i<this.ownedTiles.length; i++){
-            console.log(this.ownedTiles[i][0]);
+            console.log(this.ownedTiles[i]);
             console.log(tile[0]);
-            if (this.ownedTiles[i][0]===tile[0] && this.ownedTiles[i][1]===tile[1] && this.ownedTiles[i][2]===tile[2]){
+            if (this.ownedTiles[i].q===tile[0] && this.ownedTiles[i].r===tile[1] && this.ownedTiles[i].s===tile[2]){
                 return(true);
             }
         }

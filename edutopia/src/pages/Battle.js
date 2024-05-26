@@ -17,8 +17,8 @@ Modal.setAppElement('#root');
 
 
 function Battle ({close, isOpen}) {
-    const [phase, setPhase] = useState(0);//phase of pop up that is returned
-    const {player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn} = useContext(PlayerContext);
+    const [phase, setPhase] = useState(0);
+    const {player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn, battleTiles} = useContext(PlayerContext);
     const [winner, setWinner] = useState(0);
     const [attackedPlayer, setAttackedPlayer] = useState(3);
     const [attackLand, setAttackLand] = useState(null);
@@ -29,7 +29,41 @@ function Battle ({close, isOpen}) {
     const [notifications, setNotifications] = useState([]);
     const [TroopIconAttacker, setTroopIconAttacker] = useState('');
     const [TroopIconOpponent, setTroopIconOpponent] = useState('');
+    
+    useEffect(() => {
+        const aiPlayerBattle = async () => {
+            gameSettings.saveClickedHexagon(battleTiles[0][0], battleTiles[0][1], battleTiles[0][2], '');
+            let hex = gameSettings.getClickedHexagon();
+            setTroopIconAttacker(await selectColorTroop(turn));
+            setAttackLand(battleTiles[0]);
+            setAttackTroops(gameSettings.getClickedHexagonTroops()); 
+            
+            gameSettings.saveClickedHexagon(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2], '');
+            hex = gameSettings.getClickedHexagon();
+            if(await gameSettings.getBiomeForCoordinates(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]).includes('_Pink')){
+                setAttackedPlayer(2); 
+                setTroopIconOpponent(await selectColorTroop(2));
+            }else if(await gameSettings.getBiomeForCoordinates(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]).includes('_Blue')){
+                setAttackedPlayer(1); 
+                setTroopIconOpponent(await selectColorTroop(1));
+            }else if (await gameSettings.getBiomeForCoordinates(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]).includes('_Cyan')){
+                setAttackedPlayer(3);
+                setTroopIconOpponent(await selectColorTroop(3)); 
+            }else if(await gameSettings.getBiomeForCoordinates(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]).includes('_Yellow')){
+                setAttackedPlayer(4); 
+                setTroopIconOpponent(await selectColorTroop(4));
+            }
+            await randomlyChoose(gameSettings.getClickedHexagonTroops(), battleTiles[1]);
 
+            setPhase(3);
+        }
+
+        if (battleTiles.length === 0) {
+            setPhase(0);
+        } else {
+            aiPlayerBattle();
+        }
+    }, [battleTiles]);
     
     const [scope, animate] = useAnimate();
     const winnerTextRef = useRef(null);
