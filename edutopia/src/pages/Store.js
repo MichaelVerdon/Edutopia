@@ -70,11 +70,6 @@ function Store ({storeModal, close}) {
     }
   }
 
-  const handleClosePopup = () => {
-    setShowPopup(false);
-    setPhase(0);
-  };
-
   const changeSelectedHex = (selectedHex) => {
     setSelectedHex(selectedHex);
     console.log("yup this works too");
