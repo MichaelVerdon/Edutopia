@@ -16,7 +16,6 @@ function Store ({storeModal, close}) {
     const { player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn} = useContext(PlayerContext);
     const [showPopup, setShowPopup] = useState(false);
     const [ selectedHex, setSelectedHex ] = useState(null);
-    const { shouldTriggerSaveSelection, triggerSaveSelection } = useContext(PlayerContext);
     const source = gameSettings.getSourceOfStore();
 
     const customStyles = {
@@ -232,15 +231,6 @@ function Store ({storeModal, close}) {
     console.log("Selected tile: " + gameSettings.getClickedHexagon())
   })
 
-  useEffect(() => {
-    console.log(phase);
-    console.log("Selected Hexagon for Store:", gameSettings.getClickedHexagon());
-    if (shouldTriggerSaveSelection) {
-      saveSelection();
-      triggerSaveSelection(false);
-    }
-  }, [phase, storeModal, selectedHex, shouldTriggerSaveSelection]);
-
   const backToMain = () => {
     setPhase(0);
   }
@@ -312,43 +302,6 @@ function Store ({storeModal, close}) {
     close();
   }
 
-  async function saveSelection(){
-    let q = selectedHex.q;
-    let r = selectedHex.r;
-    let s = selectedHex.s;
-    let clickedHexagonBiome = gameSettings.getBiomeForCoordinates(q, r, s);
-    console.log(clickedHexagonBiome);
-    let currentPlayer = await playersTurn();
-
-    let ableToPurchase = false;
-    for(let i = 0; i<selectedItem.landNeeded.length; i++){
-      if(selectedItem.new === true && clickedHexagonBiome === selectedItem.landNeeded[i] + "_Unclaimed"){
-        ableToPurchase = true;
-      }if(selectedItem.new === false && clickedHexagonBiome === selectedItem.landNeeded[i] + await colorTurn()){
-        ableToPurchase = true;
-      }
-    }
-    
-    if (ableToPurchase){
-      if(currentPlayer.getTechPoints < selectedItem.techPoints || currentPlayer.getFoodPoints < selectedItem.foodPoints || currentPlayer.getWoodPoints < selectedItem.woodPoints || currentPlayer.getMetalPoints < selectedItem.metalPoints){
-        setReason("you don't have enough resources");
-        setSelectedItem(null)
-        setPhase(1);
-        gameSettings.saveSourceOfStore(null);
-      }else{
-        setPhase(3);
-        gameSettings.saveSourceOfStore(null);
-      }  
-    } else {
-      setReason("you don't own the correct land for this purchase or you selected an incorrect land");
-      setPhase(1);
-      gameSettings.saveSourceOfStore(null);
-    }
-    
-  }
-
-
-
   const DisplayData = JsonData.map((info) => (
     <tr key={info.id} onClick={() => handleRowClick(info)}>
       <td><img src={require(`${ info.item }`)} width={60} height={60} alt ='troop'/></td>
@@ -397,25 +350,15 @@ function Store ({storeModal, close}) {
         </Modal>
     );
 } else if (phase === 2) {
-    return (
-      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal" style={customStyles}>
+  return (
+    <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal" style={customStyles}>
       <div className="phase-popup">
-            <h1>Pick a land</h1>
-            <button onClick={saveSelection} className="btn">Save selection</button>
-            <button className="close-btn-small" onClick={close}>X</button> {/* Top right X close button */}
-        </div>
-        </Modal>
-    );
-} else if (phase === 3) {
-    return (
-      <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal" style={customStyles}>
-        <div className="phase-popup">
-            <h1>Are you sure you want to purchase this?</h1>
-            <button onClick={purchase} className="btn">Yes</button>
-            <button className="close-btn-small" onClick={close}>X</button> {/* Top right X close button */}
-        </div>
-        </Modal>
-    );
+          <h1>Are you sure you want to purchase this?</h1>
+          <button onClick={purchase} className="btn">Yes</button>
+          <button className="close-btn-small" onClick={close}>X</button> {/* Top right X close button */}
+      </div>
+      </Modal>
+  );
 }
 
 }
