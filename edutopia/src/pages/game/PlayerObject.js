@@ -1,3 +1,4 @@
+import GameSettings from './GameSettings';
 import Tile from './Tile';
 
 class PlayerObject{
@@ -41,24 +42,39 @@ class PlayerObject{
     set setFreeTroops(freeTroops) { this.freeTroops = freeTroops; }
     set setOwnedTiles(setTile) { this.ownedTiles = setTile; }
 
-    set addOwnedTiles(ownedTile){
-        let notInArr = true;
-        for(let i = 0; i<this.ownedTiles.length; i++){
-            if (this.ownedTiles[i]===ownedTile){
-                notInArr = false;
-                break;
-            }
+    async addOwnedTile(ownedTile, newTileColor){
+        if(!this.OwnsTileCheck(ownedTile)){
+            let oldBiome = await GameSettings.getBiomeForCoordinates(ownedTile[0], ownedTile[1], ownedTile[2]);
+            let newBiome = await oldBiome.split('_')[0] + newTileColor;
+            console.log(newBiome);
+            GameSettings.setBiome(ownedTile[0], ownedTile[1], ownedTile[2], newBiome);
+            this.ownedTiles.push(new Tile(ownedTile[0], ownedTile[1], ownedTile[2]));
         }
-        if(notInArr){this.ownedTiles.push(ownedTile);}}
+    }  
 
-    set removeOwnedTiles(removeTile){
-        for(let i = 0; i<this.ownedTiles.length; i++){
-            if (this.ownedTiles[i]===removeTile){
-                this.ownedTiles.splice(i,1);
+    removeOwnedTile(removeTile) {
+        // Helper function to compare arrays by value
+        const arraysEqual = (arr1, arr2) => {
+            if (arr1.length !== arr2.length) return false;
+            for (let i = 0; i < arr1.length; i++) {
+                if (arr1[i] !== arr2[i]) return false;
+            }
+            return true;
+        };
+    
+        
+        for (let i = 0; i < this.ownedTiles.length; i++) {
+            let q = this.ownedTiles[i].q;
+            let r = this.ownedTiles[i].r;
+            let s = this.ownedTiles[i].s;
+            if (arraysEqual([q, r, s], removeTile)) {
+                this.ownedTiles.splice(i, 1);
                 break;
             }
         }
+        
     }
+    
 
     OwnsTileCheck(tile){
         for(let i = 0; i<this.ownedTiles.length; i++){

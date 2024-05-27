@@ -20,7 +20,7 @@ function Battle ({close, isOpen}) {
     const [phase, setPhase] = useState(0);
     const {player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn, battleTiles} = useContext(PlayerContext);
     const [winner, setWinner] = useState(0);
-    const [attackedPlayer, setAttackedPlayer] = useState(3);
+    const [attackedPlayer, setAttackedPlayer] = useState(0);
     const [attackLand, setAttackLand] = useState(null);
     const [attackTroops, setAttackTroops] = useState(0);
     const [opponentDead, setOpponentDead] = useState(false);
@@ -145,9 +145,9 @@ function Battle ({close, isOpen}) {
         if (color === 1){
             return TroopIconBlue;
         } else if(color === 2){
-            return TroopIconYellow;
-        } else if (color === 3){
             return TroopIconPink;
+        } else if (color === 3){
+            return TroopIconYellow;
         }else{
             return TroopIconCyan;
         }
@@ -198,7 +198,7 @@ function Battle ({close, isOpen}) {
                     setOpponentLand([q,r,s]);
                     setOpponentTroops(clickedHexagonTroops);
                     setTroopIconOpponent(selectColorTroop(2)); //TODO change when real opponents implemented
-                    await randomlyChoose(clickedHexagonTroops, [q,r,s]);
+                    await randomlyChoose(clickedHexagonTroops, [q,r,s], 2);
                     //changePhase();
                     OpponentAliveCheck();
                 }else if(opponent1.OwnsTileCheck([q,r,s]) && opponent1.playerId !== currentPlayer.playerId){
@@ -207,7 +207,7 @@ function Battle ({close, isOpen}) {
                     setOpponentLand([q,r,s]);
                     setOpponentTroops(clickedHexagonTroops);
                     setTroopIconOpponent(selectColorTroop(3)); //TODO change when real opponents implemented
-                    await randomlyChoose(clickedHexagonTroops, [q,r,s]);
+                    await randomlyChoose(clickedHexagonTroops, [q,r,s], 3);
                     //changePhase();
                     OpponentAliveCheck();
                 }else if(opponent2.OwnsTileCheck([q,r,s]) && opponent2.playerId !== currentPlayer.playerId){
@@ -216,7 +216,7 @@ function Battle ({close, isOpen}) {
                     setOpponentLand([q,r,s]);
                     setOpponentTroops(clickedHexagonTroops);
                     setTroopIconOpponent(selectColorTroop(4)); //TODO change when real opponents implemented
-                    await randomlyChoose(clickedHexagonTroops, [q,r,s]);
+                    await randomlyChoose(clickedHexagonTroops, [q,r,s], 4);
                     //changePhase();
                     OpponentAliveCheck();
                 }else if(player.OwnsTileCheck([q,r,s]) && player.playerId !== currentPlayer.playerId){
@@ -225,7 +225,7 @@ function Battle ({close, isOpen}) {
                     setOpponentLand([q,r,s]);
                     setOpponentTroops(clickedHexagonTroops);
                     setTroopIconOpponent(selectColorTroop(1)); //TODO change when real opponents implemented
-                    await randomlyChoose(clickedHexagonTroops, [q,r,s]);
+                    await randomlyChoose(clickedHexagonTroops, [q,r,s], 1);
                     //changePhase();
                     OpponentAliveCheck();
                 }else {
@@ -240,8 +240,24 @@ function Battle ({close, isOpen}) {
         }
     }
 
+    async function removeLosersTile(land, attackedPlayerId) {
+        if (attackedPlayerId === 2){
+            opponent.removeOwnedTile(land); //TODO: later replace with game handler functions later
+            NotificationManager.showSuccessNotification(``);
+        }else if (attackedPlayerId === 3){
+            opponent1.removeOwnedTile(land);//TODO: later replace with game handler functions later
+            NotificationManager.showSuccessNotification(``);
+        }else if (attackedPlayerId === 1){
+            player.removeOwnedTile(land); //TODO: later replace with game handler functions later
+            NotificationManager.showSuccessNotification(``);
+        }else if (attackedPlayerId===4){
+            opponent2.removeOwnedTile(land); //TODO: later replace with game handler functions later
+            NotificationManager.showSuccessNotification(``);
+        }
+    }
+
     //comparing nums of troops selected
-    async function randomlyChoose(opponentTroopCount, land) {
+    async function randomlyChoose(opponentTroopCount, land, attackedPlayerId) {
         let currentPlayer = await playersTurn();
         const chanceOptionAttacker = (attackTroops/((attackTroops+opponentTroopCount)/100))/100;
         // Generate a random number between 0 and 1
@@ -250,58 +266,22 @@ function Battle ({close, isOpen}) {
         if (randomValue <= chanceOptionAttacker) {
             setWinner(turn);
             if (turn === 1){
-                player.addOwnedTiles = land; //TODO: later replace with game handler functions later
-                if (attackedPlayer === 2){
-                    opponent.setOwnedTiles = []; //TODO: later replace with game handler functions later
-                    NotificationManager.showSuccessNotification(`Player 1`);
-                }else if (attackedPlayer === 3){
-                    opponent1.setOwnedTiles = [];//TODO: later replace with game handler functions later
-                    NotificationManager.showSuccessNotification(`Player 1`);
-                }else{
-                    opponent2.setOwnedTiles = []; //TODO: later replace with game handler functions later
-                    NotificationManager.showSuccessNotification(`Player 1`);
-                }
+                player.addOwnedTile(land, '_Blue'); //TODO: later replace with game handler functions later
+                removeLosersTile(land, attackedPlayerId);
             }else if (turn === 2){
-                opponent.addOwnedTiles = land; //TODO: later replace with game handler functions later
-                if (attackedPlayer === 1){
-                    player.setOwnedTiles = []; //TODO: later replace with game handler functions later
-                    NotificationManager.showSuccessNotification(`Player 2`);
-                }else if (attackedPlayer === 3){
-                    opponent1.setOwnedTiles = []; //TODO: later replace with game handler functions later
-                    NotificationManager.showSuccessNotification(`Player 2`);
-                }else{
-                    opponent2.setOwnedTiles = []; //TODO: later replace with game handler functions later
-                    NotificationManager.showSuccessNotification(`Player 2`);
-                }
+                opponent.addOwnedTile(land, '_Pink'); //TODO: later replace with game handler functions later
+                removeLosersTile(land, attackedPlayerId);
             }else if (turn === 3){
-                opponent1.addOwnedTiles = land; //TODO: later replace with game handler functions later
-                if (attackedPlayer === 1){
-                    player.setOwnedTiles = []; //TODO: later replace with game handler functions later
-                    NotificationManager.showSuccessNotification(`Player 3`);
-                }else if (attackedPlayer=== 2){
-                    opponent.setOwnedTiles = []; //TODO: later replace with game handler functions later
-                    NotificationManager.showSuccessNotification(`Player 3`);
-                }else{
-                    opponent2.setOwnedTiles = []; //TODO: later replace with game handler functions later
-                    NotificationManager.showSuccessNotification(`Player 3`);
-                }
+                opponent1.addOwnedTile(land, '_Cyan'); //TODO: later replace with game handler functions later
+                removeLosersTile(land, attackedPlayerId);
             }else{
-                opponent2.addOwnedTiles = land; //TODO: later replace with game handler functions later
-                if (attackedPlayer === 1){
-                    player.setOwnedTiles = []; //TODO: later replace with game handler functions later
-                    NotificationManager.showSuccessNotification(`Player 4 now owns ${opponent2.getOwnedTiles.length} tiles (player 2 owns ${player.getOwnedTiles.length})`);
-                }else if (attackedPlayer === 2){
-                    opponent.setOwnedTiles = []; //TODO: later replace with game handler functions later
-                    NotificationManager.showSuccessNotification(`Player 4 now owns ${opponent2.getOwnedTiles.length} tiles (player 2 owns ${opponent.getOwnedTiles.length})`);
-                }else{
-                    opponent1.setOwnedTiles = []; //TODO: later replace with game handler functions later
-                    NotificationManager.showSuccessNotification(`Player 4 now owns ${opponent2.getOwnedTiles.length} tiles (player 2 owns ${opponent1.getOwnedTiles.length})`);
-                }
+                opponent2.addOwnedTile(land, '_Yellow'); //TODO: later replace with game handler functions later
+                removeLosersTile(land, attackedPlayerId);
             }
              
         } else {
             // Otherwise, choose option2
-            setWinner(attackedPlayer); //TODO
+            setWinner(attackedPlayerId); //TODO
             
         }
         //changePhase();
