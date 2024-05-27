@@ -61,16 +61,15 @@ class aiPlayer extends PlayerObject{
             let r = this.ownedTiles[i].r;
             let s = this.ownedTiles[i].s;
 
-            //TODO solve nonexistent tiles
-            if(await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_").pop() !== "_Unclaimed"){
+            if(await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_").pop() !== "Unclaimed"){
                 touchingTiles.push([[q,r,s], [q-1,r+1,s]]);
-            }else if(await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_").pop() !== "_Unclaimed"){
+            }else if(await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_").pop() !== "Unclaimed"){
                 touchingTiles.push([[q,r,s], [q,r+1,s-1]]);
-            }else if(await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_").pop() !== "_Unclaimed"){
+            }else if(await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_").pop() !== "Unclaimed"){
                 touchingTiles.push([[q,r,s], [q-1,r,s+1]]);
-            }else if(await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_").pop() !== "_Unclaimed"){
+            }else if(await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_").pop() !== "Unclaimed"){
                 touchingTiles.push([[q,r,s], [q+1,r,s-1]]);
-            }else if(await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_").pop() !== "_Unclaimed"){
+            }else if(await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_").pop() !== "Unclaimed"){
                 touchingTiles.push([[q,r,s], [q,r-1,s+1]]);
             }
         }
