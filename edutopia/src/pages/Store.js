@@ -127,7 +127,6 @@ function Store ({storeModal, close}) {
     let tiles = player.ownedTiles;
     tiles = tiles.map(tile => tile.getCoordVal());
     for(let tile of tiles){
-      let checkedTile = tile;
       console.log("iterating over: " + tile)
       for (let array of adjancenyMap) {
         let tempTile = [
