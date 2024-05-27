@@ -69,46 +69,50 @@ class Tile {
     }
   
     
-      // Getter methods for resource points
-      getTechPoints() {
-        return this.resources.techPoints;
-      }
-    
-      getFoodPoints() {
-        return this.resources.foodPoints;
-      }
-    
-      getWoodPoints() {
-        return this.resources.woodPoints;
-      }
-    
-      getMetalPoints() {
-        return this.resources.metalPoints;
-      }
-
-      getTroops() {
-        return this.troops;
-      }
+    // Getter methods for resource points
+    getTechPoints() {
+      return this.resources.techPoints;
+    }
   
-      getTileInfo() {
-        const coords = `Coordinates: (x: ${this.q}, y: ${this.r}, z: ${this.s})`;
-        const biomeInfo = this.biome ? `Biome: ${this.biome}` : "Biome: None";
-      
-        // Create the resources text string from the resources object
-        const resourcesText = Object.entries(this.resources)
-          .map(([key, value]) => `${key}: ${value}`)
-          .join(', ');
-      
-        // Now resourcesText can be used in the template literal
-        const resourcesInfo = `Resources: ${resourcesText}`;
-        const troopsInfo = `Troops: ${this.troops}`;
-      
-        return `${coords}, ${biomeInfo}, ${resourcesInfo}, ${troopsInfo}`;
-      }
+    getFoodPoints() {
+      return this.resources.foodPoints;
+    }
+  
+    getWoodPoints() {
+      return this.resources.woodPoints;
+    }
+  
+    getMetalPoints() {
+      return this.resources.metalPoints;
+    }
 
-      getCoords(){
-        return `x: ${this.q}, y: ${this.r}, z: ${this.s}`;
-      }
+    getTroops() {
+      return this.troops;
+    }
+
+    getTileInfo() {
+      const coords = `Coordinates: (x: ${this.q}, y: ${this.r}, z: ${this.s})`;
+      const biomeInfo = this.biome ? `Biome: ${this.biome}` : "Biome: None";
+    
+      // Create the resources text string from the resources object
+      const resourcesText = Object.entries(this.resources)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(', ');
+    
+      // Now resourcesText can be used in the template literal
+      const resourcesInfo = `Resources: ${resourcesText}`;
+      const troopsInfo = `Troops: ${this.troops}`;
+    
+      return `${coords}, ${biomeInfo}, ${resourcesInfo}, ${troopsInfo}`;
+    }
+
+    getCoords(){
+      return `x: ${this.q}, y: ${this.r}, z: ${this.s}`;
+    }
+
+    getCoordVal(){
+      return [this.q, this.r, this.s];
+    }
   }
 
 export default Tile;

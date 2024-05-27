@@ -6,6 +6,7 @@ import gameSettings from './game/GameSettings';
 import './Store.css';
 import NotificationManager from '../pages/game/NotificationManager';
 import storeData from '../pages/game/storeItemsData.json';
+import Tile from './game/Tile';
 Modal.setAppElement('#root'); 
 
 
@@ -108,25 +109,77 @@ function Store ({storeModal, close}) {
     }
   }
 
+  function canPurchase(){
+    if(gameSettings.getBiomeForCoordinates(selectedHex) !== "Water"){
+      if(checkTileAdjancency()){
+        console.log("Tile is adjacent to owned tile");
+        return true;
+      }
+      else{
+        console.log("Tile is not adjacent to owned tile");
+        return false;
+      }
+    }
+  }
+
+  function checkTileAdjancency(){
+    let selectedTile = [selectedHex.q, selectedHex.r, selectedHex.s];
+    let tiles = player.ownedTiles;
+    tiles = tiles.map(tile => tile.getCoordVal());
+    for(let tile of tiles){
+      let checkedTile = tile;
+      console.log("iterating over: " + tile)
+      for (let array of adjancenyMap) {
+        let tempTile = [
+          tile[0] + array[0],
+          tile[1] + array[1],
+          tile[2] + array[2]
+        ];
+        console.log("temp tile: " + tempTile);
+        if(
+          tempTile [0] === selectedTile[0] &&
+          tempTile [1] === selectedTile[1] &&
+          tempTile [2] === selectedTile[2]
+        ){ //Check matching coordinates to check for tile adjanceny to owned tile.
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  const adjancenyMap = [
+    [0, -1, 1],
+    [1, -1, 0],
+    [1, 0, -1],
+    [0, 1, -1],
+    [-1, 1, 0],
+    [-1, 0, 1]
+  ]
+
+
   async function purchase(){
     let currentPlayer = await playersTurn();
     let tempPlayer = new PlayerObject(turn);
-    if(selectedItem.id===1){
-      let troops = await currentPlayer.freeTroops +1;
-      tempPlayer.freeTroops = 11;
-      
-      
-    }else if(selectedItem.land){
-      const { q, r, s } = gameSettings.getClickedHexagon();
-      gameSettings.setBiomeForCoordinates(q,r,s,selectedItem.landNew + await colorTurn());
-      NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);
-      tempPlayer.ownedTiles = await currentPlayer.ownedTiles.push([q, r, s]);
-      tempPlayer.freeTroops = await currentPlayer.freeTroops;
-    }
-    else{
-      NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} unsuccessful`);
-      return;
-    }
+
+    if(canPurchase()){
+      if(selectedItem.id===1){
+        let troops = await currentPlayer.freeTroops +1;
+        tempPlayer.freeTroops = 11;
+        
+        
+      }else if(selectedItem.land){
+        const { q, r, s } = selectedHex;
+        gameSettings.setBiomeForCoordinates(q,r,s,selectedItem.landNew + await colorTurn());
+        NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);
+        tempPlayer.ownedTiles = await currentPlayer.ownedTiles.push([q, r, s]);
+        tempPlayer.freeTroops = await currentPlayer.freeTroops;
+      }
+      else{
+        NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} unsuccessful`);
+        return;
+      }
+  
     tempPlayer.playerId = turn;
     tempPlayer.color = await colorTurn();
     tempPlayer.ownedTiles = currentPlayer.ownedTiles;
@@ -147,6 +200,7 @@ function Store ({storeModal, close}) {
     }
     gameSettings.clearClickedHexagon();
     gameSettings.saveSourceOfStore(null);
+  }
 
     close();
   }
