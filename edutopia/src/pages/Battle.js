@@ -197,7 +197,7 @@ function Battle ({close, isOpen}) {
                     setAttackedPlayer(2);
                     setOpponentLand([q,r,s]);
                     setOpponentTroops(clickedHexagonTroops);
-                    setTroopIconOpponent(selectColorTroop(2)); //TODO change when real opponents implemented
+                    setTroopIconOpponent(selectColorTroop(2)); 
                     await randomlyChoose(clickedHexagonTroops, [q,r,s], 2);
                     //changePhase();
                     OpponentAliveCheck();
@@ -206,7 +206,7 @@ function Battle ({close, isOpen}) {
                     setAttackedPlayer(3);
                     setOpponentLand([q,r,s]);
                     setOpponentTroops(clickedHexagonTroops);
-                    setTroopIconOpponent(selectColorTroop(3)); //TODO change when real opponents implemented
+                    setTroopIconOpponent(selectColorTroop(3));
                     await randomlyChoose(clickedHexagonTroops, [q,r,s], 3);
                     //changePhase();
                     OpponentAliveCheck();
@@ -215,7 +215,7 @@ function Battle ({close, isOpen}) {
                     setAttackedPlayer(4);
                     setOpponentLand([q,r,s]);
                     setOpponentTroops(clickedHexagonTroops);
-                    setTroopIconOpponent(selectColorTroop(4)); //TODO change when real opponents implemented
+                    setTroopIconOpponent(selectColorTroop(4));
                     await randomlyChoose(clickedHexagonTroops, [q,r,s], 4);
                     //changePhase();
                     OpponentAliveCheck();
@@ -224,7 +224,7 @@ function Battle ({close, isOpen}) {
                     setAttackedPlayer(1);
                     setOpponentLand([q,r,s]);
                     setOpponentTroops(clickedHexagonTroops);
-                    setTroopIconOpponent(selectColorTroop(1)); //TODO change when real opponents implemented
+                    setTroopIconOpponent(selectColorTroop(1));
                     await randomlyChoose(clickedHexagonTroops, [q,r,s], 1);
                     //changePhase();
                     OpponentAliveCheck();
@@ -242,23 +242,18 @@ function Battle ({close, isOpen}) {
 
     async function removeLosersTile(land, attackedPlayerId) {
         if (attackedPlayerId === 2){
-            opponent.removeOwnedTile(land); //TODO: later replace with game handler functions later
-            NotificationManager.showSuccessNotification(``);
+            opponent.removeOwnedTile(land);
         }else if (attackedPlayerId === 3){
-            opponent1.removeOwnedTile(land);//TODO: later replace with game handler functions later
-            NotificationManager.showSuccessNotification(``);
+            opponent1.removeOwnedTile(land);
         }else if (attackedPlayerId === 1){
-            player.removeOwnedTile(land); //TODO: later replace with game handler functions later
-            NotificationManager.showSuccessNotification(``);
+            player.removeOwnedTile(land); 
         }else if (attackedPlayerId===4){
-            opponent2.removeOwnedTile(land); //TODO: later replace with game handler functions later
-            NotificationManager.showSuccessNotification(``);
+            opponent2.removeOwnedTile(land); 
         }
     }
 
     //comparing nums of troops selected
     async function randomlyChoose(opponentTroopCount, land, attackedPlayerId) {
-        let currentPlayer = await playersTurn();
         const chanceOptionAttacker = (attackTroops/((attackTroops+opponentTroopCount)/100))/100;
         // Generate a random number between 0 and 1
         const randomValue = Math.random();
@@ -266,17 +261,21 @@ function Battle ({close, isOpen}) {
         if (randomValue <= chanceOptionAttacker) {
             setWinner(turn);
             if (turn === 1){
-                player.addOwnedTile(land, '_Blue'); //TODO: later replace with game handler functions later
+                player.addOwnedTile(land, '_Blue'); 
                 removeLosersTile(land, attackedPlayerId);
+                NotificationManager.showSuccessNotification(`player 1 now owns ` + land);
             }else if (turn === 2){
-                opponent.addOwnedTile(land, '_Pink'); //TODO: later replace with game handler functions later
+                opponent.addOwnedTile(land, '_Pink'); 
                 removeLosersTile(land, attackedPlayerId);
+                NotificationManager.showSuccessNotification(`player 2 now owns ` + land);
             }else if (turn === 3){
-                opponent1.addOwnedTile(land, '_Cyan'); //TODO: later replace with game handler functions later
+                opponent1.addOwnedTile(land, '_Cyan'); 
                 removeLosersTile(land, attackedPlayerId);
-            }else{
-                opponent2.addOwnedTile(land, '_Yellow'); //TODO: later replace with game handler functions later
+                NotificationManager.showSuccessNotification(`player 3 now owns ` + land);
+            }else if (turn === 4){
+                opponent2.addOwnedTile(land, '_Yellow'); 
                 removeLosersTile(land, attackedPlayerId);
+                NotificationManager.showSuccessNotification(`player 4 now owns ` + land);
             }
              
         } else {
