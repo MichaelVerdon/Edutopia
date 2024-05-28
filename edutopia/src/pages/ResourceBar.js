@@ -8,10 +8,22 @@ import TroopIcon from './images/sprites/Troop_Blue.png';
 import { PlayerContext } from './Game';
 
 function ResourceBar({ techPoints, foodPoints, woodPoints, metalPoints, ownedTroops }) {
-    useEffect(() => {
-      // Any additional effects when props change can be handled here
-    }, [techPoints, foodPoints, woodPoints, metalPoints, ownedTroops]);
-    // Tech, Food, Wood, Metal
+    
+    const { player, setPlayer } = useContext(PlayerContext);
+
+    const [tech, setTechPoints] = useState(player.getTechPoints);
+    const [food, setFoodPoints] = useState(player.getFoodPoints);
+    const [wood, setWoodPoints] = useState(player.getWoodPoints);
+    const [metal, setMetalPoints] = useState(player.getMetalPoints);
+    
+    useEffect(()=>{
+        setFoodPoints(player.getFoodPoints);
+        setWoodPoints(player.getWoodPoints);
+        setTechPoints(player.getTechPoints);
+        setMetalPoints(player.getMetalPoints);
+        
+    },[player]);
+    
     return (
         <div className='ResourceBarContainer'>
             <div className='ResourceContainer'>
