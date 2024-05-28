@@ -3,8 +3,9 @@ import { Hexagon, Text } from 'react-hexgrid';
 import configs from './configurations';
 import gameSettings from './GameSettings';
 import './inGameHex.css';
+import TroopIcon from '../images/sprites/Troop_Blue.png';
 
-const InteractiveHexagon = ({ q, r, s, onClick }) => {
+const InteractiveHexagon = ({ q, r, s, onClick, troops }) => {
   const [fillColor, setFillColor] = useState(gameSettings.getBiomeForCoordinates(q, r, s));
   const [isSelected, setIsSelected] = useState(false);
 
@@ -63,6 +64,17 @@ const InteractiveHexagon = ({ q, r, s, onClick }) => {
       style={{ cursor: cursorStyle }}
     >
       <Text className="hexagon-text">{`${q},${r},${s}`}</Text>
+      {troops > 0 && (
+        <g transform="translate(-1, 1)">
+          <image
+            href={TroopIcon}
+            height="3"  
+            width="3"   
+            
+          />
+          <Text x="0" y="1.5" className="troop-count" style={{ fontSize: '2px' }}>{troops}</Text>
+        </g>
+      )}
     </Hexagon>
   );
 };

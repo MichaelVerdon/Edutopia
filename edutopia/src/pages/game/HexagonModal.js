@@ -2,21 +2,13 @@ import React from 'react';
 import gameSettings from './GameSettings';
 import ShopIcon from '../images/sprites/Shop_Icon.png';
 import TileInfo from '../images/sprites/Tile_Info.png';
-import TroopBlue from '../images/sprites/Troop_Blue.png'; // Add your troop icon here
+import TroopBlue from '../images/sprites/Troop_Blue.png';
 
-const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileInfo, position, openStore, allocateTroops, hexData, player }) => {
+const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileInfo, position, openStore, allocateTroops, hexData }) => {
   if (!isOpen) return null;
 
-  const StoreFunction = () => {
-    if (gameSettings.getSourceOfStore() !== 'HUD') {
-      openStore();
-    } else {
-      return null;
-    }
-  };
-
   const handleAllocateTroops = () => {
-    allocateTroops(player, hexData);
+    allocateTroops(hexData);
   };
 
   const modalStyle = {
@@ -87,7 +79,7 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
           backgroundColor: 'rgba(255, 204, 102, 1)',
           borderRadius: '10px',
         }}
-        onClick={StoreFunction}
+        onClick={openStore}
       >
         <img
           src={ShopIcon}
@@ -118,10 +110,10 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
           backgroundColor: 'rgba(255, 204, 102, 1)',
           borderRadius: '10px',
         }}
-        
+        onClick={handleAllocateTroops}
       >
         <img
-          src={TroopBlue} // Use your troop icon here
+          src={TroopBlue}
           alt="Troops"
           style={{
             maxWidth: '100%',

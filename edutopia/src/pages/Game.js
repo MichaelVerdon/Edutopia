@@ -50,6 +50,7 @@ function Game() {
   const [gameLoopStep, setGameLoopStep] = useState(-2);
   const [shopAndTroopTime, setShopAndTroopTime] = useState(false);
   const [battleTiles, setBattleTiles] = useState([]);
+  const [ownedTroops, setOwnedTroops] = useState(0); // State for owned troops
 
   const toggleGameState = () => {
     setGameState(!gameOver);
