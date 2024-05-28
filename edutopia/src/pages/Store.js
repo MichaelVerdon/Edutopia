@@ -110,15 +110,21 @@ function Store ({storeModal, close}) {
   }
 
   function canPurchase(){
+    try{
     if(gameSettings.getBiomeForCoordinates(selectedHex) !== "Water"){
-      if(checkTileAdjancency()){
+      if(checkTileAdjancency() || checkTileOwnership()){
         console.log("Tile is adjacent to owned tile");
         return true;
       }
       else{
-        console.log("Tile is not adjacent to owned tile");
+        console.log("Tile is not adjacent to owned tile or owned");
         return false;
       }
+    }
+  }
+    catch{
+      console.log("Something went wrong");
+      return false;
     }
   }
 
@@ -144,6 +150,24 @@ function Store ({storeModal, close}) {
         }
       }
     }
+    return false;
+  }
+
+  function checkTileOwnership(){
+    let selectedTile = [selectedHex.q, selectedHex.r, selectedHex.s];
+    let tiles = player.ownedTiles;
+    tiles = tiles.map(tile => tile.getCoordVal());
+    for(let tile of tiles){
+      if(
+        tile[0] === selectedTile[0] &&
+        tile[1] === selectedTile[1] &&
+        tile[2] === selectedTile[2]
+      ){
+        console.log("tile is owned");
+        return true;
+      }
+    }
+    console.log("tile is not owned")
     return false;
   }
 
