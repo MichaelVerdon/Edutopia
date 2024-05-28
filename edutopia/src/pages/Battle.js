@@ -43,18 +43,22 @@ function Battle ({close, isOpen}) {
             if(await gameSettings.getBiomeForCoordinates(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]).includes('_Pink')){
                 setAttackedPlayer(2); 
                 setTroopIconOpponent(await selectColorTroop(2));
+                await randomlyChoose(gameSettings.getClickedHexagonTroops(), battleTiles[1], 2);
             }else if(await gameSettings.getBiomeForCoordinates(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]).includes('_Blue')){
                 setAttackedPlayer(1); 
                 setTroopIconOpponent(await selectColorTroop(1));
+                await randomlyChoose(gameSettings.getClickedHexagonTroops(), battleTiles[1], 1);
             }else if (await gameSettings.getBiomeForCoordinates(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]).includes('_Cyan')){
                 setAttackedPlayer(3);
                 setTroopIconOpponent(await selectColorTroop(3)); 
+                await randomlyChoose(gameSettings.getClickedHexagonTroops(), battleTiles[1], 3);
             }else if(await gameSettings.getBiomeForCoordinates(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]).includes('_Yellow')){
                 setAttackedPlayer(4); 
                 setTroopIconOpponent(await selectColorTroop(4));
-            }
-            await randomlyChoose(gameSettings.getClickedHexagonTroops(), battleTiles[1]);
+                await randomlyChoose(gameSettings.getClickedHexagonTroops(), battleTiles[1], 4);
 
+            }
+            
             setPhase(3);
         }
 
@@ -105,8 +109,13 @@ function Battle ({close, isOpen}) {
             setTimeout(() => {
                 winnerTextRef.current.style.visibility = 'visible';
               }, 10);
+
+              await delay(2000);
+              close();
         }
     })
+
+    const delay = ms => new Promise(res => setTimeout(res, ms));
 
     const customStyles = {
         overlay: {

@@ -14,7 +14,6 @@ body {
   pointer-events: all;
   stroke: black;
   stroke-width: 0.1px; 
-  
 }
 
 .inGameHex.active polygon,
@@ -39,6 +38,7 @@ body {
   cursor: pointer;
   fill: black;
   user-select: none; 
+  stroke-width: 0.1px; 
   font-family: 'Arial', sans-serif; 
   font-size: 1.2px;
   -webkit-user-select: none;  /* Safari */
