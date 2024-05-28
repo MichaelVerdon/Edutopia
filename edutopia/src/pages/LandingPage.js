@@ -68,7 +68,6 @@ function LandingPage() {
                 <Link to="/game">
                     <button onClick={handlePlayClick} className="play-button">Play</button>
                 </Link>
-                <button className='options-button'>Options</button>
             </div>
         </div>
     );

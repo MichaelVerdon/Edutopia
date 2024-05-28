@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
+import '../pages/Game.css';
 
 Modal.setAppElement('#root'); 
 
@@ -52,9 +53,9 @@ function PopUp({ isOpen, onClose, onTopicsChange }) {
   };
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel="Select Topics">
+    <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel="Select Topics" className="topicsModal">
       <h2>Select Question Topics</h2>
-      <div>
+      <div className='checkboxCont'>
         {[...Array(totalCheckboxes)].map((_, index) => (
           <div key={index + 1}>
             <label>
@@ -69,7 +70,7 @@ function PopUp({ isOpen, onClose, onTopicsChange }) {
           </div>
         ))}
       </div>
-      <button onClick={handleClose}>Close</button>
+      <button onClick={handleClose} className='topicCloseButton'>Confirm</button>
     </Modal>
   );
 }
