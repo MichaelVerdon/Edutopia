@@ -7,7 +7,6 @@ const TileInfoModal = ({ isOpen, tile, onClose }) => {
 
   const tileImage = images[tile.biome];
 
-  // Modal content style
   const modalContentStyle = {
     position: 'absolute',
     top: '50%',
@@ -17,7 +16,7 @@ const TileInfoModal = ({ isOpen, tile, onClose }) => {
     maxWidth: '60%',
     height: 'auto',
     maxHeight: '90vh',
-    backgroundColor: '#f2de7f', // Yellow background color
+    backgroundColor: '#f2de7f',
     borderRadius: '10px',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
     overflow: 'hidden',
@@ -29,10 +28,9 @@ const TileInfoModal = ({ isOpen, tile, onClose }) => {
     textAlign: 'center',
   };
 
-  // Overlay style
   const overlayStyle = {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', // White-ish semi-transparent background
-    pointerEvents: 'auto', // Ensures the overlay blocks interactions and is clickable itself
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    pointerEvents: 'auto',
   };
 
   const rowStyle = (index) => ({

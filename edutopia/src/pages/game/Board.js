@@ -7,7 +7,6 @@ import images from './imageImports';
 import gameSettings from './GameSettings';
 import './inGameHex.css';
 import HexagonModal from './HexagonModal';
-import game from '../Game';
 import Tile from './Tile';
 import TileInfoModal from './TileInfoModal';
 
@@ -19,17 +18,26 @@ class Board extends Component {
     const hexCoordinates = generator.apply(this, config.mapProps);
     const gapCoordinates = gapData.gapCoordinates;
     const gapSet = new Set(gapCoordinates.map(coord => `${coord.q},${coord.r},${coord.s}`));
-    const hexagons = hexCoordinates.filter(hexCoord => !gapSet.has(`${hexCoord.q},${hexCoord.r},${hexCoord.s}`));
-    this.state = { hexagons, config, viewBox: `${config.viewBox.x} ${config.viewBox.y} ${config.viewBox.width} ${config.viewBox.height}`, selectedHex: null, showModal: false, tileInfoModalOpen: false, selectedTile: null };
+    const hexagons = hexCoordinates.filter(hexCoord => !gapSet.has(`${hexCoord.q},${hexCoord.r},${hexCoord.s}`)).map(hex => new Tile(hex.q, hex.r, hex.s));
+
+    this.state = {
+      hexagons,
+      config,
+      viewBox: `${config.viewBox.x} ${config.viewBox.y} ${config.viewBox.width} ${config.viewBox.height}`,
+      selectedHex: null,
+      showModal: false,
+      tileInfoModalOpen: false,
+      selectedTile: null,
+      ownedTroops: 10,
+    };
   }
 
   openTileInfo = () => {
     if (this.state.selectedHex) {
       const hexData = this.state.selectedHex;
-      const tile = new Tile(hexData.q, hexData.r, hexData.s);
       this.setState({
-        selectedTile: tile,
-        tileInfoModalOpen: true
+        selectedTile: hexData.tile,
+        tileInfoModalOpen: true,
       });
     }
   };
@@ -37,78 +45,82 @@ class Board extends Component {
   resetSelection = () => {
     this.setState({ selectedHex: null, showModal: false, tileInfoModalOpen: false });
   };
-  
 
-closeTileInfo = () => {
+  closeTileInfo = () => {
     this.setState({
-        tileInfoModalOpen: false,
-        selectedTile: null
+      tileInfoModalOpen: false,
+      selectedTile: null,
     });
-};
-
-
-  handleHexagonClick = (hexData) => {
-  if (gameSettings.getSourceOfStore() !== 'HUD') {
-    this.setState({ selectedHex: hexData, showModal: true });
-  } else {
-    gameSettings.saveSourceOfStore(null);
-  }
   };
 
+  handleHexagonClick = (hexData) => {
+    const tile = this.state.hexagons.find(hex => hex.q === hexData.q && hex.r === hexData.r && hex.s === hexData.s);
+    this.setState({ selectedHex: { ...hexData, tile }, showModal: true });
+  };
 
   handleCloseModal = () => {
-    gameSettings.clearClickedHexagon();
     this.setState({ showModal: false, selectedHex: null });
-
-    this.props.toggleStoreModal();
   };
 
   forceCloseModal = () => {
     this.setState({ showModal: false, selectedHex: null });
     this.resetSelection();
-    gameSettings.clearClickedHexagon();
-  }
-
+  };
 
   handleCloseWithoutDeselecting = () => {
     this.setState({ showModal: false });
-    gameSettings.saveSourceOfStore(null);
   };
 
-  selectHexagon = (hexData) => {
-    this.setState({ selectedHex: hexData });
+  allocateTroops = () => {
+    const { selectedHex, ownedTroops, hexagons } = this.state;
+    if (ownedTroops > 0 && selectedHex && selectedHex.tile) {
+      selectedHex.tile.addTroops(1);
+      const updatedHexagons = hexagons.map(hex => {
+        if (hex.q === selectedHex.q && hex.r === selectedHex.r && hex.s === selectedHex.s) {
+          return selectedHex.tile;
+        }
+        return hex;
+      });
+      this.setState(
+        {
+          hexagons: updatedHexagons,
+          ownedTroops: ownedTroops - 1,
+        },
+        () => {
+          console.log(`Allocated 1 troop to tile at coordinates (${selectedHex.q}, ${selectedHex.r}, ${selectedHex.s}).`);
+        }
+      );
+    } else {
+      console.log('No troops available to allocate.');
+    }
   };
 
   componentDidMount() {
     document.addEventListener('click', this.handleOutsideClick, false);
   }
-  
+
   componentWillUnmount() {
     document.removeEventListener('click', this.handleOutsideClick, false);
   }
-  
+
   handleOutsideClick = (e) => {
     if (this.state.selectedHex && !e.target.closest('.hexagon-modal, .hexagon')) {
       this.clearSelectedHexagon();
     }
-  }
+  };
 
   clearSelectedHexagon = () => {
     this.setState({ selectedHex: null });
   };
-  
-
 
   render() {
-    
-    const { hexagons, config, viewBox, selectedHex, showModal, tileInfoModalOpen, selectedTile} = this.state;
+    const { hexagons, config, viewBox, selectedHex, showModal, tileInfoModalOpen, selectedTile, ownedTroops } = this.state;
     const size = { x: config.layout.width, y: config.layout.height };
-  
+
     return (
       <div className='board'>
         <HexGrid width={config.width} height={config.height} viewBox={viewBox}>
           <defs>
-            {/* Define patterns for each biome */}
             {Object.keys(images).map((key) => (
               <pattern
                 key={key}
@@ -119,8 +131,8 @@ closeTileInfo = () => {
                 viewBox="0 0 6 6"
                 patternTransform="scale(1.16)"
               >
-                <image href={images[key]} width="6" height="6" preserveAspectRatio="xMidYMid slice"/>
-                <rect width="100%" height="100%" fill="rgba(0, 0, 0, 0)" class="rect-overlay"/>
+                <image href={images[key]} width="6" height="6" preserveAspectRatio="xMidYMid slice" />
+                <rect width="100%" height="100%" fill="rgba(0, 0, 0, 0)" className="rect-overlay" />
               </pattern>
             ))}
           </defs>
@@ -132,33 +144,26 @@ closeTileInfo = () => {
                 r={hex.r}
                 s={hex.s}
                 onClick={this.handleHexagonClick}
-                
+                troops={hex.getTroops()}
               />
             ))}
           </Layout>
         </HexGrid>
         {tileInfoModalOpen && selectedTile && (
-                    <TileInfoModal
-                        isOpen={this.state.showModal}
-                        onClose={this.forceCloseModal}
-                        tile={selectedTile}
-                        
-                    />
+          <TileInfoModal isOpen={tileInfoModalOpen} onClose={this.closeTileInfo} tile={selectedTile} />
         )}
 
-        
         {showModal && selectedHex && (
           <HexagonModal
-          isOpen={showModal}
-          onClose={this.forceCloseModal}
-          onCloseWithoutDeselecting={this.handleCloseWithoutDeselecting}
-          onOpenTileInfo={this.openTileInfo}
-          hexData={selectedHex}
-          position={selectedHex.position}
-          openStore={this.props.toggleStoreModal}
-        />
-        
-        
+            isOpen={showModal}
+            onClose={this.forceCloseModal}
+            onCloseWithoutDeselecting={this.handleCloseWithoutDeselecting}
+            onOpenTileInfo={this.openTileInfo}
+            hexData={selectedHex}
+            position={selectedHex.position}
+            openStore={this.props.toggleStoreModal}
+            allocateTroops={this.allocateTroops}
+          />
         )}
       </div>
     );

@@ -112,16 +112,11 @@ const GameSettings = {
     );
   },
 
-  allocateTroops: (player, hexData) => {
+  allocateTroops: (hexData) => {
     const tile = new Tile(hexData.q, hexData.r, hexData.s);
-    if (player.freeTroops > 0) {
-      tile.addTroops(1);
-      player.freeTroops -= 1;
-      console.log(`Allocated 1 troop to tile at coordinates (${hexData.q}, ${hexData.r}, ${hexData.s}).`);
-      console.log(`Player now has ${player.freeTroops} free troops.`);
-    } else {
-      console.log('No free troops available to allocate.');
-    }
+    tile.addTroops(1);
+    this.setState({ selectedHex: { ...hexData, tile } });
+    console.log(`Allocated 1 troop to tile at coordinates (${hexData.q}, ${hexData.r}, ${hexData.s}).`);
   }
 };
 
