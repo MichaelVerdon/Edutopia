@@ -30,9 +30,7 @@ const GameSettings = {
     const noiseValue = noise2D(q * scale, r * scale);
   
     let biome;
-    if (noiseValue < -0.5) {
-      biome = "Water";
-    } else if (noiseValue < -0.1) {
+    if (noiseValue < -0.1) {
       biome = "Grassland_Unclaimed";
     } else if (noiseValue < 0.2) {
       biome = "Rocky_Unclaimed";

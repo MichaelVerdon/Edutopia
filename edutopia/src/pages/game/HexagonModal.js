@@ -2,8 +2,9 @@ import React from 'react';
 import gameSettings from './GameSettings';
 import ShopIcon from '../images/sprites/Shop_Icon.png';
 import TileInfo from '../images/sprites/Tile_Info.png';
+import TroopBlue from '../images/sprites/Troop_Blue.png'; // Import the troop icon
 
-const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileInfo, hexData, position, openStore }) => {
+const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileInfo, hexData, position, openStore, allocateTroops }) => {
   if (!isOpen) return null;
 
   const StoreFunction = () => {
@@ -47,10 +48,9 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
           fontWeight: 'bolder',
           backgroundColor: 'rgba(255, 204, 0, 0)',
           borderRadius: '10px',
-          
         }}
         onClick={onOpenTileInfo}
-        >
+      >
         <img
           src={TileInfo}
           alt='TileInfo'
@@ -85,6 +85,36 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
         <img
           src={ShopIcon}
           alt='Shop'
+          style={{
+            maxWidth: '100%',
+            maxHeight: '100%',
+          }}
+        />
+      </button>
+
+      <button
+        style={{
+          position: 'relative',
+          top: '-20px',
+          right: '30px',
+          width: '50px',
+          height: '50px',
+          fontSize: '15px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 0,
+          border: '2px solid rgba(0, 0, 0, 0.7)',
+          cursor: 'pointer',
+          fontWeight: 'bolder',
+          backgroundColor: 'rgba(102, 204, 255, 1)', // Different color for the troop button
+          borderRadius: '10px',
+        }}
+        onClick={allocateTroops} // New function to handle troop allocation
+      >
+        <img
+          src={TroopBlue}
+          alt='Troops'
           style={{
             maxWidth: '100%',
             maxHeight: '100%',
