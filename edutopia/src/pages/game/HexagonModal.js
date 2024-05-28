@@ -2,9 +2,9 @@ import React from 'react';
 import gameSettings from './GameSettings';
 import ShopIcon from '../images/sprites/Shop_Icon.png';
 import TileInfo from '../images/sprites/Tile_Info.png';
-import TroopBlue from '../images/sprites/Troop_Blue.png'; // Import the troop icon
+import TroopBlue from '../images/sprites/Troop_Blue.png'; // Add your troop icon here
 
-const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileInfo, hexData, position, openStore, allocateTroops }) => {
+const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileInfo, position, openStore, allocateTroops, hexData, player }) => {
   if (!isOpen) return null;
 
   const StoreFunction = () => {
@@ -13,6 +13,10 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
     } else {
       return null;
     }
+  };
+
+  const handleAllocateTroops = () => {
+    allocateTroops(player, hexData);
   };
 
   const modalStyle = {
@@ -27,15 +31,17 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
+    pointerEvents: 'none'
   };
 
   return (
     <div style={modalStyle} className="hexagon-modal">
       <button
         style={{
+          pointerEvents: 'auto',
           position: 'relative',
-          top: '-20px',
-          right: '90px',
+          top: '-70px',
+          right: '50px',
           width: '50px',
           height: '50px',
           fontSize: '20px',
@@ -53,7 +59,7 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
       >
         <img
           src={TileInfo}
-          alt='TileInfo'
+          alt="TileInfo"
           style={{
             width: '46px',
             height: '46px',
@@ -64,9 +70,10 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
 
       <button
         style={{
+          pointerEvents: 'auto',
           position: 'relative',
           top: '-20px',
-          right: '60px',
+          right: '130px',
           width: '50px',
           height: '50px',
           fontSize: '15px',
@@ -84,7 +91,7 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
       >
         <img
           src={ShopIcon}
-          alt='Shop'
+          alt="Shop"
           style={{
             maxWidth: '100%',
             maxHeight: '100%',
@@ -94,9 +101,10 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
 
       <button
         style={{
+          pointerEvents: 'auto',
           position: 'relative',
           top: '-20px',
-          right: '30px',
+          right: '120px',
           width: '50px',
           height: '50px',
           fontSize: '15px',
@@ -107,14 +115,14 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
           border: '2px solid rgba(0, 0, 0, 0.7)',
           cursor: 'pointer',
           fontWeight: 'bolder',
-          backgroundColor: 'rgba(102, 204, 255, 1)', // Different color for the troop button
+          backgroundColor: 'rgba(255, 204, 102, 1)',
           borderRadius: '10px',
         }}
-        onClick={allocateTroops} // New function to handle troop allocation
+        
       >
         <img
-          src={TroopBlue}
-          alt='Troops'
+          src={TroopBlue} // Use your troop icon here
+          alt="Troops"
           style={{
             maxWidth: '100%',
             maxHeight: '100%',
@@ -124,9 +132,10 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
 
       <button
         style={{
+          pointerEvents: 'auto',
           position: 'relative',
           top: '35px',
-          right: '140px',
+          right: '195px',
           width: '30px',
           height: '30px',
           fontSize: '15px',
@@ -141,7 +150,9 @@ const HexagonModal = ({ isOpen, onClose, onCloseWithoutDeselecting, onOpenTileIn
           color: 'white',
           fontWeight: 'bold'
         }}
-        onClick={onClose}>X
+        onClick={onClose}
+      >
+        X
       </button>
     </div>
   );
