@@ -117,12 +117,14 @@ function Store ({storeModal, close}) {
         return true;
       }
       else{
+        NotificationManager.showSuccessNotification("Please pick a tile adjacent to owned tiles or buy on an owned tile!");
         console.log("Tile is not adjacent to owned tile or owned");
         return false;
       }
     }
   }
     catch{
+      NotificationManager.showSuccessNotification("Something went wrong, please try again!");
       console.log("Something went wrong");
       return false;
     }
