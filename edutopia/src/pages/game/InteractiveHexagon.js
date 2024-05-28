@@ -14,20 +14,27 @@ const InteractiveHexagon = ({
   ownedHexagons,
 }) => {
   const initialBiome = gameSettings.getBiomeForCoordinates(q, r, s);
+  const playerColors = {
+    1: "Grassland_Blue",
+    2: "Grassland_Pink",
+    3: "Grassland_Cyan",
+    4: "Grassland_Yellow",
+  };
+
   const isOwned = ownedHexagons.some(
     (hex) => hex.q === q && hex.r === r && hex.s === s
   );
 
   const [fillColor, setFillColor] = useState(
-    isOwned ? "OwnedColor" : initialBiome
-  ); // Default to a special color if owned
+    isOwned ? playerColors[owner] : initialBiome
+  ); 
   const [isSelected, setIsSelected] = useState(false);
 
   useEffect(() => {
     const updateBiome = () => {
       const customBiome = gameSettings.customBiomes[`${q},${r},${s}`];
       const defaultBiome = gameSettings.getBiomeForCoordinates(q, r, s);
-      const newColor = isOwned ? "OwnedColor" : customBiome || defaultBiome;
+      const newColor = isOwned ? playerColors[owner] : customBiome || defaultBiome;
       setFillColor(newColor);
     };
 
@@ -45,7 +52,7 @@ const InteractiveHexagon = ({
       gameSettings.unsubscribeFromBiomeChanges(updateBiome);
       gameSettings.unsubscribeFromBiomeChanges(checkSelected);
     };
-  }, [q, r, s, isOwned]);
+  }, [q, r, s, isOwned, owner, playerColors]);
 
   const handleClick = (e) => {
     const currentlySelected = gameSettings.getClickedHexagon();
@@ -84,7 +91,7 @@ const InteractiveHexagon = ({
   const cursorStyle = clickable ? "pointer" : "auto";
   const hexagonClass = `inGameHex ${isSelected ? "active" : ""} ${
     fillColor === "Water" ? "water" : ""
-  } ${owner ? `owner-${owner}` : ""}`; // Apply the owner class
+  } ${isOwned ? "owned" : ""}`;
 
   return (
     <Hexagon

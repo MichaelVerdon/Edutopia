@@ -1,44 +1,57 @@
 import gapData from "./gapCoordinates.json";
-import images from "./imageImports";
 import hexagonData from "./hexagonData.json";
 import { createNoise2D } from "simplex-noise";
+import Grassland_Blue from '../images/sprites/Grassland_Blue.png';
+import Grassland_Cyan from '../images/sprites/Grassland_Cyan.png';
+import Grassland_Pink from '../images/sprites/Grassland_Pink.png';
+import Grassland_Unclaimed from '../images/sprites/Grassland_Unclaimed.png';
+import Grassland_Yellow from '../images/sprites/Grassland_Yellow.png';
 
 const noise2D = createNoise2D();
-const biomes = Object.keys(images);
 
+const images = {
+  Grassland_Blue,
+  Grassland_Cyan,
+  Grassland_Pink,
+  Grassland_Unclaimed,
+  Grassland_Yellow,
+};
+
+//const biomes = Object.keys(images);
 const gapCoordinates = gapData.gapCoordinates;
 const GameSettings = {
+  images,
   customBiomes: {},
   clickedHexagon: null,
   sourceOfStore: null,
 
-getBiomeForCoordinates: (q, r, s) => {
-  if (
-    gapCoordinates.some(
-      (coord) => coord.q === q && coord.r === r && coord.s === s
-    )
-  ) {
-    return "Water";
-  } else {
-    const scale = 0.1;
-    const noiseValue = noise2D(q * scale, r * scale);
-
-    if (noiseValue < -0.5) {
+  getBiomeForCoordinates: (q, r, s) => {
+    if (
+      gapCoordinates.some(
+        (coord) => coord.q === q && coord.r === r && coord.s === s
+      )
+    ) {
       return "Water";
-    } else if (noiseValue < -0.1) {
-      return "Grassland_Unclaimed";
-    } else if (noiseValue < 0.2) {
-      return "Rocky_Unclaimed";
-    } else if (noiseValue < 0.5) {
-      return "Woods_Unclaimed";
     } else {
-      const hexagon = hexagonData.hexagons.find(
-        (hex) => hex.q === q && hex.r === r && hex.s === s
-      );
-      return hexagon ? hexagon.biome : "Grassland_Unclaimed"; // Default to Grassland_Unclaimed if not found
+      const scale = 0.1;
+      const noiseValue = noise2D(q * scale, r * scale);
+
+      if (noiseValue < -0.5) {
+        return "Water";
+      } else if (noiseValue < -0.1) {
+        return "Grassland_Unclaimed";
+      } else if (noiseValue < 0.2) {
+        return "Rocky_Unclaimed";
+      } else if (noiseValue < 0.5) {
+        return "Woods_Unclaimed";
+      } else {
+        const hexagon = hexagonData.hexagons.find(
+          (hex) => hex.q === q && hex.r === r && hex.s === s
+        );
+        return hexagon ? hexagon.biome : "Grassland_Unclaimed"; // Default to Grassland_Unclaimed if not found
+      }
     }
-  }
-},
+  },
 
   setBiome: (q, r, s, biome) => {
     const key = `${q},${r},${s}`;
@@ -114,7 +127,6 @@ getBiomeForCoordinates: (q, r, s) => {
     const deltaS = s2 - s1;
 
     // Tiles are adjacent if they are one step away in any of the hexagon directions
-
     const adjacent =
       (Math.abs(deltaQ) === 1 && deltaR === 0 && deltaS === -1) ||
       (Math.abs(deltaR) === 1 && deltaQ === 0 && deltaS === -1) ||
@@ -125,7 +137,17 @@ getBiomeForCoordinates: (q, r, s) => {
 
     return adjacent;
   },
+
+  
 };
+
+export const isTileWithinBoard = (q, r, s, boardSize) => {
+  // Define the bounds of the board (hexagonal board in this example)
+  const minBound = -boardSize;
+  const maxBound = boardSize;
+  return q >= minBound && q <= maxBound && r >= minBound && r <= maxBound && s >= minBound && s <= maxBound;
+};
+
 
 export default GameSettings;
 window.GameSettings = GameSettings;

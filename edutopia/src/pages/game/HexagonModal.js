@@ -50,7 +50,7 @@ const HexagonModal = ({
               cursor: "pointer",
               fontWeight: "bolder",
               zIndex: 1000,
-              backgroundColor: "white"
+              backgroundColor: "White"
             }}
             onClick={() => console.log("Tile Info")}
           >

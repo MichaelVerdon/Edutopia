@@ -11,19 +11,9 @@ body {
   stroke-width: 0.1px;
 }
 
-.inGameHex.active polygon,
-.inGameHex.active {
-  fill: "fillColor";
-}
-
 .inGameHex:hover polygon,
 .inGameHex:hover path {
   cursor: pointer;
-}
-
-.inGameHex:hover,
-.inGameHex.active {
-  filter: brightness(130%);
 }
 
 .inGameHex .hexagon-text {
@@ -67,7 +57,6 @@ body {
   pointer-events: none;
 }
 
-
 .hexagon-owner.owner-1 {
   fill: blue;
 }
@@ -83,5 +72,3 @@ body {
 .hexagon-owner.owner-4 {
   fill: yellow;
 }
-
-

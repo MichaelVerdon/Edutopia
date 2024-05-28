@@ -45,7 +45,6 @@ class Board extends Component {
   handleCloseModal = () => {
     gameSettings.clearClickedHexagon();
     this.setState({ showModal: false, selectedHex: null });
-
     this.props.toggleStoreModal();
   };
 
@@ -86,19 +85,22 @@ class Board extends Component {
 
   render() {
     const { hexagons, config, viewBox, selectedHex, showModal } = this.state;
-
-    const { currentPlayer, tiles, showClaimTilePopup, handleClaimTile } =
-      this.props;
-    console.log("🚀 ~ Board ~ render ~ currentPlayer:", currentPlayer);
+    const { players, tiles, showClaimTilePopup, handleClaimTile } = this.props;
+    console.log("🚀 ~ Board ~ render ~ players:", players);
 
     const size = { x: config.layout.width, y: config.layout.height };
 
-    const ownedHexagons = hexagons.filter((hex) =>
-      currentPlayer.ownedTiles.find(
-        (tile) => tile.q === hex.q && tile.r === hex.r && tile.s === hex.s
-      )
-    );
-    console.log("🚀 ~ Board ~ render ~ ownedHexagons:", ownedHexagons);
+    const allOwnedHexagons = players && Array.isArray(players)
+      ? players.reduce((acc, player) => {
+          const ownedHexagons = hexagons.filter((hex) =>
+            player.ownedTiles.find(
+              (tile) => tile.q === hex.q && tile.r === hex.r && tile.s === hex.s
+            )
+          );
+          console.log(`🚀 ~ Board ~ render ~ ownedHexagons for player ${player.playerId}:`, ownedHexagons);
+          return acc.concat(ownedHexagons);
+        }, [])
+      : [];
 
     return (
       <div className="board">
@@ -148,8 +150,8 @@ class Board extends Component {
                   s={hex.s}
                   onClick={this.handleHexagonClick}
                   owner={owner}
-                  currentPlayerId={currentPlayer.playerId}
-                  ownedHexagons={ownedHexagons}
+                  currentPlayerId={this.props.currentPlayer.playerId}
+                  ownedHexagons={allOwnedHexagons}
                 />
               );
             })}
