@@ -47,8 +47,17 @@ function Store ({storeModal, close}) {
     setSelectedItem(row);
     setShowPopup(true);
     let currentPlayer = await playersTurn();
+
+    // cost of selected item
+    const cost = {
+      techPoints: row.techPoints,
+      foodPoints: row.foodPoints,
+      woodPoints: row.woodPoints,
+      metalPoints: row.metalPoints
+  };
+  
     //checks if u have enough resources, if not tells u u cant buy
-    if(currentPlayer.getTechPoints < row.techPoints || currentPlayer.getFoodPoints < row.foodPoints || currentPlayer.getWoodPoints < row.woodPoints || currentPlayer.getMetalPoints < row.metalPoints){
+    if(!currentPlayer.hasEnoughResources(cost)) {
       setReason("you don't have enough resources");
       setSelectedItem(null)
       setPhase(1);
@@ -204,30 +213,39 @@ function Store ({storeModal, close}) {
         NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} unsuccessful`);
         return;
       }
-  
-    tempPlayer.playerId = turn;
-    tempPlayer.color = await colorTurn();
-    tempPlayer.ownedTiles = currentPlayer.ownedTiles;
-    tempPlayer.liveStatus = currentPlayer.liveStatus;
-    tempPlayer.techPoints = (currentPlayer.getTechPoints - selectedItem.techPoints);
-    tempPlayer.foodPoints = (currentPlayer.getFoodPoints - selectedItem.foodPoints);
-    tempPlayer.woodPoints = (currentPlayer.getWoodPoints - selectedItem.woodPoints);
-    tempPlayer.metalPoints = (currentPlayer.getMetalPoints - selectedItem.metalPoints); 
-    
-    if (turn === 1){
-      setPlayer(tempPlayer);
-    } else if (turn === 2){
-      setOpponent(tempPlayer);
-    }else if (turn === 3){
-      setOpponent1(tempPlayer);
-    }else{
-      setOpponent2(tempPlayer);
-    }
-    gameSettings.clearClickedHexagon();
-    gameSettings.saveSourceOfStore(null);
-  }
 
-    close();
+      // cost of selected item
+      const cost = {
+        techPoints: selectedItem.techPoints,
+        foodPoints: selectedItem.foodPoints,
+        woodPoints: selectedItem.woodPoints,
+        metalPoints: selectedItem.metalPoints
+    };
+  
+      tempPlayer.playerId = turn;
+      tempPlayer.color = await colorTurn();
+      tempPlayer.ownedTiles = currentPlayer.ownedTiles;
+      tempPlayer.liveStatus = currentPlayer.liveStatus;
+      tempPlayer.techPoints = currentPlayer.techPoints;
+      tempPlayer.foodPoints = currentPlayer.getFoodPoints;
+      tempPlayer.woodPoints = currentPlayer.getWoodPoints;
+      tempPlayer.metalPoints = currentPlayer.getMetalPoints;
+      tempPlayer.deductResources(cost);
+      
+      if (turn === 1){
+        setPlayer(tempPlayer);
+      } else if (turn === 2){
+        setOpponent(tempPlayer);
+      }else if (turn === 3){
+        setOpponent1(tempPlayer);
+      }else{
+        setOpponent2(tempPlayer);
+      }
+      gameSettings.clearClickedHexagon();
+      gameSettings.saveSourceOfStore(null);
+    }
+
+      close();
   }
 
   const DisplayData = storeData.storeData.map((info) => (
