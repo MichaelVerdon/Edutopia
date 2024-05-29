@@ -8,10 +8,25 @@ const noise2D = createNoise2D();
 const biomes = Object.keys(images);
 
 const gapCoordinates = gapData.gapCoordinates;
+const LOCAL_STORAGE_KEY = "gameCustomBiomes";
+
 const GameSettings = {
   customBiomes: {},
   clickedHexagon: null,
   sourceOfStore: null,
+
+  // Load custom biomes from local storage
+  loadCustomBiomes: () => {
+    const savedBiomes = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (savedBiomes) {
+      GameSettings.customBiomes = JSON.parse(savedBiomes);
+    }
+  },
+
+  // Save custom biomes to local storage
+  saveCustomBiomes: () => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(GameSettings.customBiomes));
+  },
 
   getBiomeForCoordinates: (q, r, s) => {
     const customBiomeKey = `${q},${r},${s}`;
@@ -35,12 +50,14 @@ const GameSettings = {
       biome = hexagon ? hexagon.biome : "Grassland_Unclaimed";
     }
     GameSettings.customBiomes[customBiomeKey] = biome;
+    GameSettings.saveCustomBiomes(); // Save to local storage whenever a new biome is generated
     return biome;
   },
 
   setBiome: (q, r, s, biome) => {
     const key = `${q},${r},${s}`;
     GameSettings.customBiomes[key] = biome;
+    GameSettings.saveCustomBiomes(); // Save to local storage whenever a biome is set
   },
 
   subscribers: [],
@@ -61,6 +78,7 @@ const GameSettings = {
     const key = `${q},${r},${s}`;
     GameSettings.customBiomes[key] = biome;
     GameSettings.notifyBiomeChanges();
+    GameSettings.saveCustomBiomes(); // Save to local storage whenever a biome is set
   },
 
   saveClickedHexagon: (q, r, s, source) => {
@@ -122,3 +140,6 @@ const GameSettings = {
 
 export default GameSettings;
 window.GameSettings = GameSettings;
+
+// Load custom biomes when the script is loaded
+GameSettings.loadCustomBiomes();
