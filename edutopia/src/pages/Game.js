@@ -32,9 +32,9 @@ function Game() {
   const api_link = "http://localhost:9000/get_question?topic_id=";
   
   const [player, setPlayer] = useState(new PlayerObject(1, new Tile(1, 1, -2), "_Blue"));
-  const [opponent, setOpponent] = useState(new aiPlayer(2,  new Tile(2, 0, -2), "_Pink"));
-  const [opponent1, setOpponent1] = useState(new aiPlayer(3,  new Tile(0, 1, -1), "_Cyan"));
-  const [opponent2, setOpponent2] = useState(new aiPlayer(4,  new Tile(0, 0, 0), "_Yellow"));
+  const [opponent, setOpponent] = useState(new aiPlayer(2, new Tile(2, 0, -2), "_Pink"));
+  const [opponent1, setOpponent1] = useState(new aiPlayer(3, new Tile(0, 1, -1), "_Cyan"));
+  const [opponent2, setOpponent2] = useState(new aiPlayer(4, new Tile(0, 0, 0), "_Yellow"));
 
   const [turn, setTurn] = useState(0);
   const [gameOver, setGameState] = useState(true);
@@ -50,7 +50,7 @@ function Game() {
   const [gameLoopStep, setGameLoopStep] = useState(-2);
   const [shopAndTroopTime, setShopAndTroopTime] = useState(false);
   const [battleTiles, setBattleTiles] = useState([]);
-  const [ownedTroops, setOwnedTroops] = useState(0); // State for owned troops
+  const [ownedTroops, setOwnedTroops] = useState(player.getOwnedTroops); // State for owned troops
 
   const toggleGameState = () => {
     setGameState(!gameOver);
@@ -59,34 +59,18 @@ function Game() {
   // Function to calculate and update resources per turn based on owned tiles
   const generateResourcesPerTurn = () => {
     // Calculate resources generated per turn based on owned tiles
-    if (turn === 1){
+    if (turn === 1) {
       player.calculateResourcesPerTurn();
-    } else if (turn === 2){
+    } else if (turn === 2) {
       opponent.calculateResourcesPerTurn();
-    }else if (turn === 3){
+    } else if (turn === 3) {
       opponent1.calculateResourcesPerTurn();
-    }else if (turn === 4){
+    } else if (turn === 4) {
       opponent2.calculateResourcesPerTurn();
     }
-   /*  // Log or perform any other actions as needed
-    console.log(currentPlayer)
-    console.log(`Resources generated for player ${currentPlayer} per turn:`);
-    console.log(`Food Points: ${currentPlayer.getFoodPoints}`);
-    console.log(`Wood Points: ${currentPlayer.getWoodPoints}`);
-    console.log(`Metal Points: ${currentPlayer.getMetalPoints}`);
-
-    // Only log player's owned tiles if the player ID is 1
-    if (currentPlayer.playerId === 1) {
-      console.log(`Player ${currentPlayer.playerId} owned tiles:`);
-      currentPlayer.ownedTiles.forEach((tile, index) => {
-        console.log(`Tile ${index + 1}: (${tile.x}, ${tile.y}, ${tile.z})`);
-      });} */
-
-    
-    };
+  };
 
   const handleTopicsChange = (newTopics) => {
-    
     setSelectedTopics(newTopics);
   };
 
@@ -101,10 +85,9 @@ function Game() {
       throw error;
     }
   }
-  
 
   const getQuestionClick = () => {
-    var topic = '1' // Default for safety?
+    var topic = '1'; // Default for safety?
     if (selectedTopics.length !== 0) {
       const randomIndex = Math.floor(Math.random() * selectedTopics.length);
       topic = selectedTopics[randomIndex];
@@ -114,7 +97,7 @@ function Game() {
         setQuestion(data);
       })
       .catch(error => console.error('Error fetching question:', error));
-  } 
+  }
 
   // Use useEffect to open the modal on page load
   useEffect(() => {
@@ -124,222 +107,142 @@ function Game() {
   const closeModal = () => {
     setModalOpen(false);
   };
- //score add
 
   const deselect = () => {
     GameSettings.clearClickedHexagon();
   };
-  //question modal
+
   const toggleModal = () => {
     setModal(!modal);
   };
+
   const questionAndToggle = async () => {
     await getQuestionClick();
     setModal(!modal);
-
   };
-
 
   const saveSelection = () => {
     console.log("Selection Saved");
     toggleStoreModal();
   };
 
-  if(modal) {
-    document.body.classList.add('active-modal')
+  if (modal) {
+    document.body.classList.add('active-modal');
   } else {
-    document.body.classList.remove('active-modal')
+    document.body.classList.remove('active-modal');
   }
 
-  //generic modal 
   const toggleGameLoopModal = () => {
     deselect();
     setGameLoopModal(!gameLoopModal);
   };
 
-  if(gameLoopModal) {
-    document.body.classList.add('gameLoopModal')
+  if (gameLoopModal) {
+    document.body.classList.add('gameLoopModal');
   } else {
-    document.body.classList.remove('gameLoopModal')
+    document.body.classList.remove('gameLoopModal');
   }
 
-  //battle modal
   const toggleBattleModal = () => {
     deselect();
     setBattleModal(!battleModal);
   };
 
-  if(battleModal) {
-    document.body.classList.add('battleModal')
+  if (battleModal) {
+    document.body.classList.add('battleModal');
   } else {
-    document.body.classList.remove('battleModal')
+    document.body.classList.remove('battleModal');
   }
 
-   //store modal
-   const toggleStoreModal = () => {
+  const toggleStoreModal = () => {
     setStoreModal(!storeModal); // Toggle the visibility of the store modal
 
     // If we are opening the store, set the source to 'HUD', otherwise reset it
     const newSource = !storeModal ? 'HUD' : null;
     GameSettings.saveSourceOfStore(newSource);
-};
+  };
 
- 
- 
-   if(storeModal) {
-     document.body.classList.add('active-storeModal')
-   } else {
-     document.body.classList.remove('active-storeModal')
-     //NotificationManager.showSuccessNotification("Test");
-   }
+  if (storeModal) {
+    document.body.classList.add('active-storeModal');
+  } else {
+    document.body.classList.remove('active-storeModal');
+  }
 
-  //<Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
-
-  //shortcut function for delay
   const delay = ms => new Promise(res => setTimeout(res, ms));
 
-   const playersTurn = async () => {
-    if (turn === 1){
+  const playersTurn = async () => {
+    if (turn === 1) {
       return (2);
-    } else if (turn === 2){
+    } else if (turn === 2) {
       return (3);
-    }else if (turn === 3){
+    } else if (turn === 3) {
       return (4);
-    }else{
+    } else {
       return (1);
     }
   }
 
-  const continueGame = () =>{
+  const continueGame = () => {
     let cont = true;
     let deadCount = 0;
     console.log(player.liveStatus);
 
-    if (player.liveStatus === false){
+    if (player.liveStatus === false) {
       cont = false;
-    }else if (opponent.liveStatus === false){
+    } else if (opponent.liveStatus === false) {
       deadCount = deadCount + 1;
-    }else if (opponent1.liveStatus === false){
+    } else if (opponent1.liveStatus === false) {
       deadCount = deadCount + 1;
-    }else if (opponent2.liveStatus === false){
+    } else if (opponent2.liveStatus === false) {
       deadCount = deadCount + 1;
     }
-    if(deadCount === 3){
+    if (deadCount === 3) {
       cont = false
     }
-    return(cont);
+    return (cont);
   }
 
-useEffect( () => {
+  useEffect(() => {
     const fce = async () => {
-      if(gameLoopStep===-1){
+      if (gameLoopStep === -1) {
         setGameText("Your starting tile is " + JSON.stringify(player.ownedTiles[0].getCoords()));
         toggleGameLoopModal();
         await delay(2000);
         setGameLoopModal(false);
       }
-      else if(gameLoopStep===0){
+      else if (gameLoopStep === 0) {
         setGameText("It is player's " + turn + " turn");
         generateResourcesPerTurn();
         toggleGameLoopModal();
         await delay(2000);
         setGameLoopModal(false);
-      } else if(gameLoopStep===1 && modal===false){
+      } else if (gameLoopStep === 1 && modal === false) {
         await questionAndToggle();
-      }else if(gameLoopStep===2){
+      } else if (gameLoopStep === 2) {
         setGameText('Time to shop and assign troops');
         setShopAndTroopTime(true);
         toggleGameLoopModal();
         await delay(2000);
         setGameLoopModal(false);
-      }else if(gameLoopStep===4 && battleModal===false){
+      } else if (gameLoopStep === 4 && battleModal === false) {
         setShopAndTroopTime(false);
         toggleBattleModal();
-      }else if(gameLoopStep===5){
+      } else if (gameLoopStep === 5) {
         let cont = continueGame();
-        if (cont === true){
+        if (cont === true) {
           setGameText('Next players turn');
           toggleGameLoopModal();
           await delay(2000);
           setGameLoopModal(false);
           setTurn(await playersTurn());
-        }else if (cont === false){
+        } else if (cont === false) {
           gameOver(true);
-          if(player.liveStatus === false){
+          if (player.liveStatus === false) {
             setGameText('You lost');
             toggleGameLoopModal();
             await delay(2000);
             setGameLoopModal(false);
-          }else if(player.liveStatus === true){
-            setGameText('You win');
-            toggleGameLoopModal();
-            await delay(2000);
-            setGameLoopModal(false);
-          }
-        }
-
-      
-      } 
-    }
-    const aiPlayerTurnFce = async () => {
-      if(gameLoopStep===0){
-        setGameText("It is player's " + turn + " turn");
-        generateResourcesPerTurn();
-        toggleGameLoopModal();
-        await delay(2000);
-        setGameLoopModal(false);
-      }else if(gameLoopStep===1 && modal===false){
-        if (turn === 2){
-          await questionAndToggle();
-          opponent.answerQuestion();
-          await delay(2000);
-          setModal(false);
-        }else if (turn===3){
-          await questionAndToggle();
-          opponent1.answerQuestion();
-          await delay(2000);
-          setModal(false);
-        }else if(turn===4){
-          await questionAndToggle();
-          opponent2.answerQuestion();
-          await delay(2000);
-          setModal(false);
-        }
-      }else if(gameLoopStep===2){
-        setGameText('Time to shop and assign troops');
-        setShopAndTroopTime(true);
-        toggleGameLoopModal();
-        await delay(2000);
-        setGameLoopModal(false);
-        //ai player shops
-      }else if(gameLoopStep===4 && battleModal===false){
-        setShopAndTroopTime(false);
-        if (turn === 2){
-          setBattleTiles(await opponent.battleOthers());
-          toggleBattleModal();
-        }else if (turn===3){
-          setBattleTiles(await opponent1.battleOthers());
-          toggleBattleModal();
-        }else if(turn===4){
-          setBattleTiles(await opponent2.battleOthers());
-          toggleBattleModal();
-        }
-      }else if(gameLoopStep===5){
-        let cont = continueGame();
-        if (cont === true){
-          setGameText('Next players turn');
-          toggleGameLoopModal();
-          await delay(2000);
-          setGameLoopModal(false);
-          setTurn(await playersTurn());
-        }else if (cont === false){
-          gameOver(true);
-          if(player.liveStatus === false){
-            setGameText('You lost');
-            toggleGameLoopModal();
-            await delay(2000);
-            setGameLoopModal(false);
-          }else if(player.liveStatus === true){
+          } else if (player.liveStatus === true) {
             setGameText('You win');
             toggleGameLoopModal();
             await delay(2000);
@@ -348,133 +251,181 @@ useEffect( () => {
         }
       }
     }
-    //add ai player part
-    if (gameOver === false && gameLoopStep >= -1 && turn === 1){
+    const aiPlayerTurnFce = async () => {
+      if (gameLoopStep === 0) {
+        setGameText("It is player's " + turn + " turn");
+        generateResourcesPerTurn();
+        toggleGameLoopModal();
+        await delay(2000);
+        setGameLoopModal(false);
+      } else if (gameLoopStep === 1 && modal === false) {
+        if (turn === 2) {
+          await questionAndToggle();
+          opponent.answerQuestion();
+          await delay(2000);
+          setModal(false);
+        } else if (turn === 3) {
+          await questionAndToggle();
+          opponent1.answerQuestion();
+          await delay(2000);
+          setModal(false);
+        } else if (turn === 4) {
+          await questionAndToggle();
+          opponent2.answerQuestion();
+          await delay(2000);
+          setModal(false);
+        }
+      } else if (gameLoopStep === 2) {
+        setGameText('Time to shop and assign troops');
+        setShopAndTroopTime(true);
+        toggleGameLoopModal();
+        await delay(2000);
+        setGameLoopModal(false);
+      } else if (gameLoopStep === 4 && battleModal === false) {
+        setShopAndTroopTime(false);
+        if (turn === 2) {
+          setBattleTiles(await opponent.battleOthers());
+          toggleBattleModal();
+        } else if (turn === 3) {
+          setBattleTiles(await opponent1.battleOthers());
+          toggleBattleModal();
+        } else if (turn === 4) {
+          setBattleTiles(await opponent2.battleOthers());
+          toggleBattleModal();
+        }
+      } else if (gameLoopStep === 5) {
+        let cont = continueGame();
+        if (cont === true) {
+          setGameText('Next players turn');
+          toggleGameLoopModal();
+          await delay(2000);
+          setGameLoopModal(false);
+          setTurn(await playersTurn());
+        } else if (cont === false) {
+          gameOver(true);
+          if (player.liveStatus === false) {
+            setGameText('You lost');
+            toggleGameLoopModal();
+            await delay(2000);
+            setGameLoopModal(false);
+          } else if (player.liveStatus === true) {
+            setGameText('You win');
+            toggleGameLoopModal();
+            await delay(2000);
+            setGameLoopModal(false);
+          }
+        }
+      }
+    }
+    if (gameOver === false && gameLoopStep >= -1 && turn === 1) {
       fce();
-    }else if (gameOver === false && gameLoopStep >= -1){
+    } else if (gameOver === false && gameLoopStep >= -1) {
       aiPlayerTurnFce();
     }
-    
-
   }, [gameOver, gameLoopStep]);
- 
+
   useEffect(() => {
     if (!gameLoopModal && gameLoopStep === -1) {
-      // Perform your effect when variable changes from true to false
-      // This block will run only when variable changes from true to false
       setGameLoopStep(0);
-    }else if (!gameLoopModal && gameLoopStep === 0) {
-      // Perform your effect when variable changes from true to false
-      // This block will run only when variable changes from true to false
+    } else if (!gameLoopModal && gameLoopStep === 0) {
       setGameLoopStep(1);
-    }else if (!gameLoopModal && gameLoopStep === 2) {
-      // Perform your effect when variable changes from true to false
-      // This block will run only when variable changes from true to false
+    } else if (!gameLoopModal && gameLoopStep === 2) {
       setGameLoopStep(3);
-    }else if (!gameLoopModal && gameLoopStep === 5) {
-      // Perform your effect when variable changes from true to false
-      // This block will run only when variable changes from true to false
+    } else if (!gameLoopModal && gameLoopStep === 5) {
       setGameLoopStep(0);
     }
-  }, [gameLoopModal]); // Only run this effect when variable changes
+  }, [gameLoopModal]);
 
   useEffect(() => {
     if (!modal) {
-      // Perform your effect when variable changes from true to false
-      // This block will run only when variable changes from true to false
       setGameLoopStep(2);
     }
-  }, [modal]); // Only run this effect when variable changes
+  }, [modal]);
 
   useEffect(() => {
     if (!battleModal) {
-      // Perform your effect when variable changes from true to false
-      // This block will run only when variable changes from true to false
       setGameLoopStep(5);
     }
-  }, [battleModal]); // Only run this effect when variable changes
-  
-  // Handles events in sequence
+  }, [battleModal]);
+
   const gameLoop = async () => {
     toggleGameState();
     setTurn(1);
     setGameLoopStep(-1);
   }
 
-  
   return (
-    <PlayerContext.Provider value={{player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn, battleTiles}}>
+    <PlayerContext.Provider value={{ player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn, battleTiles, ownedTroops, setOwnedTroops }}>
       {battleModal && (
         <div id="battleModal" class="battleModal">
           <div className="overlay">
-             <Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
-            </div>
+            <Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
+          </div>
         </div>
       )}
 
       {modal && (
-          <div className="modal">
-            <div className="overlay">
-              <Question questionJson={question} isOpen={modal} close={toggleModal}></Question>
-              </div>
+        <div className="modal">
+          <div className="overlay">
+            <Question questionJson={question} isOpen={modal} close={toggleModal}></Question>
           </div>
-        )}
+        </div>
+      )}
 
       {storeModal && (
         <div id="storeModal" class="storeModal">
           <div className="overlay">
             <Store storeModal={storeModal} isOpen={storeModal} close={() => { toggleStoreModal(); deselect(); }} ></Store>
-            </div>
-        </div>
-        )}
-
-        {gameLoopModal && (
-          <div className="gameLoopModal">
-            <div className="overlay">
-              <GameLoopModal text={gameText} isOpen={gameLoopModal} close={toggleGameLoopModal}></GameLoopModal>
-              </div>
           </div>
-        )}
+        </div>
+      )}
+
+      {gameLoopModal && (
+        <div className="gameLoopModal">
+          <div className="overlay">
+            <GameLoopModal text={gameText} isOpen={gameLoopModal} close={toggleGameLoopModal}></GameLoopModal>
+          </div>
+        </div>
+      )}
 
       <div className="game">
 
-      <div className='hudContainer'>
+        <div className='hudContainer'>
 
-        <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
+          <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
 
-        <div className='hudElementContainer'>
-        <div className='buttons-container'> {/* New container for the buttons */}
+          <div className='hudElementContainer'>
+            <div className='buttons-container'>
 
-        {gameOver && (
-        <button onClick={gameLoop} className="btn-modal"> 
-        Start Game
-        </button>
-        )}
+              {gameOver && (
+                <button onClick={gameLoop} className="btn-modal">
+                  Start Game
+                </button>
+              )}
 
-        {shopAndTroopTime && (
-          <><button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
-                  Store
-                </button><button onClick={() => setGameLoopStep(4)} className="btn-modal" href="battleModal">
+              {shopAndTroopTime && (
+                <>
+                  <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
+                    Store
+                  </button>
+                  <button onClick={() => setGameLoopStep(4)} className="btn-modal" href="battleModal">
                     Ready
-                  </button></>
-        )}
-          {/* <button onClick={toggleBattleModal} className="btn-modal" href="battleModal">
-          Battle
-          </button> */}
+                  </button>
+                </>
+              )}
 
-          
+            </div>
+
+            <ResourceBar techPoints={player.techPoints} woodPoints={player.woodPoints} foodPoints={player.foodPoints} metalPoints={player.metalPoints} ownedTroops={ownedTroops}>
+            </ResourceBar>
+          </div>
+
         </div>
-        
-          <ResourceBar techPoints={player.techPoints} woodPoints={player.woodPoints} foodPoints={player.foodPoints} metalPoints={player.metalPoints}>
-          </ResourceBar>
+        <div className='hexContainer'>
+          <Board saveSelection={saveSelection} toggleStoreModal={toggleStoreModal} ownedTroops={ownedTroops} setOwnedTroops={setOwnedTroops} />
+        </div>
       </div>
-
-    </div>
-    <div className='hexContainer'>
-        <Board saveSelection={saveSelection} toggleStoreModal={toggleStoreModal}/>
-      </div>
-  </div>
-  </PlayerContext.Provider>
+    </PlayerContext.Provider>
   );
 }
 

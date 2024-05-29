@@ -28,7 +28,6 @@ class Board extends Component {
       showModal: false,
       tileInfoModalOpen: false,
       selectedTile: null,
-      ownedTroops: 10,
     };
   }
 
@@ -67,12 +66,10 @@ class Board extends Component {
     this.resetSelection();
   };
 
-  handleCloseWithoutDeselecting = () => {
-    this.setState({ showModal: false });
-  };
-
   allocateTroops = () => {
-    const { selectedHex, ownedTroops, hexagons } = this.state;
+    const { selectedHex, hexagons } = this.state;
+    const { ownedTroops, setOwnedTroops } = this.props;
+
     if (ownedTroops > 0 && selectedHex && selectedHex.tile) {
       selectedHex.tile.addTroops(1);
       const updatedHexagons = hexagons.map(hex => {
@@ -81,10 +78,10 @@ class Board extends Component {
         }
         return hex;
       });
+      setOwnedTroops(ownedTroops - 1);
       this.setState(
         {
           hexagons: updatedHexagons,
-          ownedTroops: ownedTroops - 1,
         },
         () => {
           console.log(`Allocated 1 troop to tile at coordinates (${selectedHex.q}, ${selectedHex.r}, ${selectedHex.s}).`);
@@ -114,7 +111,7 @@ class Board extends Component {
   };
 
   render() {
-    const { hexagons, config, viewBox, selectedHex, showModal, tileInfoModalOpen, selectedTile, ownedTroops } = this.state;
+    const { hexagons, config, viewBox, selectedHex, showModal, tileInfoModalOpen, selectedTile } = this.state;
     const size = { x: config.layout.width, y: config.layout.height };
 
     return (
