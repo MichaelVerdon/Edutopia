@@ -13,7 +13,7 @@ class PlayerObject{
         this.metalPoints = 100;
         // A list of tile objects
         this.ownedTiles = [randomTile]; // We need to assign a random starting tile
-        this.freeTroops = 20;
+        this.freeTroops = 10;
     }
 
     // Return Player ID For checks
