@@ -1,5 +1,6 @@
 import PlayerObject from "./PlayerObject";
 import GameSettings from "./GameSettings";
+import Board from "./Board";
 
 // Inherit from PlayerObject Class so they can have all functionalities of player class.
 // You will be able to treat this as a PlayerObject class and use same funcs and vars.
@@ -50,6 +51,18 @@ class aiPlayer extends PlayerObject{
 
         //buy the tile
 
+    }
+
+    async assignTroops(){
+        //assign a troop per tile
+        for(let i=0; i<this.ownedTiles.length; i++){
+            console.log(this.ownedTiles[i].troops);
+            if(await this.ownedTiles[i].troops === 0 && this.getOwnedTroops > 0){
+                GameSettings.allocateTroops()
+            }else if (this.getOwnedTroops === 0){
+                break;
+            }
+        }
     }
 
     async battleOthers(){

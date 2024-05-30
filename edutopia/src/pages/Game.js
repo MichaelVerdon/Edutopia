@@ -212,6 +212,13 @@ function Game() {
     return (cont);
   }
 
+  const someFunction = () => {
+    GameSettings.saveClickedHexagon(2,0,-2, '');
+    if (boardRef.current) {
+      boardRef.current.allocateTroops();
+    }
+  };
+
   useEffect(() => {
     const fce = async () => {
       if (gameLoopStep === -1) {
@@ -291,6 +298,7 @@ function Game() {
         toggleGameLoopModal();
         await delay(2000);
         setGameLoopModal(false);
+        someFunction();
       } else if (gameLoopStep === 4 && battleModal === false) {
         setShopAndTroopTime(false);
         if (turn === 2) {
