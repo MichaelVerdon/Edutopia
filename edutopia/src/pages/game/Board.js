@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, forwardRef, useImperativeHandle} from 'react';
 import { HexGrid, Layout, GridGenerator } from 'react-hexgrid';
 import InteractiveHexagon from './InteractiveHexagon';
 import configs from './configurations';
@@ -167,4 +167,16 @@ class Board extends Component {
   }
 }
 
-export default Board;
+export default forwardRef((props, ref) => {
+  const boardRef = React.useRef();
+
+  useImperativeHandle(ref, () => ({
+    allocateTroops: () => {
+      if (boardRef.current) {
+        boardRef.current.allocateTroops();
+      }
+    }
+  }));
+
+  return <Board ref={boardRef} {...props} />;
+});

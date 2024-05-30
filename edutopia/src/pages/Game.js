@@ -52,6 +52,16 @@ function Game() {
   const [battleTiles, setBattleTiles] = useState([]);
   const [ownedTroops, setOwnedTroops] = useState(player.getOwnedTroops); // State for owned troops
 
+
+
+  const boardRef = useRef(null);
+
+  const allocateTroops = (selectedHex) => {
+    if (boardRef.current) {
+      boardRef.current.allocateTroops();
+    }
+  };
+
   const toggleGameState = () => {
     setGameState(!gameOver);
   }
