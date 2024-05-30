@@ -440,7 +440,7 @@ function Game() {
 
         </div>
         <div className='hexContainer'>
-          <Board saveSelection={saveSelection} toggleStoreModal={toggleStoreModal} ownedTroops={ownedTroops} setOwnedTroops={setOwnedTroops} />
+          <Board ref={boardRef} saveSelection={saveSelection} toggleStoreModal={toggleStoreModal} ownedTroops={ownedTroops} setOwnedTroops={setOwnedTroops} />
         </div>
       </div>
     </PlayerContext.Provider>
