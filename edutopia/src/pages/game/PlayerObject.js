@@ -29,7 +29,7 @@ class PlayerObject{
     get getMetalPoints(){return this.metalPoints;}
 
     get getOwnedTiles(){return this.ownedTiles;}
-    get getOwnedTroops(){return this.freeTroops;}
+    get getFreeTroops(){return this.freeTroops;}
 
     // Checks for eliminating players
     get getLiveStatus(){return this.alive}

@@ -53,7 +53,7 @@ function Store ({storeModal, close}) {
       setSelectedItem(null)
       setPhase(1);
     }
-    else if (row.land === true){
+    else if (row.land === true || row.land === false){
       //if yes asks u to pick a land
         if (source === 'MiniMenu') {
           setPhase(3);
@@ -135,14 +135,12 @@ function Store ({storeModal, close}) {
     let tiles = player.ownedTiles;
     tiles = tiles.map(tile => tile.getCoordVal());
     for(let tile of tiles){
-      console.log("iterating over: " + tile)
       for (let array of adjancenyMap) {
         let tempTile = [
           tile[0] + array[0],
           tile[1] + array[1],
           tile[2] + array[2]
         ];
-        console.log("temp tile: " + tempTile);
         if(
           tempTile [0] === selectedTile[0] &&
           tempTile [1] === selectedTile[1] &&
@@ -165,11 +163,9 @@ function Store ({storeModal, close}) {
         tile[1] === selectedTile[1] &&
         tile[2] === selectedTile[2]
       ){
-        console.log("tile is owned");
         return true;
       }
     }
-    console.log("tile is not owned")
     return false;
   }
 
@@ -187,13 +183,16 @@ function Store ({storeModal, close}) {
     let currentPlayer = await playersTurn();
     let tempPlayer = new PlayerObject(turn);
 
-    if(canPurchase()){
-      if(selectedItem.id===1){
+    if(await canPurchase()){
+      if(!selectedItem.land){
         console.log("troop selected");
-        let troops = await currentPlayer.freeTroops + 1;
-        tempPlayer.freeTroops = troops;
+        tempPlayer.freeTroops = await currentPlayer.freeTroops + 1;
+        NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful.`);
         console.log("troop bought");
+        console.log(tempPlayer.freeTroops + "troops owned");
+
       } else if(selectedItem.land){
+        console.log("land selected");
         const { q, r, s } = selectedHex;
         gameSettings.setBiomeForCoordinates(q,r,s,selectedItem.landNew + await colorTurn());
         NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);

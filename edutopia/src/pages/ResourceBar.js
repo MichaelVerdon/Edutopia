@@ -15,12 +15,14 @@ function ResourceBar({ techPoints, foodPoints, woodPoints, metalPoints, ownedTro
     const [food, setFoodPoints] = useState(player.getFoodPoints);
     const [wood, setWoodPoints] = useState(player.getWoodPoints);
     const [metal, setMetalPoints] = useState(player.getMetalPoints);
+    const [troops, setFreeTroops] = useState(player.getFreeTroops);
     
     useEffect(()=>{
         setFoodPoints(player.getFoodPoints);
         setWoodPoints(player.getWoodPoints);
         setTechPoints(player.getTechPoints);
         setMetalPoints(player.getMetalPoints);
+        setFreeTroops(player.getFreeTroops);
         
     },[player]);
     
@@ -56,7 +58,7 @@ function ResourceBar({ techPoints, foodPoints, woodPoints, metalPoints, ownedTro
 
             <div className='ResourceContainer'>
                 <img src={TroopIcon} alt="Troop Icon" />
-                <div className='ResourceAmountText'>{ownedTroops}</div>
+                <div className='ResourceAmountText'>{troops}</div>
                 <div className='ResourceInfoIcon'>ℹ️</div>
                 <div className='ResourceInfoText'>Troop Points</div>
             </div>
