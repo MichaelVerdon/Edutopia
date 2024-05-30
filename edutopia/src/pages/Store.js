@@ -174,6 +174,7 @@ function Store ({storeModal, close}) {
   }
 
   const adjancenyMap = [
+    [0, 0, 0],
     [0, -1, 1],
     [1, -1, 0],
     [1, 0, -1],
@@ -188,20 +189,19 @@ function Store ({storeModal, close}) {
 
     if(canPurchase()){
       if(selectedItem.id===1){
-        let troops = await currentPlayer.freeTroops +1;
-        tempPlayer.freeTroops = 11;
-        
-        
-      }else if(selectedItem.land){
+        console.log("troop selected");
+        let troops = await currentPlayer.freeTroops + 1;
+        tempPlayer.freeTroops = troops;
+        console.log("troop bought");
+      } else if(selectedItem.land){
         const { q, r, s } = selectedHex;
         gameSettings.setBiomeForCoordinates(q,r,s,selectedItem.landNew + await colorTurn());
         NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);
         tempPlayer.ownedTiles = await currentPlayer.ownedTiles.push([q, r, s]);
         tempPlayer.freeTroops = await currentPlayer.freeTroops;
-      }
-      else{
+
+      } else{
         NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} unsuccessful`);
-        return;
       }
   
     tempPlayer.playerId = turn;
@@ -212,7 +212,8 @@ function Store ({storeModal, close}) {
     tempPlayer.foodPoints = (currentPlayer.getFoodPoints - selectedItem.foodPoints);
     tempPlayer.woodPoints = (currentPlayer.getWoodPoints - selectedItem.woodPoints);
     tempPlayer.metalPoints = (currentPlayer.getMetalPoints - selectedItem.metalPoints); 
-    
+    setPlayer(tempPlayer);
+
     if (turn === 1){
       setPlayer(tempPlayer);
     } else if (turn === 2){
