@@ -50,15 +50,15 @@ function Game() {
   const [gameLoopStep, setGameLoopStep] = useState(-2);
   const [shopAndTroopTime, setShopAndTroopTime] = useState(false);
   const [battleTiles, setBattleTiles] = useState([]);
-  const [ownedTroops, setOwnedTroops] = useState(player.getOwnedTroops); // State for owned troops
+  const [ownedTroops, setOwnedTroops] = useState(player.getFreeTroops); // State for owned troops
 
 
 
   const boardRef = useRef(null);
 
-  const allocateTroops = (selectedHex) => {
+  const allocateTroops = (hex) => {
     if (boardRef.current) {
-      boardRef.current.allocateTroops();
+      boardRef.current.allocateTroops(hex);
     }
   };
 
@@ -212,12 +212,6 @@ function Game() {
     return (cont);
   }
 
-  const someFunction = () => {
-    GameSettings.saveClickedHexagon(2,0,-2, '');
-    if (boardRef.current) {
-      boardRef.current.allocateTroops();
-    }
-  };
 
   useEffect(() => {
     const fce = async () => {
@@ -298,7 +292,17 @@ function Game() {
         toggleGameLoopModal();
         await delay(2000);
         setGameLoopModal(false);
-        someFunction();
+        let hex = [];
+        if (turn === 2) {
+          hex = await opponent.allocateTroopsHex();
+        } else if (turn === 3) {
+          hex = await opponent1.allocateTroopsHex();
+        } else if (turn === 4) {
+          hex = await opponent2.allocateTroopsHex();
+        }
+        for (let i=0; i < hex.length; i++){
+          allocateTroops(hex[i]);
+        }
       } else if (gameLoopStep === 4 && battleModal === false) {
         setShopAndTroopTime(false);
         if (turn === 2) {

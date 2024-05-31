@@ -66,8 +66,10 @@ class Board extends Component {
     this.resetSelection();
   };
 
-  allocateTroops = () => {
-    const { selectedHex, hexagons } = this.state;
+  allocateTroops = (hexData) => {
+    const tile = this.state.hexagons.find(hex => hex.q === hexData.q && hex.r === hexData.r && hex.s === hexData.s);
+    const selectedHex = { ...hexData, tile };
+    const { hexagons } = this.state;
     const { ownedTroops, setOwnedTroops } = this.props;
 
     if (ownedTroops > 0 && selectedHex && selectedHex.tile) {
@@ -171,9 +173,9 @@ export default forwardRef((props, ref) => {
   const boardRef = React.useRef();
 
   useImperativeHandle(ref, () => ({
-    allocateTroops: () => {
+    allocateTroops: (hex) => {
       if (boardRef.current) {
-        boardRef.current.allocateTroops();
+        boardRef.current.allocateTroops(hex);
       }
     }
   }));

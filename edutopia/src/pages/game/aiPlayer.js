@@ -53,16 +53,19 @@ class aiPlayer extends PlayerObject{
 
     }
 
-    async assignTroops(){
+    async allocateTroopsHex(){
+        let allocatableHexs = [];
+        let troopsAvailable = this.freeTroops;
         //assign a troop per tile
         for(let i=0; i<this.ownedTiles.length; i++){
-            console.log(this.ownedTiles[i].troops);
-            if(await this.ownedTiles[i].troops === 0 && this.getOwnedTroops > 0){
-                GameSettings.allocateTroops()
-            }else if (this.getOwnedTroops === 0){
+            if(await this.ownedTiles[i].troops === 0){
+                allocatableHexs.push(this.ownedTiles[i]);
+            }
+            if (i === troopsAvailable){
                 break;
             }
         }
+        return allocatableHexs;
     }
 
     async battleOthers(){
