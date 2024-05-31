@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage';
 import Game from './pages/Game';
 
 function App() {
+
   return (
     <div className="App">
       <Router>

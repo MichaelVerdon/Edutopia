@@ -1,13 +1,12 @@
-// LandingPage.js
-
 import './LandingPage.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import sounds from './game/sounds/soundImports.js';
 
 function LandingPage() {
-    
+
     const handlePlayClick = () => {
-        console.log('play game');
+        sounds[0].play()
     }
 
     return (

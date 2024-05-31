@@ -13,6 +13,7 @@ import Battle from './Battle';
 import GameLoopModal from './GameLoopModal';
 import aiPlayer from './game/aiPlayer';
 import Tile from './game/Tile';
+import sounds from './game/sounds/soundImports.js';
 
 export const PlayerContext = createContext({
   player: {},
@@ -165,6 +166,7 @@ function Game() {
   }
 
   const toggleStoreModal = () => {
+    sounds[0].play();
     setStoreModal(!storeModal); // Toggle the visibility of the store modal
 
     // If we are opening the store, set the source to 'HUD', otherwise reset it
@@ -371,6 +373,7 @@ function Game() {
   }, [battleModal]);
 
   const gameLoop = async () => {
+    sounds[0].play();
     toggleGameState();
     setTurn(1);
     setGameLoopStep(-1);

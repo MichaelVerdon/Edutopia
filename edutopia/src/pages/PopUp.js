@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import '../pages/Game.css';
 import NotificationManager from '../pages/game/NotificationManager';
+import sounds from './game/sounds/soundImports.js';
 
 Modal.setAppElement('#root'); 
 
@@ -51,8 +52,10 @@ function PopUp({ isOpen, onClose, onTopicsChange }) {
     onTopicsChange(selectedTopics);
     if(selectedTopics.length === 0){
       NotificationManager.showSuccessNotification("Please select at least one topic!")
+      sounds[0].play();
     }
     else{
+      sounds[0].play();
       onClose();
     }
     // Export the current state of selectedTopics when the modal is closed
