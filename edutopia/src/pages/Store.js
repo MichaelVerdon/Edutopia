@@ -47,7 +47,7 @@ function Store({ storeModal, close }) {
     setShowPopup(true);
     let currentPlayer = await playersTurn();
     if (hasResources(currentPlayer, row)) {
-      setReason("you don't have enough resources");
+      setReason("You do not have enough resources to purchase this!");
       setSelectedItem(null);
       setPhase(1);
     } else {

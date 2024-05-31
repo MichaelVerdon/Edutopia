@@ -353,8 +353,8 @@ function Battle ({close, isOpen}) {
             <Modal isOpen={isOpen} onRequestClose={close} contentLabel="Battle"  className="storeModal" style={customStyles}>
                 <div className="phase-popup">
                     <h1>Get ready to battle</h1>
-                    <h2>Select a land to attack with</h2>
-                    <button className='btn' onClick={attackLandSelected}>land selected</button>
+                    <h2>Select your own land you wish to attack with!</h2>
+                    <button className='btn' onClick={attackLandSelected}>Confirm land selection</button>
                     <button className="close-btn-small" onClick={close}>X</button> {/* Top right X close button */}
                 </div>
             </Modal>
@@ -365,8 +365,8 @@ function Battle ({close, isOpen}) {
             <Modal isOpen={isOpen} onRequestClose={close} contentLabel="Battle"  className="storeModal" style={customStyles}>
                 <div className="phase-popup">
                 <h1>Get ready to battle</h1>
-                <h2>Select a land to attack</h2>
-                <button className='btn' onClick={opponentLandSelected}>land selected</button>
+                <h2>Select an enemy land to attack!</h2>
+                <button className='btn' onClick={opponentLandSelected}>Confirm land selection</button>
                 <button className="close-btn-small" onClick={close}>X</button> {/* Top right X close button */}
                 </div>
             </Modal>
