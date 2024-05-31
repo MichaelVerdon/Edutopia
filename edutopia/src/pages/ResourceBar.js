@@ -30,28 +30,28 @@ function ResourceBar({ techPoints, foodPoints, woodPoints, metalPoints, ownedTro
         <div className='ResourceBarContainer'>
             <div className='ResourceContainer'>
                 <img src={TechIcon} alt="Tech Icon" />
-                <div className='ResourceAmountText'>{techPoints}</div>
+                <div className='ResourceAmountText'>{tech}</div>
                 <div className='ResourceInfoIcon'>ℹ️</div>
                 <div className='ResourceInfoText'>Tech Points</div>
             </div>
 
             <div className='ResourceContainer'>
                 <img src={FoodIcon} alt="Food Icon" />
-                <div className='ResourceAmountText'>{foodPoints}</div>
+                <div className='ResourceAmountText'>{food}</div>
                 <div className='ResourceInfoIcon'>ℹ️</div>
                 <div className='ResourceInfoText'>Food Points</div>
             </div>
 
             <div className='ResourceContainer'>
                 <img src={WoodIcon} alt="Wood Icon" />
-                <div className='ResourceAmountText'>{woodPoints}</div>
+                <div className='ResourceAmountText'>{wood}</div>
                 <div className='ResourceInfoIcon'>ℹ️</div>
                 <div className='ResourceInfoText'>Wood Points</div>
             </div>
 
             <div className='ResourceContainer'>
                 <img src={MetalIcon} alt="Metal Icon" />
-                <div className='ResourceAmountText'>{metalPoints}</div>
+                <div className='ResourceAmountText'>{metal}</div>
                 <div className='ResourceInfoIcon'>ℹ️</div>
                 <div className='ResourceInfoText'>Metal Points</div>
             </div>
