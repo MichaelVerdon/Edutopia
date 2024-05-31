@@ -46,7 +46,7 @@ function Store({ storeModal, close }) {
     setSelectedItem(row);
     setShowPopup(true);
     let currentPlayer = await playersTurn();
-    if (hasResources(currentPlayer)) {
+    if (hasResources(currentPlayer, row)) {
       setReason("you don't have enough resources");
       setSelectedItem(null);
       setPhase(1);
@@ -55,7 +55,7 @@ function Store({ storeModal, close }) {
     }
   }
 
-  function hasResources(currentPlayer){
+  function hasResources(currentPlayer, row){
     if(currentPlayer.getTechPoints < row.techPoints 
       || currentPlayer.getFoodPoints < row.foodPoints 
       || currentPlayer.getWoodPoints < row.woodPoints 
