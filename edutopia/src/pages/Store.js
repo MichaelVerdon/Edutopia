@@ -46,13 +46,25 @@ function Store({ storeModal, close }) {
     setSelectedItem(row);
     setShowPopup(true);
     let currentPlayer = await playersTurn();
-    if (currentPlayer.getTechPoints < row.techPoints || currentPlayer.getFoodPoints < row.foodPoints || currentPlayer.getWoodPoints < row.woodPoints || currentPlayer.getMetalPoints < row.metalPoints) {
+    if (hasResources(currentPlayer)) {
       setReason("you don't have enough resources");
       setSelectedItem(null);
       setPhase(1);
     } else {
       setPhase(3);
     }
+  }
+
+  function hasResources(currentPlayer){
+    if(currentPlayer.getTechPoints < row.techPoints 
+      || currentPlayer.getFoodPoints < row.foodPoints 
+      || currentPlayer.getWoodPoints < row.woodPoints 
+      || currentPlayer.getMetalPoints < row.metalPoints){
+        return true;
+      } 
+      else{
+        return false;
+      }
   }
 
   const changeSelectedHex = (selectedHex) => {
