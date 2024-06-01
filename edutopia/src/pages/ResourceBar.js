@@ -24,7 +24,7 @@ function ResourceBar({ techPoints, foodPoints, woodPoints, metalPoints, ownedTro
         setMetalPoints(player.getMetalPoints);
         setFreeTroops(player.getFreeTroops);
         
-    },[player]);
+    },[player, ownedTroops]);
     
     return (
         <div className='ResourceBarContainer'>

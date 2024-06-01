@@ -53,7 +53,13 @@ function Game() {
   const [battleTiles, setBattleTiles] = useState([]);
   const [ownedTroops, setOwnedTroops] = useState(player.getFreeTroops); // State for owned troops
 
+  useEffect(() => {
+    if (turn === 1) {
+      player.freeTroops = ownedTroops;
+      console.log(player.freeTroops);
 
+    }
+  }, [ownedTroops]);
 
   const boardRef = useRef(null);
 
@@ -296,11 +302,17 @@ function Game() {
         setGameLoopModal(false);
         let hex = [];
         if (turn === 2) {
+          setOwnedTroops(opponent.getFreeTroops);
           hex = await opponent.allocateTroopsHex();
+          opponent.freeTroops = opponent.getFreeTroops - hex.length;
         } else if (turn === 3) {
+          setOwnedTroops(opponent1.getFreeTroops);
           hex = await opponent1.allocateTroopsHex();
+          opponent1.freeTroops = opponent1.getFreeTroops - hex.length;
         } else if (turn === 4) {
+          setOwnedTroops(opponent2.getFreeTroops);
           hex = await opponent2.allocateTroopsHex();
+          opponent2.freeTroops = opponent2.getFreeTroops - hex.length;
         }
         for (let i=0; i < hex.length; i++){
           allocateTroops(hex[i]);
