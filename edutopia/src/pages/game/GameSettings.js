@@ -3,7 +3,7 @@ import images from './imageImports';
 import hexagonData from './hexagonData.json';
 import { createNoise2D } from 'simplex-noise';
 import Tile from './Tile';
-
+import sounds from './sounds/soundImports';
 const noise2D = createNoise2D();
 const biomes = Object.keys(images);
 
@@ -91,6 +91,7 @@ const GameSettings = {
   },
 
   getClickedHexagon: () => {
+    sounds[3].play();
     return GameSettings.clickedHexagon;
   },
 

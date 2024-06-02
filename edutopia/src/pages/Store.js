@@ -6,6 +6,7 @@ import gameSettings from './game/GameSettings';
 import './Store.css';
 import NotificationManager from '../pages/game/NotificationManager';
 import storeData from '../pages/game/storeItemsData.json';
+import sounds from './game/sounds/soundImports.js';
 import Tile from './game/Tile';
 
 Modal.setAppElement('#root');
@@ -170,6 +171,7 @@ function Store({ storeModal, close }) {
 
     if (!selectedItem.land) {
       tempPlayer.freeTroops = await currentPlayer.freeTroops + 1;
+      sounds[1].play();
       NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful.`);
     }
 
@@ -177,6 +179,7 @@ function Store({ storeModal, close }) {
       if (selectedItem.land) {
         const { q, r, s } = selectedHex;
         gameSettings.setBiomeForCoordinates(q, r, s, selectedItem.landNew + await colorTurn());
+        sounds[1].play();
         NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);
         tempPlayer.ownedTiles = await currentPlayer.ownedTiles.push([q, r, s]);
         tempPlayer.freeTroops = await currentPlayer.freeTroops;

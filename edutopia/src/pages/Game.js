@@ -400,7 +400,7 @@ function Game() {
   }, [battleModal]);
 
   const gameLoop = async () => {
-    sounds[0].play();
+    sounds[2].play();
     toggleGameState();
     setTurn(1);
     setGameLoopStep(-1);
@@ -460,10 +460,10 @@ function Game() {
               {shopAndTroopTime && (
                 <>
                   <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
-                    Store
+                    Shop
                   </button>
-                  <button onClick={() => setGameLoopStep(4)} className="btn-modal" href="battleModal">
-                    Ready
+                  <button onClick={() => {setGameLoopStep(4); sounds[0].play()}} className="btn-modal" href="battleModal">
+                    Battle
                   </button>
                 </>
               )}
