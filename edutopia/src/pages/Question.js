@@ -3,6 +3,7 @@ import { PlayerContext } from './Game';
 import PlayerObject from './game/PlayerObject';
 import Modal from 'react-modal';
 import './Store.css';
+import sounds from './game/sounds/soundImports';
 
 function Question ({questionJson, isOpen, close}) {
     
@@ -40,6 +41,7 @@ function Question ({questionJson, isOpen, close}) {
         setDisabled(true);
         setAnswer(answer)
         if (question[answer] === question[7]){
+            sounds[5].play();
             setColor('#68e868') //green
             let tempPlayer = new PlayerObject(player.getPlayerID);
             tempPlayer.ownedTiles = player.ownedTiles;
@@ -52,6 +54,7 @@ function Question ({questionJson, isOpen, close}) {
             setPlayer(tempPlayer);
             
         }else{
+            sounds[6].play();
             setColor('#e86868') //red
         }
         await delay(2000);

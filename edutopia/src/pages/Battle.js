@@ -12,6 +12,7 @@ import TroopIconYellow from './images/sprites/Troop_Yellow.png';
 import TroopIconPink from './images/sprites/Troop_Pink.png';
 import TroopIconCyan from './images/sprites/Troop_Cyan.png';
 import Star from './images/sprites/star.png';
+import sounds from './game/sounds/soundImports.js';
 
 Modal.setAppElement('#root'); 
 
@@ -81,6 +82,7 @@ function Battle ({close, isOpen}) {
 
     const enterAnimation = (async(callback)=>{
         if(phase === 3){
+            sounds[4].play();
             //slash 1
             await animate('#flipTroop', {scaleX: -1});
             animate("#star",{opacity: [0,0.8]},{transition: {duration:0.25}} );
@@ -255,6 +257,7 @@ function Battle ({close, isOpen}) {
         }else if (attackedPlayerId === 3){
             opponent1.removeOwnedTile(land);
         }else if (attackedPlayerId === 1){
+            sounds[8].play();
             player.removeOwnedTile(land); 
         }else if (attackedPlayerId===4){
             opponent2.removeOwnedTile(land); 
@@ -270,6 +273,7 @@ function Battle ({close, isOpen}) {
         if (randomValue <= chanceOptionAttacker) {
             setWinner(turn);
             if (turn === 1){
+                sounds[7].play();
                 player.addOwnedTile(land, '_Blue'); 
                 removeLosersTile(land, attackedPlayerId);
                 NotificationManager.showSuccessNotification(`player 1 now owns ` + land);
@@ -289,6 +293,7 @@ function Battle ({close, isOpen}) {
              
         } else {
             // Otherwise, choose option2
+            sounds[8].play();
             setWinner(attackedPlayerId); //TODO
             
         }
