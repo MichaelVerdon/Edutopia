@@ -203,6 +203,7 @@ function Battle ({close, isOpen}) {
             let currentPlayer = await playersTurn();
             let adjacent = await gameSettings.areTilesAdjacent(attackLand[0], attackLand[1], attackLand[2], q, r, s);
             if (adjacent){
+                console.log("Tiles Adjacent");
                 if(opponent.OwnsTileCheck([q,r,s]) && opponent.playerId !== currentPlayer.playerId){
                     const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
                     setAttackedPlayer(2);
