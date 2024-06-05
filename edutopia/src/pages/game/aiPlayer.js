@@ -26,30 +26,96 @@ class aiPlayer extends PlayerObject{
         }
     }
 
-    getClaimTile(){
-        // Will eventually be able to pick a random tile based off adjacent tiles using this.tiles
-        // Then apply logic to give resources
+    async getOwnedTile(){
+        // returns random owned tiles
         const ownedTileCount = this.ownedTiles.length
         const randomTileIndex = Math.floor(Math.random() * ownedTileCount);
-        let randomTile = this.ownedTiles[randomTileIndex];
+        let randomTile = await  this.ownedTiles[randomTileIndex];
+        return [randomTile];
+    }
+
+    async getClaimTile(){
+        // able to pick a random tile based off adjacent tiles using this.tiles
+        // Then apply logic to give resources
+        let adjTiles = await this.checkAdjacentTiles();
+        const randomTileIndex = Math.floor(Math.random() * adjTiles.length);
+        let randomTile = await adjTiles[randomTileIndex];
         // Will need to bulletproof this later (e.t.c cases where a random tile has no adjacent ones)
         return randomTile;
     }
 
-    checkAdjacentTiles(tile){
-        let vacantTiles = [];
+    async checkAdjacentTiles(){
+        let touchingTiles = [];
+        for(let i=0; i<this.ownedTiles.length; i++){
+            let q = this.ownedTiles[i].q;
+            let r = this.ownedTiles[i].r;
+            let s = this.ownedTiles[i].s;
+
+            if(await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_")[0] !== "Water"){
+                touchingTiles.push([q-1,r+1,s]);
+            }
+            if(await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_")[0] !== "Water"){
+                touchingTiles.push([q,r+1,s-1]);
+            }
+            if(await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_")[0] !== "Water"){
+                touchingTiles.push([q-1,r,s+1]);
+            }
+            if(await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_")[0] !== "Water"){
+                touchingTiles.push([q+1,r,s-1]);
+            }
+            if(await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_")[0] !== "Water"){
+                touchingTiles.push([q,r-1,s+1]);
+            }
+        }
+        return touchingTiles;
     }
 
-    shopping(){
-        //THIS IS JUST OPTIONAL IDEA
-        //if you can buy a troop and still have enough resources left to buy a tile
-
-        //buying a tile
-        //check unclaimed tiles around your tiles
-
-        //randomly select one tile
-
-        //buy the tile
+    async shopping(){
+        //BUY TILE
+        let TileToUpdate;
+        const option = Math.floor(Math.random() * 2);
+        //randomly decide if buy new or upgrade
+        if (option === 1){
+            TileToUpdate = await this.getOwnedTile();
+            //decide on item
+            let biome = await GameSettings.getBiomeForCoordinates(TileToUpdate.q, TileToUpdate.r, TileToUpdate.s);
+            biome = biome.charAt(0);
+            let item;
+            if(biome === "G"){
+                if(await biome.split("_")[0] === "_Grassland"){
+                    item = 5;
+                }else if(await biome.split("_")[0] === "_GrasslandWithFarm"){
+                    item = 8;
+                }   
+            }else if(biome === "R"){
+                item = 6;
+            }else if(biome === "W"){
+                item = 7;
+            }if(biome === "V"){
+                if(await biome.split("_")[0] === "_Village"){
+                    item = 9;
+                }else if(await biome.split("_")[0] === "_VillageWithTrainingGrounds"){
+                    item = 11;
+                }   
+            }
+            return([TileToUpdate.q, TileToUpdate.r, TileToUpdate.s], item);
+        }else if (option ===0){
+            TileToUpdate = await this.getClaimTile();
+            let biome = await GameSettings.getBiomeForCoordinates(TileToUpdate[0], TileToUpdate[1], TileToUpdate[2]);
+            biome = biome.charAt(0);
+            let item;
+            if(biome === "G"){
+                item = 2;
+            }else if(biome === "R"){
+                item = 3;
+            }else if(biome === "W"){
+                item = 4;
+            }
+            return(TileToUpdate, item);
+        }else if (option ===2){
+            //buy troop
+            return ("", 1)
+        }
 
     }
 

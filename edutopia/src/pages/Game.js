@@ -302,14 +302,17 @@ function Game() {
         setGameLoopModal(false);
         let hex = [];
         if (turn === 2) {
+          await Store.aiPurchase(await opponent.shopping());
           setOwnedTroops(opponent.getFreeTroops);
           hex = await opponent.allocateTroopsHex();
           opponent.freeTroops = opponent.getFreeTroops - hex.length;
         } else if (turn === 3) {
+          await Store.aiPurchase(await opponent1.shopping());
           setOwnedTroops(opponent1.getFreeTroops);
           hex = await opponent1.allocateTroopsHex();
           opponent1.freeTroops = opponent1.getFreeTroops - hex.length;
         } else if (turn === 4) {
+          await Store.aiPurchase(await opponent2.shopping());
           setOwnedTroops(opponent2.getFreeTroops);
           hex = await opponent2.allocateTroopsHex();
           opponent2.freeTroops = opponent2.getFreeTroops - hex.length;

@@ -101,13 +101,11 @@ function Store({ storeModal, close }) {
 
   function canPurchase() {
     try {
-      if (gameSettings.getBiomeForCoordinates(selectedHex) !== "Water") {
-        if (checkTileAdjancency() || checkTileOwnership()) {
-          return true;
-        } else {
-          NotificationManager.showSuccessNotification("Please pick a tile adjacent to owned tiles or buy on an owned tile!");
-          return false;
-        }
+      if (checkTileAdjancency() || checkTileOwnership()) {
+        return true;
+      } else {
+        NotificationManager.showSuccessNotification("Please pick a tile adjacent to owned tiles or buy on an owned tile!");
+        return false;
       }
     } catch {
       NotificationManager.showSuccessNotification("Something went wrong, please try again!");
@@ -163,6 +161,12 @@ function Store({ storeModal, close }) {
     [-1, 1, 0],
     [-1, 0, 1],
   ];
+
+  async function aiPurchase(tile, item){
+    setSelectedHex(tile);
+    setSelectedItem(item);
+    await purchase();
+  }
 
   async function purchase() {
     let currentPlayer = await playersTurn();
