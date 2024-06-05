@@ -55,6 +55,14 @@ function Game() {
   const [ownedTroops, setOwnedTroops] = useState(player.getFreeTroops); // State for owned troops
   const [isPopupMenuOpen, setPopupMenuOpen] = useState(false); // State for popup menu
 
+  const saveGame = () => {
+    console.log('Game saved!');
+  };
+
+  const loadGame = () => {
+    console.log('Loading saved file!');
+  };
+
   useEffect(() => {
     if (turn === 1) {
       player.freeTroops = ownedTroops;
@@ -440,7 +448,7 @@ function Game() {
         </div>
       )}
 
-      {isPopupMenuOpen && <PopupMenu isOpen={isPopupMenuOpen} onClose={() => setPopupMenuOpen(false)} />}
+      {isPopupMenuOpen && <PopupMenu isOpen={isPopupMenuOpen} onClose={() => setPopupMenuOpen(false)} saveGame={saveGame} loadGame={loadGame}/>}
 
       <div className="game">
 
@@ -482,5 +490,6 @@ function Game() {
     </PlayerContext.Provider>
   );
 }
+
 
 export default Game;
