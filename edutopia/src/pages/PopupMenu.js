@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import '../pages/Game.css';
 import './PopupMenu.css';
 
-const PopupMenu = ({ isOpen, onClose, saveGame, loadGame }) => { // Added saveGame prop
+const PopupMenu = ({ isOpen, onClose, saveGame, loadGame }) => { 
   const navigate = useNavigate();
 
   if (!isOpen) return null;
