@@ -1,0 +1,54 @@
+/* PopupMenu.css */
+.popup-menu-overlay {
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+  }
+  
+  .popup-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 15rem; 
+    padding: 2rem;
+    border-radius: 1rem;
+    background-color: rgba(233, 196, 106, 0.7); 
+    border: 3px solid rgba(206, 143, 8, 0.534);
+  }
+  
+  .popup-menu button {
+    font-family: 'Arial', sans-serif; 
+    font-size: 1.5rem; 
+    font-weight: bold; 
+    color: #000; 
+    text-align: center; 
+    padding: 1.5rem 3rem; 
+    border: 3px solid rgb(206, 143, 8);
+    background-color: #e9c46a;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 1rem;
+  }
+  
+  .popup-menu button:hover {
+    background-color: #ffd166;
+  }
+  
+  .popup-menu-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: -1;
+  }
+  
