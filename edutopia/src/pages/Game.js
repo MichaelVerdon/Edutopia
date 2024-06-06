@@ -54,6 +54,41 @@ function Game() {
   const [battleTiles, setBattleTiles] = useState([]);
   const [ownedTroops, setOwnedTroops] = useState(player.getFreeTroops); // State for owned troops
   const [isPopupMenuOpen, setPopupMenuOpen] = useState(false); // State for popup menu
+  const [loadedGameData, setLoadedGameData] = useState(null);
+
+  const saveGame = () => {
+  // save player data
+  const saveData = {
+    tilesOwned: player.ownedTiles,
+    resources: {
+      techPoints: player.techPoints,
+      woodPoints: player.woodPoints,
+      foodPoints: player.foodPoints,
+      metalPoints: player.metalPoints
+    },
+    turn: turn
+  };
+
+  // Convert data to JSON
+  const saveJSON = JSON.stringify(saveData);
+
+  // Save data to localStorage 
+  localStorage.setItem('gameSave', saveJSON);
+
+  console.log('Game saved!');
+  };
+
+  const loadGame = () => {
+    // Load saved game data from localStorage
+    const savedData = localStorage.getItem('gameSave');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      setLoadedGameData(parsedData);
+      console.log('Saved Data:', parsedData);
+    } else {
+      console.log('No saved game data found.');
+    }
+  };
 
   useEffect(() => {
     if (turn === 1) {
@@ -458,7 +493,7 @@ function Game() {
         </div>
       )}
 
-      {isPopupMenuOpen && <PopupMenu isOpen={isPopupMenuOpen} onClose={() => setPopupMenuOpen(false)} />}
+      {isPopupMenuOpen && <PopupMenu isOpen={isPopupMenuOpen} onClose={() => setPopupMenuOpen(false)} saveGame={saveGame} loadGame={loadGame}/>}
 
       <div className="game">
 
@@ -500,5 +535,6 @@ function Game() {
     </PlayerContext.Provider>
   );
 }
+
 
 export default Game;
