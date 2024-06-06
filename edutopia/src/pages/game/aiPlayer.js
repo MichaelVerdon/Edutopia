@@ -39,10 +39,13 @@ class aiPlayer extends PlayerObject{
         // able to pick a random tile based off adjacent tiles using this.tiles
         // Then apply logic to give resources
         let adjTiles = await this.checkAdjacentTiles();
-        const randomTileIndex = Math.floor(Math.random() * adjTiles.length);
-        let randomTile = await adjTiles[randomTileIndex];
-        // Will need to bulletproof this later (e.t.c cases where a random tile has no adjacent ones)
-        return randomTile;
+        if(adjTiles.length !== 0){
+          const randomTileIndex = Math.floor(Math.random() * adjTiles.length);
+          let randomTile = await adjTiles[randomTileIndex];
+          // Will need to bulletproof this later (e.t.c cases where a random tile has no adjacent ones)
+          return randomTile;
+        }
+        return [];
     }
 
     async outOfBounds(q, r, s){
@@ -111,7 +114,7 @@ class aiPlayer extends PlayerObject{
     async shopping(){
         //BUY TILE
         let TileToUpdate;
-        const option = 0;//Math.floor(Math.random() * 2);
+        const option = Math.floor(Math.random() * 2);
         //randomly decide if buy new or upgrade
         if (option === 1){
             TileToUpdate = await this.getOwnedTile();
@@ -139,18 +142,21 @@ class aiPlayer extends PlayerObject{
             return([TileToUpdate, item]);
         }else if (option ===0){
             TileToUpdate = await this.getClaimTile();
-            let tile = new Tile(TileToUpdate[0], TileToUpdate[1], TileToUpdate[2]);
-            let biome = await GameSettings.getBiomeForCoordinates(await TileToUpdate[0], await TileToUpdate[1], await TileToUpdate[2]);
-            biome = await biome.charAt(0);
-            let item;
-            if(biome === "G"){
+            if(TileToUpdate.length !== 0){
+              let tile = new Tile(TileToUpdate[0], TileToUpdate[1], TileToUpdate[2]);
+              let biome = await GameSettings.getBiomeForCoordinates(await TileToUpdate[0], await TileToUpdate[1], await TileToUpdate[2]);
+              biome = await biome.charAt(0);
+              let item;
+              if(biome === "G"){
                 item = 2;
-            }else if(biome === "R"){
+              }else if(biome === "R"){
                 item = 3;
-            }else if(biome === "W"){
+              }else if(biome === "W"){
                 item = 4;
+              }
+              return([tile, item]);
             }
-            return([tile, item]);
+            return (["", 1])
         }
         if (this.techPoints >= 7 &&
             this.foodPoints >= 7 &&

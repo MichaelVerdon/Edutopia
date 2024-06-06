@@ -31,6 +31,20 @@ function Battle ({close, isOpen}) {
     const [TroopIconAttacker, setTroopIconAttacker] = useState('');
     const [TroopIconOpponent, setTroopIconOpponent] = useState('');
     
+    /* const shutDown = (() => {
+        setPhase(0);
+        setWinner(0);
+        setAttackedPlayer(null);
+        setAttackLand(null);
+        setAttackTroops(0);
+        setOpponentDead(false);
+        setOpponentLand(null);
+        setOpponentTroops(0);
+        setTroopIconAttacker('');
+        setTroopIconOpponent('');
+        close();
+    }) */
+
     useEffect(() => {
         const aiPlayerBattle = async () => {
             gameSettings.saveClickedHexagon(battleTiles[0][0], battleTiles[0][1], battleTiles[0][2], '');
@@ -159,9 +173,9 @@ function Battle ({close, isOpen}) {
         } else if(color === 2){
             return TroopIconPink;
         } else if (color === 3){
-            return TroopIconYellow;
-        }else{
             return TroopIconCyan;
+        }else{
+            return TroopIconYellow;
         }
     }
 

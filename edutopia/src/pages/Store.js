@@ -107,9 +107,9 @@ const Store = forwardRef(({ storeModal, close }, ref) => {
     }
   };
 
-  function canPurchase() {
+  async function canPurchase() {
     try {
-      if (checkTileAdjancency() || checkTileOwnership()) {
+      if ((checkTileAdjancency() || checkTileOwnership()) && await checkCorrectLand()) {
         return true;
       } else {
         NotificationManager.showSuccessNotification("Please pick a tile adjacent to owned tiles or buy on an owned tile!");
@@ -119,6 +119,18 @@ const Store = forwardRef(({ storeModal, close }, ref) => {
       //NotificationManager.showSuccessNotification("Something went wrong, please try again!");
       return false;
     }
+  }
+
+  async function checkCorrectLand(){
+    const { q, r, s } = selectedHex;
+    let clickedHexagonBiome = await gameSettings.getBiomeForCoordinates(q, r, s);
+      for(let i = 0; i<selectedItem.landNeeded.length; i++){
+        console.log(selectedItem.landNeeded + colorTurn());
+        if(clickedHexagonBiome === selectedItem.landNeeded + "_Unclaimed" || clickedHexagonBiome === selectedItem.landNeeded + await colorTurn()){
+          return true;
+        }
+      }
+      return false;
   }
 
   function checkTileAdjancency() {
@@ -186,7 +198,8 @@ const Store = forwardRef(({ storeModal, close }, ref) => {
         gameSettings.setBiomeForCoordinates(q, r, s, selectedItem.landNew + await colorTurn());
         sounds[1].play();
         NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);
-        tempPlayer.ownedTiles = await currentPlayer.ownedTiles.push([q, r, s]);
+        currentPlayer.removeOwnedTile([q,r,s]);
+        tempPlayer.ownedTiles = await currentPlayer.ownedTiles.push(new Tile(q, r, s));
         tempPlayer.freeTroops = await currentPlayer.freeTroops;
       } else {
         NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} unsuccessful`);
