@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, {useState, useEffect, useContext, useImperativeHandle, forwardRef  } from 'react';
 import Modal from 'react-modal';
 import { PlayerContext } from './Game';
 import PlayerObject from './game/PlayerObject';
@@ -11,7 +11,8 @@ import Tile from './game/Tile';
 
 Modal.setAppElement('#root');
 
-function Store({ storeModal, close }) {
+
+const Store = forwardRef(({ storeModal, close }, ref) => {
   const [phase, setPhase] = useState(0);
   const [reason, setReason] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
@@ -76,6 +77,12 @@ function Store({ storeModal, close }) {
     changeSelectedHex(gameSettings.getClickedHexagon());
   }, []);
 
+  useEffect(() => {
+    if (turn != 1 && selectedItem !== null && selectedHex !== null){
+      purchase();
+    }
+  }, [selectedItem]);
+
   const backToMain = () => {
     setPhase(0);
   };
@@ -109,7 +116,7 @@ function Store({ storeModal, close }) {
         return false;
       }
     } catch {
-      NotificationManager.showSuccessNotification("Something went wrong, please try again!");
+      //NotificationManager.showSuccessNotification("Something went wrong, please try again!");
       return false;
     }
   }
@@ -163,16 +170,10 @@ function Store({ storeModal, close }) {
     [-1, 0, 1],
   ];
 
-  async function aiPurchase(tile, item){
-    setSelectedHex(tile);
-    setSelectedItem(item);
-    await purchase();
-  }
-
   async function purchase() {
     let currentPlayer = await playersTurn();
     let tempPlayer = new PlayerObject(turn);
-
+    console.log(selectedItem);
     if (!selectedItem.land) {
       tempPlayer.freeTroops = await currentPlayer.freeTroops + 1;
       sounds[1].play();
@@ -235,6 +236,25 @@ function Store({ storeModal, close }) {
     </tr>
   ));
 
+  async function getItemById(id) {
+    // Find the item with the matching ID
+    const item = storeData.storeData.find(item => item.id === id);
+    console.log('Found Item:', item);
+    // If the item is found, return it, otherwise return null
+    return item || null;
+  }
+
+   // Expose the aiPurchase method to be callable from outside
+   useImperativeHandle(ref, () => ({
+    async aiPurchase(tile, item) {
+      setSelectedHex(tile);
+      let i = await getItemById(item);
+      console.log(i);
+      setSelectedItem(i);
+      //await purchase();
+    }
+  }));
+
   if (phase === 0) {
     return (
       <Modal isOpen={storeModal} onRequestClose={close} contentLabel="Store" className="storeModal">
@@ -284,6 +304,5 @@ function Store({ storeModal, close }) {
       </Modal>
     );
   }
-}
-
+});
 export default Store;

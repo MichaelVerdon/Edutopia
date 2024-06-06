@@ -16,7 +16,9 @@ const sounds = [
    new Audio(land_select),
    new Audio(fighting_sound),
    new Audio(correct_sound),
-   new Audio(incorrect_sound)
+   new Audio(incorrect_sound),
+   new Audio(land_lost),
+   new Audio(land_won),
 ];
 
 export default sounds;

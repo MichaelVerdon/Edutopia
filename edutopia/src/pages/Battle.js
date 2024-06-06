@@ -62,11 +62,12 @@ function Battle ({close, isOpen}) {
             
             setPhase(3);
         }
-
-        if (battleTiles.length === 0) {
-            setPhase(0);
-        } else {
+        try{
+          if (battleTiles.length !== 0) {
             aiPlayerBattle();
+          }
+        }catch(exceptionVar){
+            close();
         }
     }, [battleTiles]);
     
@@ -258,7 +259,7 @@ function Battle ({close, isOpen}) {
         }else if (attackedPlayerId === 3){
             opponent1.removeOwnedTile(land);
         }else if (attackedPlayerId === 1){
-            sounds[8].play();
+            sounds[7].play();
             player.removeOwnedTile(land); 
         }else if (attackedPlayerId===4){
             opponent2.removeOwnedTile(land); 

@@ -1,7 +1,8 @@
 import PlayerObject from "./PlayerObject";
 import GameSettings from "./GameSettings";
 import Board from "./Board";
-
+import Tile from "./Tile";
+import gapData from './gapCoordinates.json';
 // Inherit from PlayerObject Class so they can have all functionalities of player class.
 // You will be able to treat this as a PlayerObject class and use same funcs and vars.
 class aiPlayer extends PlayerObject{
@@ -31,7 +32,7 @@ class aiPlayer extends PlayerObject{
         const ownedTileCount = this.ownedTiles.length
         const randomTileIndex = Math.floor(Math.random() * ownedTileCount);
         let randomTile = await  this.ownedTiles[randomTileIndex];
-        return [randomTile];
+        return (randomTile);
     }
 
     async getClaimTile(){
@@ -44,28 +45,65 @@ class aiPlayer extends PlayerObject{
         return randomTile;
     }
 
+    async outOfBounds(q, r, s){
+        const gapCoordinates = gapData.gapCoordinates;
+        for(let i=0;i<gapCoordinates.length;i++){
+            if(q===gapCoordinates[i].q && r===gapCoordinates[i].r && s===gapCoordinates[i].s){
+                return false;
+            }
+        }
+        if(r === -1){
+                return false;
+        }else if(r===30){
+                return false;
+        }else if(r===Math.abs(q+s) && q<=-1 && q>=-15 && r >= 0 && r<=28 && s<=1 && s>=-13){
+            return false;
+        }else if(r===Math.abs(q+s) && q<=-1 && q>=-15 && r >= 1 && r<=29 && s<=0 && s>=-14){
+            return false;
+        }else if(r===Math.abs(q+s) && q<=30 && q>=15 && r >=0 && r<=30 && s<=-30 && s>=-45){
+            return false;
+        }else if(r===Math.abs(q+s) && q<=30 && q>=16 && r >=1 && r<=29 && s<=-31 && s>=-45){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     async checkAdjacentTiles(){
         let touchingTiles = [];
         for(let i=0; i<this.ownedTiles.length; i++){
-            let q = this.ownedTiles[i].q;
-            let r = this.ownedTiles[i].r;
-            let s = this.ownedTiles[i].s;
-
-            if(await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_")[0] !== "Water"){
-                touchingTiles.push([q-1,r+1,s]);
-            }
-            if(await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_")[0] !== "Water"){
-                touchingTiles.push([q,r+1,s-1]);
-            }
-            if(await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_")[0] !== "Water"){
-                touchingTiles.push([q-1,r,s+1]);
-            }
-            if(await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_")[0] !== "Water"){
-                touchingTiles.push([q+1,r,s-1]);
-            }
-            if(await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_")[0] !== "Water"){
-                touchingTiles.push([q,r-1,s+1]);
-            }
+            let q = await this.ownedTiles[i].q;
+            let r = await this.ownedTiles[i].r;
+            let s = await this.ownedTiles[i].s;
+            //TODO: check for chomped out tiles and corner tiles
+            
+                if(await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_").pop() === "Unclaimed"){
+                    if(await this.outOfBounds(q-1,r+1,s)){
+                      touchingTiles.push([q-1,r+1,s]);
+                    }
+                }
+                if(await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_").pop() === "Unclaimed"){
+                    if(await this.outOfBounds(q,r+1,s-1)){
+                      touchingTiles.push([q,r+1,s-1]);
+                    }
+                }
+                if(await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_").pop() === "Unclaimed"){
+                    if(await this.outOfBounds(q-1,r,s+1)){
+                      touchingTiles.push([q-1,r,s+1]);
+                    }
+                }
+                if(await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_").pop() === "Unclaimed"){
+                    if(await this.outOfBounds(q+1,r,s-1)){
+                      touchingTiles.push([q+1,r,s-1]);
+                    }
+                }
+                if(await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_").pop() === "Unclaimed"){
+                    if(await this.outOfBounds(q,r-1,s+1)){
+                      touchingTiles.push([q,r-1,s+1]);
+                    }
+                }
+            
+            
         }
         return touchingTiles;
     }
@@ -73,36 +111,37 @@ class aiPlayer extends PlayerObject{
     async shopping(){
         //BUY TILE
         let TileToUpdate;
-        const option = Math.floor(Math.random() * 2);
+        const option = 0;//Math.floor(Math.random() * 2);
         //randomly decide if buy new or upgrade
         if (option === 1){
             TileToUpdate = await this.getOwnedTile();
             //decide on item
             let biome = await GameSettings.getBiomeForCoordinates(TileToUpdate.q, TileToUpdate.r, TileToUpdate.s);
-            biome = biome.charAt(0);
+            let biomeOne = biome.charAt(0);
             let item;
-            if(biome === "G"){
-                if(await biome.split("_")[0] === "_Grassland"){
+            if(biomeOne === "G"){
+                if(await biome.split("_")[0] === "Grassland"){
                     item = 5;
-                }else if(await biome.split("_")[0] === "_GrasslandWithFarm"){
+                }else if(await biome.split("_")[0] === "GrasslandWithFarm"){
                     item = 8;
                 }   
-            }else if(biome === "R"){
+            }else if(biomeOne === "R"){
                 item = 6;
-            }else if(biome === "W"){
+            }else if(biomeOne === "W"){
                 item = 7;
-            }if(biome === "V"){
-                if(await biome.split("_")[0] === "_Village"){
+            }else if(biomeOne === "V"){
+                if(await biome.split("_")[0] === "Village"){
                     item = 9;
-                }else if(await biome.split("_")[0] === "_VillageWithTrainingGrounds"){
+                }else if(await biome.split("_")[0] === "VillageWithTrainingGrounds"){
                     item = 11;
                 }   
             }
-            return([TileToUpdate.q, TileToUpdate.r, TileToUpdate.s], item);
+            return([TileToUpdate, item]);
         }else if (option ===0){
             TileToUpdate = await this.getClaimTile();
-            let biome = await GameSettings.getBiomeForCoordinates(TileToUpdate[0], TileToUpdate[1], TileToUpdate[2]);
-            biome = biome.charAt(0);
+            let tile = new Tile(TileToUpdate[0], TileToUpdate[1], TileToUpdate[2]);
+            let biome = await GameSettings.getBiomeForCoordinates(await TileToUpdate[0], await TileToUpdate[1], await TileToUpdate[2]);
+            biome = await biome.charAt(0);
             let item;
             if(biome === "G"){
                 item = 2;
@@ -111,10 +150,14 @@ class aiPlayer extends PlayerObject{
             }else if(biome === "W"){
                 item = 4;
             }
-            return(TileToUpdate, item);
-        }else if (option ===2){
+            return([tile, item]);
+        }
+        if (this.techPoints >= 7 &&
+            this.foodPoints >= 7 &&
+            this.woodPoints >= 7 &&
+            this.metalPoints >= 7){
             //buy troop
-            return ("", 1)
+            return (["", 1])
         }
 
     }

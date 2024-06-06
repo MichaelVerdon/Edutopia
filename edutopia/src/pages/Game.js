@@ -84,6 +84,14 @@ function Game() {
     }
   };
 
+  const storeRef = useRef();
+
+  const handleAiPurchase = (tile, item) => {
+    if (storeRef.current) {
+      storeRef.current.aiPurchase(tile, item);
+    }
+  };
+
   const toggleGameState = () => {
     setGameState(!gameOver);
   }
@@ -311,30 +319,37 @@ function Game() {
         }
       } else if (gameLoopStep === 2) {
         setGameText('Time to shop and assign troops');
-        setShopAndTroopTime(true);
-        toggleGameLoopModal();
+        //setShopAndTroopTime(true);
+        //toggleGameLoopModal();
+        toggleStoreModal();
         await delay(2000);
-        setGameLoopModal(false);
+        //setGameLoopModal(false);
         let hex = [];
         if (turn === 2) {
-          await Store.aiPurchase(await opponent.shopping());
+          let arr = await opponent.shopping();
+          handleAiPurchase(arr[0], arr[1]);
           setOwnedTroops(opponent.getFreeTroops);
+          console.log(opponent);
           hex = await opponent.allocateTroopsHex();
           opponent.freeTroops = opponent.getFreeTroops - hex.length;
         } else if (turn === 3) {
-          await Store.aiPurchase(await opponent1.shopping());
+          let arr = await opponent1.shopping();
+          handleAiPurchase(arr[0], arr[1]);
           setOwnedTroops(opponent1.getFreeTroops);
           hex = await opponent1.allocateTroopsHex();
           opponent1.freeTroops = opponent1.getFreeTroops - hex.length;
         } else if (turn === 4) {
-          await Store.aiPurchase(await opponent2.shopping());
+          let arr = await opponent2.shopping();
+          handleAiPurchase(arr[0], arr[1]);
           setOwnedTroops(opponent2.getFreeTroops);
           hex = await opponent2.allocateTroopsHex();
           opponent2.freeTroops = opponent2.getFreeTroops - hex.length;
         }
+        //toggleStoreModal();
         for (let i=0; i < hex.length; i++){
           allocateTroops(hex[i]);
         }
+        setGameLoopStep(4);
       } else if (gameLoopStep === 4 && battleModal === false) {
         setShopAndTroopTime(false);
         if (turn === 2) {
@@ -430,7 +445,7 @@ function Game() {
       {storeModal && (
         <div id="storeModal" class="storeModal">
           <div className="overlay">
-            <Store storeModal={storeModal} isOpen={storeModal} close={() => { toggleStoreModal(); deselect(); }} ></Store>
+            <Store ref={storeRef} storeModal={storeModal} isOpen={storeModal} close={() => { toggleStoreModal(); deselect(); }} ></Store>
           </div>
         </div>
       )}
