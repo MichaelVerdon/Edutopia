@@ -247,11 +247,11 @@ function Game() {
   const delay = ms => new Promise(res => setTimeout(res, ms));
 
   const playersTurn = async () => {
-    if (turn === 1) {
+    if (turn === 1 && opponent.liveStatus) {
       return (2);
-    } else if (turn === 2) {
+    }else if ((turn === 2 && opponent1.liveStatus) || (turn === 1 && opponent1.liveStatus)) {
       return (3);
-    } else if (turn === 3) {
+    } else if ((turn === 3 && opponent2.liveStatus) || (turn === 2 && opponent2.liveStatus) || (turn === 1 && opponent2.liveStatus)) {
       return (4);
     } else {
       return (1);
@@ -307,11 +307,11 @@ function Game() {
       } else if (gameLoopStep === 5) {
         let cont = continueGame();
         if (cont === true) {
+          setTurn(await playersTurn());
           setGameText('Next players turn');
           toggleGameLoopModal();
           await delay(2000);
           setGameLoopModal(false);
-          setTurn(await playersTurn());
         } else if (cont === false) {
           gameOver(true);
           if (player.liveStatus === false) {
@@ -400,11 +400,11 @@ function Game() {
       } else if (gameLoopStep === 5) {
         let cont = continueGame();
         if (cont === true) {
+          setTurn(await playersTurn());
           setGameText('Next players turn');
           toggleGameLoopModal();
           await delay(2000);
           setGameLoopModal(false);
-          setTurn(await playersTurn());
         } else if (cont === false) {
           gameOver(true);
           if (player.liveStatus === false) {

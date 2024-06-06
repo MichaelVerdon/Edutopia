@@ -51,26 +51,26 @@ function Battle ({close, isOpen}) {
             let hex = gameSettings.getClickedHexagon();
             setTroopIconAttacker(await selectColorTroop(turn));
             setAttackLand(battleTiles[0]);
-            setAttackTroops(gameSettings.getClickedHexagonTroops()); 
+            setAttackTroops(await troopNum(turn, [battleTiles[0][0], battleTiles[0][1], battleTiles[0][2]])); 
             
             gameSettings.saveClickedHexagon(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2], '');
             hex = gameSettings.getClickedHexagon();
             if(await gameSettings.getBiomeForCoordinates(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]).includes('_Pink')){
                 setAttackedPlayer(2); 
                 setTroopIconOpponent(await selectColorTroop(2));
-                await randomlyChoose(gameSettings.getClickedHexagonTroops(), battleTiles[1], 2);
+                await randomlyChoose(await troopNum(2, [battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]]), battleTiles[1], 2);
             }else if(await gameSettings.getBiomeForCoordinates(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]).includes('_Blue')){
                 setAttackedPlayer(1); 
                 setTroopIconOpponent(await selectColorTroop(1));
-                await randomlyChoose(gameSettings.getClickedHexagonTroops(), battleTiles[1], 1);
+                await randomlyChoose(await troopNum(1, [battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]]), battleTiles[1], 1);
             }else if (await gameSettings.getBiomeForCoordinates(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]).includes('_Cyan')){
                 setAttackedPlayer(3);
                 setTroopIconOpponent(await selectColorTroop(3)); 
-                await randomlyChoose(gameSettings.getClickedHexagonTroops(), battleTiles[1], 3);
+                await randomlyChoose(await troopNum(3, [battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]]), battleTiles[1], 3);
             }else if(await gameSettings.getBiomeForCoordinates(battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]).includes('_Yellow')){
                 setAttackedPlayer(4); 
                 setTroopIconOpponent(await selectColorTroop(4));
-                await randomlyChoose(gameSettings.getClickedHexagonTroops(), battleTiles[1], 4);
+                await randomlyChoose(await troopNum(4, [battleTiles[1][0], battleTiles[1][1], battleTiles[1][2]]), battleTiles[1], 4);
 
             }
             
@@ -190,17 +190,33 @@ function Battle ({close, isOpen}) {
           return (opponent2);
         }
       }
-
+    async function troopNum(curPl, land){
+        let currentPlayer;
+        if (curPl === 1){
+            currentPlayer = player;
+          } else if (curPl === 2){
+            currentPlayer = opponent;
+          }else if (curPl === 3){
+            currentPlayer = opponent1;
+          }else{
+            currentPlayer = opponent2;
+          }
+        for(let i=0; i<=currentPlayer.ownedTiles.length; i++){
+            if(await currentPlayer.ownedTiles[i].q === land[0] && await currentPlayer.ownedTiles[i].r === land[1] && await currentPlayer.ownedTiles[i].s === land[2]){
+                return await currentPlayer.ownedTiles[i].troops;
+            }
+        }
+        return 0;
+    }
     //land selecting
     async function attackLandSelected(){
         try{
             const { q, r, s }  = gameSettings.getClickedHexagon();
             let currentPlayer = await playersTurn();
             if(currentPlayer.OwnsTileCheck([q,r,s])){
-                const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
                 gameSettings.clearClickedHexagon();
                 setAttackLand([q,r,s]);
-                setAttackTroops(clickedHexagonTroops);
+                setAttackTroops(await troopNum(turn, [q,r,s]));
                 changePhase();
                 setTroopIconAttacker(selectColorTroop(turn));
             }else {
@@ -220,41 +236,33 @@ function Battle ({close, isOpen}) {
             if (adjacent){
                 console.log("Tiles Adjacent");
                 if(opponent.OwnsTileCheck([q,r,s]) && opponent.playerId !== currentPlayer.playerId){
-                    const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
+                    const clickedHexagonTroops = await troopNum(2, [q,r,s]);
                     setAttackedPlayer(2);
                     setOpponentLand([q,r,s]);
                     setOpponentTroops(clickedHexagonTroops);
                     setTroopIconOpponent(selectColorTroop(2)); 
                     await randomlyChoose(clickedHexagonTroops, [q,r,s], 2);
-                    //changePhase();
-                    OpponentAliveCheck();
                 }else if(opponent1.OwnsTileCheck([q,r,s]) && opponent1.playerId !== currentPlayer.playerId){
-                    const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
+                    const clickedHexagonTroops = await troopNum(3, [q,r,s]);
                     setAttackedPlayer(3);
                     setOpponentLand([q,r,s]);
                     setOpponentTroops(clickedHexagonTroops);
                     setTroopIconOpponent(selectColorTroop(3));
                     await randomlyChoose(clickedHexagonTroops, [q,r,s], 3);
-                    //changePhase();
-                    OpponentAliveCheck();
                 }else if(opponent2.OwnsTileCheck([q,r,s]) && opponent2.playerId !== currentPlayer.playerId){
-                    const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
+                    const clickedHexagonTroops = await troopNum(4, [q,r,s]);
                     setAttackedPlayer(4);
                     setOpponentLand([q,r,s]);
                     setOpponentTroops(clickedHexagonTroops);
                     setTroopIconOpponent(selectColorTroop(4));
                     await randomlyChoose(clickedHexagonTroops, [q,r,s], 4);
-                    //changePhase();
-                    OpponentAliveCheck();
                 }else if(player.OwnsTileCheck([q,r,s]) && player.playerId !== currentPlayer.playerId){
-                    const clickedHexagonTroops = gameSettings.getClickedHexagonTroops();
+                    const clickedHexagonTroops = await troopNum(1, [q,r,s]);
                     setAttackedPlayer(1);
                     setOpponentLand([q,r,s]);
                     setOpponentTroops(clickedHexagonTroops);
                     setTroopIconOpponent(selectColorTroop(1));
                     await randomlyChoose(clickedHexagonTroops, [q,r,s], 1);
-                    //changePhase();
-                    OpponentAliveCheck();
                 }else {
                     throw new Error("Invalid land selection.");
                 }
@@ -290,23 +298,23 @@ function Battle ({close, isOpen}) {
             setWinner(turn);
             if (turn === 1){
                 sounds[7].play();
-                player.addOwnedTile(land, '_Blue'); 
-                removeLosersTile(land, attackedPlayerId);
+                await player.addOwnedTile(land, '_Blue'); 
+                await removeLosersTile(land, attackedPlayerId);
                 NotificationManager.showSuccessNotification(`player 1 now owns ` + land);
             }else if (turn === 2){
-                opponent.addOwnedTile(land, '_Pink'); 
-                removeLosersTile(land, attackedPlayerId);
+                await opponent.addOwnedTile(land, '_Pink'); 
+                await removeLosersTile(land, attackedPlayerId);
                 NotificationManager.showSuccessNotification(`player 2 now owns ` + land);
             }else if (turn === 3){
-                opponent1.addOwnedTile(land, '_Cyan'); 
-                removeLosersTile(land, attackedPlayerId);
+                await opponent1.addOwnedTile(land, '_Cyan'); 
+                await removeLosersTile(land, attackedPlayerId);
                 NotificationManager.showSuccessNotification(`player 3 now owns ` + land);
             }else if (turn === 4){
-                opponent2.addOwnedTile(land, '_Yellow'); 
-                removeLosersTile(land, attackedPlayerId);
+                await opponent2.addOwnedTile(land, '_Yellow'); 
+                await removeLosersTile(land, attackedPlayerId);
                 NotificationManager.showSuccessNotification(`player 4 now owns ` + land);
             }
-             
+            OpponentAliveCheck(attackedPlayerId)
         } else {
             // Otherwise, choose option2
             sounds[8].play();
@@ -325,31 +333,31 @@ function Battle ({close, isOpen}) {
       }, [winner]); 
 
     //check if after the player wins the opponent still has tiles left
-    function OpponentAliveCheck(){
+    async function OpponentAliveCheck(attacked){
         //TODO: connect it so some dead player fce when game handler finished
 
-        if (attackedPlayer === 2){
-            if(opponent.getOwnedTiles.length === 0){
+        if (attacked === 2){
+            if(await opponent.getOwnedTiles.length <= 1){
                 setOpponentDead(true);
-                opponent.setAliveStatus = false;
+                opponent.liveStatus = false;
                 console.log('dead');
             }
-        }else if (attackedPlayer === 3){
-            if(opponent1.getOwnedTiles.length === 0){
+        }else if (attacked === 3){
+            if(await opponent1.getOwnedTiles.length <= 1){
                 setOpponentDead(true);
-                opponent1.setAliveStatus = false;
+                opponent1.liveStatus = false;
                 console.log('dead');
             }
-        }else if (attackedPlayer === 4){
-            if(opponent2.getOwnedTiles.length === 0){
+        }else if (attacked === 4){
+            if(await opponent2.getOwnedTiles.length <= 1){
                 setOpponentDead(true);
-                opponent2.setAliveStatus = false;
+                opponent2.liveStatus = false;
                 console.log('dead');
             }
-        }else if (attackedPlayer === 1){
-            if(player.getOwnedTiles.length === 0){
+        }else if (attacked === 1){
+            if(await player.getOwnedTiles.length <= 1){
                 setOpponentDead(true);
-                player.setAliveStatus = false;
+                player.liveStatus = false;
                 console.log('dead');
             }
         }
