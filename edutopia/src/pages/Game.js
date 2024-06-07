@@ -95,6 +95,18 @@ function Game() {
       player.freeTroops = ownedTroops;
       console.log(player.freeTroops);
 
+    } else if (turn === 2) {
+      opponent.freeTroops = ownedTroops;
+      console.log(opponent.freeTroops);
+
+    } else if (turn === 3) {
+      opponent1.freeTroops = ownedTroops;
+      console.log(opponent1.freeTroops);
+
+    } else if (turn === 4) {
+      opponent2.freeTroops = ownedTroops;
+      console.log(opponent2.freeTroops);
+
     }
   }, [ownedTroops]);
 
@@ -278,6 +290,17 @@ function Game() {
     return (cont);
   }
 
+  const setTroopsNumber = (plyr) =>{
+    if(plyr === 1){
+      setOwnedTroops(player.freeTroops);
+    }else if(plyr === 2){
+      setOwnedTroops(opponent.freeTroops);
+    }else if(plyr === 3){
+      setOwnedTroops(opponent1.freeTroops);
+    }else if(plyr === 4){
+      setOwnedTroops(opponent2.freeTroops);
+    }
+  }
 
   useEffect(() => {
     const fce = async () => {
@@ -308,6 +331,7 @@ function Game() {
         let cont = continueGame();
         if (cont === true) {
           setTurn(await playersTurn());
+          setTroopsNumber(await playersTurn());
           setGameText('Next players turn');
           toggleGameLoopModal();
           await delay(2000);
@@ -337,16 +361,19 @@ function Game() {
         setGameLoopModal(false);
       } else if (gameLoopStep === 1 && modal === false) {
         if (turn === 2) {
+          setOwnedTroops(opponent.getFreeTroops);
           await questionAndToggle();
           opponent.answerQuestion();
           await delay(2000);
           setModal(false);
         } else if (turn === 3) {
+          setOwnedTroops(opponent1.getFreeTroops);
           await questionAndToggle();
           opponent1.answerQuestion();
           await delay(2000);
           setModal(false);
         } else if (turn === 4) {
+          setOwnedTroops(opponent2.getFreeTroops);
           await questionAndToggle();
           opponent2.answerQuestion();
           await delay(2000);
@@ -363,22 +390,19 @@ function Game() {
         if (turn === 2) {
           let arr = await opponent.shopping();
           handleAiPurchase(arr[0], arr[1]);
-          setOwnedTroops(opponent.getFreeTroops);
           console.log(opponent);
           hex = await opponent.allocateTroopsHex();
-          opponent.freeTroops = opponent.getFreeTroops - hex.length;
+          //opponent.freeTroops = opponent.getFreeTroops - hex.length;
         } else if (turn === 3) {
           let arr = await opponent1.shopping();
           handleAiPurchase(arr[0], arr[1]);
-          setOwnedTroops(opponent1.getFreeTroops);
           hex = await opponent1.allocateTroopsHex();
-          opponent1.freeTroops = opponent1.getFreeTroops - hex.length;
+          //opponent1.freeTroops = opponent1.getFreeTroops - hex.length;
         } else if (turn === 4) {
           let arr = await opponent2.shopping();
           handleAiPurchase(arr[0], arr[1]);
-          setOwnedTroops(opponent2.getFreeTroops);
           hex = await opponent2.allocateTroopsHex();
-          opponent2.freeTroops = opponent2.getFreeTroops - hex.length;
+          //opponent2.freeTroops = opponent2.getFreeTroops - hex.length;
         }
         //toggleStoreModal();
         for (let i=0; i < hex.length; i++){

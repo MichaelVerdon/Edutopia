@@ -191,8 +191,9 @@ function Battle ({close, isOpen}) {
         }
       }
     async function troopNum(curPl, land){
-        let currentPlayer;
-        if (curPl === 1){
+        try{
+          let currentPlayer;
+          if (curPl === 1){
             currentPlayer = player;
           } else if (curPl === 2){
             currentPlayer = opponent;
@@ -201,12 +202,15 @@ function Battle ({close, isOpen}) {
           }else{
             currentPlayer = opponent2;
           }
-        for(let i=0; i<=currentPlayer.ownedTiles.length; i++){
+          for(let i=0; i<=currentPlayer.ownedTiles.length; i++){
             if(await currentPlayer.ownedTiles[i].q === land[0] && await currentPlayer.ownedTiles[i].r === land[1] && await currentPlayer.ownedTiles[i].s === land[2]){
                 return await currentPlayer.ownedTiles[i].troops;
             }
+          }
+          return 0;
+        }catch(x){
+           return 0;
         }
-        return 0;
     }
     //land selecting
     async function attackLandSelected(){

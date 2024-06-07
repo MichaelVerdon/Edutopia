@@ -8,6 +8,7 @@ import NotificationManager from '../pages/game/NotificationManager';
 import storeData from '../pages/game/storeItemsData.json';
 import sounds from './game/sounds/soundImports.js';
 import Tile from './game/Tile';
+import aiPlayer from './game/aiPlayer.js';
 
 Modal.setAppElement('#root');
 
@@ -184,7 +185,12 @@ const Store = forwardRef(({ storeModal, close }, ref) => {
 
   async function purchase() {
     let currentPlayer = await playersTurn();
-    let tempPlayer = new PlayerObject(turn);
+    let tempPlayer;
+    if(turn === 1){
+       tempPlayer = new PlayerObject(turn);
+    } else{
+      tempPlayer = new aiPlayer(turn)
+    }
     console.log(selectedItem);
     if (!selectedItem.land) {
       tempPlayer.freeTroops = await currentPlayer.freeTroops + 1;
