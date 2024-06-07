@@ -77,7 +77,7 @@ function Battle ({close, isOpen}) {
             setPhase(3);
         }
         try{
-          if (battleTiles.length !== 0) {
+          if (battleTiles.length !== 0 && turn !== 1) {
             aiPlayerBattle();
           }
         }catch(exceptionVar){
