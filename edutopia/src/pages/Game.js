@@ -57,25 +57,57 @@ function Game() {
   const [loadedGameData, setLoadedGameData] = useState(null);
 
   const saveGame = () => {
-  // save player data
-  const saveData = {
-    tilesOwned: player.ownedTiles,
-    resources: {
-      techPoints: player.techPoints,
-      woodPoints: player.woodPoints,
-      foodPoints: player.foodPoints,
-      metalPoints: player.metalPoints
-    },
-    turn: turn
-  };
-
-  // Convert data to JSON
-  const saveJSON = JSON.stringify(saveData);
-
-  // Save data to localStorage 
-  localStorage.setItem('gameSave', saveJSON);
-
-  console.log('Game saved!');
+    // save player and opponents data
+    const saveData = {
+      player: {
+        tilesOwned: player.ownedTiles,
+        resources: {
+          techPoints: player.techPoints,
+          woodPoints: player.woodPoints,
+          foodPoints: player.foodPoints,
+          metalPoints: player.metalPoints
+        }
+      },
+      opponents: [
+        {
+          tilesOwned: opponent.ownedTiles,
+          resources: {
+            techPoints: opponent.techPoints,
+            woodPoints: opponent.woodPoints,
+            foodPoints: opponent.foodPoints,
+            metalPoints: opponent.metalPoints
+          }
+        },
+        {
+          tilesOwned: opponent1.ownedTiles,
+          resources: {
+            techPoints: opponent1.techPoints,
+            woodPoints: opponent1.woodPoints,
+            foodPoints: opponent1.foodPoints,
+            metalPoints: opponent1.metalPoints
+          }
+        },
+        {
+          tilesOwned: opponent2.ownedTiles,
+          resources: {
+            techPoints: opponent2.techPoints,
+            woodPoints: opponent2.woodPoints,
+            foodPoints: opponent2.foodPoints,
+            metalPoints: opponent2.metalPoints
+          }
+        }
+      ],
+      turn: turn
+    };
+  
+  
+    // Convert data to JSON
+    const saveJSON = JSON.stringify(saveData);
+  
+    // Save data to localStorage 
+    localStorage.setItem('gameSave', saveJSON);
+  
+    console.log('Game saved!');
   };
 
   const loadGame = () => {
@@ -84,10 +116,26 @@ function Game() {
     if (savedData) {
       const parsedData = JSON.parse(savedData);
       setLoadedGameData(parsedData);
+      // print saved data in console
       console.log('Saved Data:', parsedData);
+      // load the turn to the saved turn
+      setTurn(parsedData.turn);
+      // updates the players and opponent resource counts with the saved data
+      updatePlayerResources(parsedData.player.resources, player);
+      updatePlayerResources(parsedData.player.resources, opponent);
+      updatePlayerResources(parsedData.player.resources, opponent1);
+      updatePlayerResources(parsedData.player.resources, opponent2);
+      // need to add thing to load saved tiles here
     } else {
       console.log('No saved game data found.');
     }
+  };
+
+  const updatePlayerResources = (resources, entity) => {
+    entity.setTechPoints = resources.techPoints;
+    entity.setWoodPoints = resources.woodPoints;
+    entity.setFoodPoints = resources.foodPoints;
+    entity.setMetalPoints = resources.metalPoints;
   };
 
   useEffect(() => {
@@ -559,6 +607,7 @@ function Game() {
     </PlayerContext.Provider>
   );
 }
+
 
 
 export default Game;
