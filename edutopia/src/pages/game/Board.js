@@ -1,14 +1,14 @@
-import React, { Component, forwardRef, useImperativeHandle} from 'react';
+import React, { Component, forwardRef, useImperativeHandle } from 'react';
 import { HexGrid, Layout, GridGenerator } from 'react-hexgrid';
 import InteractiveHexagon from './InteractiveHexagon';
 import configs from './configurations';
 import gapData from './gapCoordinates.json';
 import images from './imageImports';
-import gameSettings from './GameSettings';
 import './inGameHex.css';
 import HexagonModal from './HexagonModal';
-import Tile from './Tile';
 import TileInfoModal from './TileInfoModal';
+import GameSettings from './GameSettings';
+import Tile from './Tile';
 
 class Board extends Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class Board extends Component {
   };
 
   handleHexagonClick = (hexData) => {
-    const tile = this.state.hexagons.find(hex => hex.q === hexData.q && hex.r === hexData.r && hex.s === hexData.s);
+    const tile = this.props.tiles.find(tile => tile.q === hexData.q && tile.r === hexData.r && tile.s === hexData.s);
     this.setState({ selectedHex: { ...hexData, tile }, showModal: true });
   };
 
@@ -66,33 +66,45 @@ class Board extends Component {
     this.resetSelection();
   };
 
+  updateTileBiome = (hex, biome) => {
+    const updatedHexagons = this.state.hexagons.map(tile => {
+        if (tile.q === hex.q && tile.r === hex.r && tile.s === hex.s) {
+            tile.setBiome(biome); // Set the new biome using the setBiome method from Tile class
+            return tile;
+        }
+        return tile;
+    });
+    this.setState({ hexagons: updatedHexagons });
+};
+
+
   allocateTroops = (hexData) => {
     const tile = this.state.hexagons.find(hex => hex.q === hexData.q && hex.r === hexData.r && hex.s === hexData.s);
     const selectedHex = { ...hexData, tile };
     const { hexagons } = this.state;
-    const { ownedTroops, setOwnedTroops } = this.props;
+    const { ownedTroops, setOwnedTroops, currentPlayer } = this.props;  // Include currentPlayer in the destructuring from props
 
-    if (ownedTroops > 0 && selectedHex && selectedHex.tile) {
-      selectedHex.tile.addTroops(1);
-      const updatedHexagons = hexagons.map(hex => {
-        if (hex.q === selectedHex.q && hex.r === selectedHex.r && hex.s === selectedHex.s) {
-          return selectedHex.tile;
-        }
-        return hex;
-      });
-      setOwnedTroops(ownedTroops - 1);
-      this.setState(
-        {
-          hexagons: updatedHexagons,
-        },
-        () => {
-          console.log(`Allocated 1 troop to tile at coordinates (${selectedHex.q}, ${selectedHex.r}, ${selectedHex.s}).`);
-        }
-      );
+    if (ownedTroops > 0 && selectedHex && selectedHex.tile && selectedHex.tile.owner === currentPlayer.playerId) {
+        selectedHex.tile.addTroops(1);
+        const updatedHexagons = hexagons.map(hex => {
+            if (hex.q === selectedHex.q && hex.r === selectedHex.r && hex.s === selectedHex.s) {
+                return selectedHex.tile;
+            }
+            return hex;
+        });
+        setOwnedTroops(ownedTroops - 1);
+        this.setState(
+            {
+                hexagons: updatedHexagons,
+            },
+            () => {
+                console.log(`Allocated 1 troop to tile at coordinates (${selectedHex.q}, ${selectedHex.r}, ${selectedHex.s}).`);
+            }
+        );
     } else {
-      console.log('No troops available to allocate.');
+        console.log('No troops available to allocate or tile not owned.');
     }
-  };
+};
 
   componentDidMount() {
     document.addEventListener('click', this.handleOutsideClick, false);
@@ -115,6 +127,7 @@ class Board extends Component {
   render() {
     const { hexagons, config, viewBox, selectedHex, showModal, tileInfoModalOpen, selectedTile } = this.state;
     const size = { x: config.layout.width, y: config.layout.height };
+    const { tiles, currentPlayer } = this.props;
 
     return (
       <div className='board'>
@@ -136,16 +149,24 @@ class Board extends Component {
             ))}
           </defs>
           <Layout size={size} flat={config.layout.flat} spacing={config.layout.spacing} origin={config.origin}>
-            {hexagons.map((hex, i) => (
-              <InteractiveHexagon
-                key={`hex-${hex.q}-${hex.r}-${hex.s}`}
-                q={hex.q}
-                r={hex.r}
-                s={hex.s}
-                onClick={this.handleHexagonClick}
-                troops={hex.getTroops()}
-              />
-            ))}
+            {hexagons.map((hex, i) => {
+              const tile = tiles ? tiles.find(tile => tile.q === hex.q && tile.r === hex.r && tile.s === hex.s) : null;
+              const owner = tile ? tile.owner : null;
+              const biome = tile ? tile.biome : null;
+              return (
+                <InteractiveHexagon
+                  key={`hex-${hex.q}-${hex.r}-${hex.s}`}
+                  q={hex.q}
+                  r={hex.r}
+                  s={hex.s}
+                  onClick={this.handleHexagonClick}
+                  troops={hex.getTroops()}
+                  owner={owner}
+                  biome={hex.biome}
+                  currentPlayerId={currentPlayer ? currentPlayer.playerId : null}
+                />
+              );
+            })}
           </Layout>
         </HexGrid>
         {tileInfoModalOpen && selectedTile && (
@@ -162,6 +183,7 @@ class Board extends Component {
             position={selectedHex.position}
             openStore={this.props.toggleStoreModal}
             allocateTroops={this.allocateTroops}
+            updateTileBiome={this.updateTileBiome} 
           />
         )}
       </div>

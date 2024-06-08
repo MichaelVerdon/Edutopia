@@ -4,6 +4,7 @@ import hexagonData from './hexagonData.json';
 import { createNoise2D } from 'simplex-noise';
 import Tile from './Tile';
 import sounds from './sounds/soundImports';
+
 const noise2D = createNoise2D();
 const biomes = Object.keys(images);
 
@@ -55,7 +56,7 @@ const GameSettings = {
   },
 
   setBiome: (q, r, s, biome) => {
-    const key = `${q},${r},${s}`;
+    const key = `${q, r, s}`;
     GameSettings.customBiomes[key] = biome;
     GameSettings.saveCustomBiomes(); // Save to local storage whenever a biome is set
   },
@@ -75,7 +76,7 @@ const GameSettings = {
   },
 
   setBiomeForCoordinates: (q, r, s, biome) => {
-    const key = `${q},${r},${s}`;
+    const key = `${q, r, s}`;
     GameSettings.customBiomes[key] = biome;
     GameSettings.notifyBiomeChanges();
     GameSettings.saveCustomBiomes(); // Save to local storage whenever a biome is set
@@ -143,4 +144,4 @@ export default GameSettings;
 window.GameSettings = GameSettings;
 
 // Load custom biomes when the script is loaded
-//GameSettings.loadCustomBiomes();
+GameSettings.loadCustomBiomes();
