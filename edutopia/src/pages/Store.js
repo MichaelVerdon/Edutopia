@@ -11,7 +11,7 @@ import Tile from './game/Tile';
 
 Modal.setAppElement('#root');
 
-function Store({ storeModal, close }) {
+function Store({ tiles, setTiles, storeModal, close }) {
   const [phase, setPhase] = useState(0);
   const [reason, setReason] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
@@ -47,15 +47,22 @@ function Store({ storeModal, close }) {
     setSelectedItem(row);
     setShowPopup(true);
     let currentPlayer = await playersTurn();
-    if (hasResources(currentPlayer, row)) {
-      setReason("You do not have enough resources to purchase this!");
-      setSelectedItem(null);
-      setPhase(1);
-    } else {
-      setPhase(3);
+    console.log('Current player:', currentPlayer); // Debug log
+    console.log('Current player tiles:', currentPlayer ? currentPlayer.ownedTiles : null); // Debug log
+    if (!currentPlayer || !currentPlayer.ownedTiles || !currentPlayer.ownedTiles.length) {
+        setReason("No tiles found for the current player.");
+        setSelectedItem(null);
+        setPhase(1);
+        return;
     }
-  }
-
+    if (hasResources(currentPlayer, row)) {
+        setReason("You do not have enough resources to purchase this!");
+        setSelectedItem(null);
+        setPhase(1);
+    } else {
+        setPhase(3);
+    }
+}
   function hasResources(currentPlayer, row){
     if(currentPlayer.getTechPoints < row.techPoints 
       || currentPlayer.getFoodPoints < row.foodPoints 
@@ -168,34 +175,49 @@ function Store({ storeModal, close }) {
   async function purchase() {
     let currentPlayer = await playersTurn();
     let tempPlayer = new PlayerObject(turn);
-
+  
     if (!selectedItem.land) {
       tempPlayer.freeTroops = await currentPlayer.freeTroops + 1;
       sounds[1].play();
       NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful.`);
     }
-
+  
     if (await canPurchase()) {
       if (selectedItem.land) {
         const { q, r, s } = selectedHex;
-        gameSettings.setBiomeForCoordinates(q, r, s, selectedItem.landNew + await colorTurn());
-        sounds[1].play();
-        NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);
-        tempPlayer.ownedTiles = await currentPlayer.ownedTiles.push([q, r, s]);
-        tempPlayer.freeTroops = await currentPlayer.freeTroops;
+        const newBiome = selectedItem.landNew + await colorTurn();
+  
+        // Find and update the tile
+        const tileIndex = tiles.findIndex(t => t.q === q && t.r === r && t.s === s);
+        if (tileIndex !== -1) {
+          tiles[tileIndex].setOwner(currentPlayer.playerId);
+          tiles[tileIndex].setBiome(newBiome); // Set the new biome
+  
+          // Update the tiles state
+          setTiles([...tiles]);
+  
+          sounds[1].play();
+          NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} successful at coordinates (${q}, ${r}, ${s})`);
+  
+          currentPlayer.ownedTiles.push(tiles[tileIndex]);
+          tempPlayer = currentPlayer;
+  
+          gameSettings.notifyBiomeChanges(); // Notify biome changes
+        } else {
+          NotificationManager.showErrorNotification('Tile not found.');
+        }
       } else {
         NotificationManager.showSuccessNotification(`Purchase of ${selectedItem.name} unsuccessful`);
       }
-
+  
       tempPlayer.playerId = turn;
       tempPlayer.color = await colorTurn();
-      tempPlayer.ownedTiles = currentPlayer.ownedTiles;
       tempPlayer.liveStatus = currentPlayer.liveStatus;
       tempPlayer.techPoints = (currentPlayer.getTechPoints - selectedItem.techPoints);
       tempPlayer.foodPoints = (currentPlayer.getFoodPoints - selectedItem.foodPoints);
       tempPlayer.woodPoints = (currentPlayer.getWoodPoints - selectedItem.woodPoints);
       tempPlayer.metalPoints = (currentPlayer.getMetalPoints - selectedItem.metalPoints);
-
+  
       switch (turn) {
         case 1:
           setPlayer(tempPlayer);
@@ -212,14 +234,14 @@ function Store({ storeModal, close }) {
         default:
           break;
       }
-
+  
       gameSettings.clearClickedHexagon();
       gameSettings.saveSourceOfStore(null);
     }
-
+  
     close();
   }
-
+    
   const DisplayData = storeData.storeData.map((info) => (
     <tr key={info.id} onClick={() => handleRowClick(info)}>
       <td><img src={require(`${info.item}`)} width={60} height={60} alt='troop' /></td>

@@ -68,15 +68,14 @@ class Board extends Component {
 
   updateTileBiome = (hex, biome) => {
     const updatedHexagons = this.state.hexagons.map(tile => {
-        if (tile.q === hex.q && tile.r === hex.r && tile.s === hex.s) {
-            tile.setBiome(biome); // Set the new biome using the setBiome method from Tile class
-            return tile;
-        }
+      if (tile.q === hex.q && tile.r === hex.r && tile.s === hex.s) {
+        tile.setBiome(biome); // Set the new biome using the setBiome method from Tile class
         return tile;
+      }
+      return tile;
     });
     this.setState({ hexagons: updatedHexagons });
-};
-
+  };
 
   allocateTroops = (hexData) => {
     const tile = this.state.hexagons.find(hex => hex.q === hexData.q && hex.r === hexData.r && hex.s === hexData.s);
@@ -85,26 +84,26 @@ class Board extends Component {
     const { ownedTroops, setOwnedTroops, currentPlayer } = this.props;  // Include currentPlayer in the destructuring from props
 
     if (ownedTroops > 0 && selectedHex && selectedHex.tile && selectedHex.tile.owner === currentPlayer.playerId) {
-        selectedHex.tile.addTroops(1);
-        const updatedHexagons = hexagons.map(hex => {
-            if (hex.q === selectedHex.q && hex.r === selectedHex.r && hex.s === selectedHex.s) {
-                return selectedHex.tile;
-            }
-            return hex;
-        });
-        setOwnedTroops(ownedTroops - 1);
-        this.setState(
-            {
-                hexagons: updatedHexagons,
-            },
-            () => {
-                console.log(`Allocated 1 troop to tile at coordinates (${selectedHex.q}, ${selectedHex.r}, ${selectedHex.s}).`);
-            }
-        );
+      selectedHex.tile.addTroops(1);
+      const updatedHexagons = hexagons.map(hex => {
+        if (hex.q === selectedHex.q && hex.r === selectedHex.r && hex.s === selectedHex.s) {
+          return selectedHex.tile;
+        }
+        return hex;
+      });
+      setOwnedTroops(ownedTroops - 1);
+      this.setState(
+        {
+          hexagons: updatedHexagons,
+        },
+        () => {
+          console.log(`Allocated 1 troop to tile at coordinates (${selectedHex.q}, ${selectedHex.r}, ${selectedHex.s}).`);
+        }
+      );
     } else {
-        console.log('No troops available to allocate or tile not owned.');
+      console.log('No troops available to allocate or tile not owned.');
     }
-};
+  };
 
   componentDidMount() {
     document.addEventListener('click', this.handleOutsideClick, false);
@@ -162,7 +161,7 @@ class Board extends Component {
                   onClick={this.handleHexagonClick}
                   troops={hex.getTroops()}
                   owner={owner}
-                  biome={hex.biome}
+                  biome={biome} // Pass the biome prop
                   currentPlayerId={currentPlayer ? currentPlayer.playerId : null}
                 />
               );
@@ -183,7 +182,7 @@ class Board extends Component {
             position={selectedHex.position}
             openStore={this.props.toggleStoreModal}
             allocateTroops={this.allocateTroops}
-            updateTileBiome={this.updateTileBiome} 
+            updateTileBiome={this.updateTileBiome}
           />
         )}
       </div>

@@ -59,44 +59,44 @@ function Game() {
   const [ownedTroops, setOwnedTroops] = useState(0); // Initialize with 0
   const [isPopupMenuOpen, setPopupMenuOpen] = useState(false); // State for popup menu
   const [questionAsked, setQuestionAsked] = useState(false);
-
-
+  
   // Initialize Tiles and Players
-  useEffect(() => {
-    const initTiles = initializeTiles();
-    setTiles(initTiles);
-    console.log('Initializing tiles and players', initTiles);
+// Game initialization function
+useEffect(() => {
+  const initTiles = initializeTiles();
+  setTiles(initTiles);
+  // console.log('Initializing tiles and players', initTiles);
 
-    const newPlayerTile = initTiles.find(tile => tile.owner === 1);
-    const newOpponentTile = initTiles.find(tile => tile.owner === 2);
-    const newOpponent1Tile = initTiles.find(tile => tile.owner === 3);
-    const newOpponent2Tile = initTiles.find(tile => tile.owner === 4);
+  const newPlayerTile = initTiles.find(tile => tile.owner === 1);
+  const newOpponentTile = initTiles.find(tile => tile.owner === 2);
+  const newOpponent1Tile = initTiles.find(tile => tile.owner === 3);
+  const newOpponent2Tile = initTiles.find(tile => tile.owner === 4);
 
-    if (!newPlayerTile || !newOpponentTile || !newOpponent1Tile || !newOpponent2Tile) {
+  if (!newPlayerTile || !newOpponentTile || !newOpponent1Tile || !newOpponent2Tile) {
       console.error('Failed to assign tiles to all players.', {
-        newPlayerTile,
-        newOpponentTile,
-        newOpponent1Tile,
-        newOpponent2Tile,
+          newPlayerTile,
+          newOpponentTile,
+          newOpponent1Tile,
+          newOpponent2Tile,
       });
       return;
-    }
+  }
 
-    const newPlayer = new PlayerObject(1, newPlayerTile, "Blue");
-    const newOpponent = new aiPlayer(2, newOpponentTile, "Pink");
-    const newOpponent1 = new aiPlayer(3, newOpponent1Tile, "Cyan");
-    const newOpponent2 = new aiPlayer(4, newOpponent2Tile, "Yellow");
+  const newPlayer = new PlayerObject(1, newPlayerTile, "Blue");
+  const newOpponent = new aiPlayer(2, newOpponentTile, "Pink");
+  const newOpponent1 = new aiPlayer(3, newOpponent1Tile, "Cyan");
+  const newOpponent2 = new aiPlayer(4, newOpponent2Tile, "Yellow");
 
-    if (newPlayer && newOpponent && newOpponent1 && newOpponent2) {
+  if (newPlayer && newOpponent && newOpponent1 && newOpponent2) {
       setPlayer(newPlayer);
       setOpponent(newOpponent);
       setOpponent1(newOpponent1);
       setOpponent2(newOpponent2);
-      setOwnedTroops(newPlayer.getFreeTroops); // Correctly access freeTroops
-    } else {
+      setOwnedTroops(newPlayer.getFreeTroops);
+  } else {
       console.error('Failed to create one or more players.');
-    }
-  }, []);
+  }
+}, []);
 
   // Validate that player object is updated correctly when ownedTroops changes
   useEffect(() => {
@@ -141,78 +141,78 @@ function Game() {
 
     // Shuffle array utility function
     const shuffleArray = (array) => {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
     };
 
     // Adjust board bounds dynamically based on the q value
     const boardBounds = (q) => {
-      let rMin, rMax;
-      switch (q) {
-        case -13: rMin = 26; rMax = 29; break;
-        case -12: rMin = 24; rMax = 29; break;
-        case -11: rMin = 22; rMax = 29; break;
-        case -10: rMin = 20; rMax = 29; break;
-        case -9: rMin = 18; rMax = 29; break;
-        case -8: rMin = 16; rMax = 29; break;
-        case -7: rMin = 14; rMax = 29; break;
-        case -6: rMin = 12; rMax = 29; break;
-        case -5: rMin = 10; rMax = 29; break;
-        case -4: rMin = 8; rMax = 29; break;
-        case -3: rMin = 6; rMax = 29; break;
-        case -2: rMin = 4; rMax = 29; break;
-        case -1: rMin = 2; rMax = 29; break;
-        case 0: rMin = 0; rMax = 29; break;
-        case 1: rMin = 0; rMax = 29; break;
-        case 2: rMin = 0; rMax = 29; break;
-        case 3: rMin = 0; rMax = 29; break;
-        case 4: rMin = 0; rMax = 29; break;
-        case 5: rMin = 0; rMax = 29; break;
-        case 6: rMin = 0; rMax = 29; break;
-        case 7: rMin = 0; rMax = 29; break;
-        case 8: rMin = 0; rMax = 29; break;
-        case 9: rMin = 0; rMax = 29; break;
-        case 10: rMin = 0; rMax = 29; break;
-        case 11: rMin = 0; rMax = 29; break;
-        case 12: rMin = 0; rMax = 29; break;
-        case 13: rMin = 0; rMax = 29; break;
-        case 14: rMin = 0; rMax = 29; break;
-        case 15: rMin = 0; rMax = 29; break;
-        case 16: rMin = 0; rMax = 27; break;
-        case 17: rMin = 0; rMax = 25; break;
-        case 18: rMin = 0; rMax = 23; break;
-        case 19: rMin = 0; rMax = 21; break;
-        case 20: rMin = 0; rMax = 19; break;
-        case 21: rMin = 0; rMax = 17; break;
-        case 22: rMin = 0; rMax = 15; break;
-        case 23: rMin = 0; rMax = 13; break;
-        case 24: rMin = 0; rMax = 11; break;
-        case 25: rMin = 0; rMax = 9; break;
-        case 26: rMin = 0; rMax = 7; break;
-        case 27: rMin = 0; rMax = 5; break;
-        case 28: rMin = 0; rMax = 3; break;
-        case 29: rMin = 0; rMax = 1; break;
-        default: rMin = -5; rMax = 29; break;
-      }
-      return { rMin, rMax };
+        let rMin, rMax;
+        switch (q) {
+            case -13: rMin = 26; rMax = 29; break;
+            case -12: rMin = 24; rMax = 29; break;
+            case -11: rMin = 22; rMax = 29; break;
+            case -10: rMin = 20; rMax = 29; break;
+            case -9: rMin = 18; rMax = 29; break;
+            case -8: rMin = 16; rMax = 29; break;
+            case -7: rMin = 14; rMax = 29; break;
+            case -6: rMin = 12; rMax = 29; break;
+            case -5: rMin = 10; rMax = 29; break;
+            case -4: rMin = 8; rMax = 29; break;
+            case -3: rMin = 6; rMax = 29; break;
+            case -2: rMin = 4; rMax = 29; break;
+            case -1: rMin = 2; rMax = 29; break;
+            case 0: rMin = 0; rMax = 29; break;
+            case 1: rMin = 0; rMax = 29; break;
+            case 2: rMin = 0; rMax = 29; break;
+            case 3: rMin = 0; rMax = 29; break;
+            case 4: rMin = 0; rMax = 29; break;
+            case 5: rMin = 0; rMax = 29; break;
+            case 6: rMin = 0; rMax = 29; break;
+            case 7: rMin = 0; rMax = 29; break;
+            case 8: rMin = 0; rMax = 29; break;
+            case 9: rMin = 0; rMax = 29; break;
+            case 10: rMin = 0; rMax = 29; break;
+            case 11: rMin = 0; rMax = 29; break;
+            case 12: rMin = 0; rMax = 29; break;
+            case 13: rMin = 0; rMax = 29; break;
+            case 14: rMin = 0; rMax = 29; break;
+            case 15: rMin = 0; rMax = 29; break;
+            case 16: rMin = 0; rMax = 27; break;
+            case 17: rMin = 0; rMax = 25; break;
+            case 18: rMin = 0; rMax = 23; break;
+            case 19: rMin = 0; rMax = 21; break;
+            case 20: rMin = 0; rMax = 19; break;
+            case 21: rMin = 0; rMax = 17; break;
+            case 22: rMin = 0; rMax = 15; break;
+            case 23: rMin = 0; rMax = 13; break;
+            case 24: rMin = 0; rMax = 11; break;
+            case 25: rMin = 0; rMax = 9; break;
+            case 26: rMin = 0; rMax = 7; break;
+            case 27: rMin = 0; rMax = 5; break;
+            case 28: rMin = 0; rMax = 3; break;
+            case 29: rMin = 0; rMax = 1; break;
+            default: rMin = -5; rMax = 29; break;
+        }
+        return { rMin, rMax };
     };
 
     // Calculate the distance between two hexCoordinates
     const hexDistance = (a, b) => {
-      return Math.max(Math.abs(a.q - b.q), Math.abs(a.r - b.r), Math.abs(a.s - b.s));
+        return Math.max(Math.abs(a.q - b.q), Math.abs(a.r - b.r), Math.abs(a.s - b.s));
     };
 
     // Filter hexCoordinates to only include valid tiles (not Water) and valid s values
     const validCoordinates = hexCoordinates.filter((coord) => {
-      const { rMin, rMax } = boardBounds(coord.q);
-      if (coord.r < rMin || coord.r > rMax || coord.s > 0 || coord.s < -44) {
-        return false;
-      }
-      const biome = GameSettings.getBiomeForCoordinates(coord.q, coord.r, coord.s);
-      return biome !== "Water"; // Ensure it excludes water tiles
+        const { rMin, rMax } = boardBounds(coord.q);
+        if (coord.r < rMin || coord.r > rMax || coord.s > 0 || coord.s < -44) {
+            return false;
+        }
+        const biome = GameSettings.getBiomeForCoordinates(coord.q, coord.r, coord.s);
+        return biome !== "Water"; // Ensure it excludes water tiles
     });
 
     // Shuffle hex coordinates to randomize starting positions
@@ -220,43 +220,43 @@ function Game() {
 
     // Assign one tile to each player, ensuring they are not within 5 tiles of each other
     playerColors.forEach((color, index) => {
-      let assigned = false;
-      while (!assigned && shuffledCoords.length > 0) {
-        const tileCoord = shuffledCoords.pop(); // Get a random tile from shuffled coordinates
-        if (tileCoord) {
-          const isFarEnough = assignedTiles.every(assignedTile => hexDistance(tileCoord, assignedTile) >= 5);
-          if (isFarEnough) {
-            const tile = new Tile(tileCoord.q, tileCoord.r, tileCoord.s);
-            tile.setOwner(index + 1); // Set owner based on player index (1-based)
-            tile.setBiome(`Grassland_${color}`); // Set biome to Grassland with player color
-            assignedTiles.push(tile); // Add tile to assigned tiles
-            assigned = true;
-          }
+        let assigned = false;
+        while (!assigned && shuffledCoords.length > 0) {
+            const tileCoord = shuffledCoords.pop(); // Get a random tile from shuffled coordinates
+            if (tileCoord) {
+                const isFarEnough = assignedTiles.every(assignedTile => hexDistance(tileCoord, assignedTile) >= 5);
+                if (isFarEnough) {
+                    const tile = new Tile(tileCoord.q, tileCoord.r, tileCoord.s);
+                    tile.setOwner(index + 1); // Set owner based on player index (1-based)
+                    tile.setBiome(`Grassland_${color}`); // Set biome to Grassland with player color
+                    assignedTiles.push(tile); // Add tile to assigned tiles
+                    assigned = true;
+                }
+            }
         }
-      }
     });
 
     // Ensure all players have a tile
     if (assignedTiles.length !== playerColors.length) {
-      console.error("Not all players could be assigned a tile. Check tile initialization logic.");
+        console.error("Not all players could be assigned a tile. Check tile initialization logic.");
     }
 
     // Assign remaining tiles with their respective biomes based on coordinates
     const allTiles = hexCoordinates.map(coord => {
-      const tile = new Tile(coord.q, coord.r, coord.s);
-      const existingTile = assignedTiles.find(t => t.q === coord.q && t.r === coord.r && t.s === coord.s);
-      if (!existingTile) {
-        const biome = GameSettings.getBiomeForCoordinates(coord.q, coord.r, coord.s); // Determine biome based on coordinates
-        tile.setBiome(biome);
-      } else {
-        tile.setOwner(existingTile.owner);
-        tile.setBiome(existingTile.biome);
-      }
-      return tile;
+        const tile = new Tile(coord.q, coord.r, coord.s);
+        const existingTile = assignedTiles.find(t => t.q === coord.q && t.r === coord.r && t.s === coord.s);
+        if (!existingTile) {
+            const biome = GameSettings.getBiomeForCoordinates(coord.q, coord.r, coord.s); // Determine biome based on coordinates
+            tile.setBiome(biome);
+        } else {
+            tile.setOwner(existingTile.owner);
+            tile.setBiome(existingTile.biome);
+        }
+        return tile;
     });
 
     return allTiles;
-  };
+};
 
   // Function to calculate and update resources per turn based on owned tiles
   const generateResourcesPerTurn = () => {
@@ -568,89 +568,99 @@ const questionAndToggle = async () => {
     setGameLoopStep(-1);
   };
 
-  return (
-    <PlayerContext.Provider value={{ player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn, battleTiles, ownedTroops, setOwnedTroops }}>
-      {battleModal && (
-        <div id="battleModal" className="battleModal">
-          <div className="overlay">
-            <Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
-          </div>
+  useEffect(() => {
+    const updateMap = () => {
+        setTiles([...tiles]); // Trigger re-render by updating the state
+    };
+    GameSettings.subscribeToBiomeChanges(updateMap);
+    return () => {
+        GameSettings.unsubscribeFromBiomeChanges(updateMap);
+    };
+}, [tiles]);
+
+return (
+  <PlayerContext.Provider value={{ player, setPlayer, opponent, setOpponent, opponent1, setOpponent1, opponent2, setOpponent2, turn, setTurn, battleTiles, ownedTroops, setOwnedTroops }}>
+    {battleModal && (
+      <div id="battleModal" className="battleModal">
+        <div className="overlay">
+          <Battle close={toggleBattleModal} isOpen={battleModal}></Battle>
         </div>
-      )}
+      </div>
+    )}
 
-      {modal && (
-        <div className="modal">
-          <div className="overlay">
-            <Question questionJson={question} isOpen={modal} close={toggleModal}></Question>
-          </div>
+    {modal && (
+      <div className="modal">
+        <div className="overlay">
+          <Question questionJson={question} isOpen={modal} close={toggleModal}></Question>
         </div>
-      )}
+      </div>
+    )}
 
-      {storeModal && (
-        <div id="storeModal" className="storeModal">
-          <div className="overlay">
-            <Store storeModal={storeModal} isOpen={storeModal} close={() => { toggleStoreModal(); deselect(); }} ></Store>
-          </div>
+    {storeModal && (
+      <div id="storeModal" className="storeModal">
+        <div className="overlay">
+          <Store tiles={tiles}  setTiles={setTiles} storeModal={storeModal} isOpen={storeModal} close={() => { toggleStoreModal(); deselect(); }} />
         </div>
-      )}
+      </div>
+    )}
 
-      {gameLoopModal && (
-        <div className="gameLoopModal">
-          <div className="overlay">
-            <GameLoopModal text={gameText} isOpen={gameLoopModal} close={toggleGameLoopModal}></GameLoopModal>
-          </div>
+    {gameLoopModal && (
+      <div className="gameLoopModal">
+        <div className="overlay">
+          <GameLoopModal text={gameText} isOpen={gameLoopModal} close={toggleGameLoopModal}></GameLoopModal>
         </div>
-      )}
+      </div>
+    )}
 
-      {isPopupMenuOpen && <PopupMenu isOpen={isPopupMenuOpen} onClose={() => setPopupMenuOpen(false)} />}
+    {isPopupMenuOpen && <PopupMenu isOpen={isPopupMenuOpen} onClose={() => setPopupMenuOpen(false)} />}
 
-      <div className="game">
+    <div className="game">
 
-        <div className='hudContainer'>
+      <div className='hudContainer'>
 
-          <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
+        <PopUp isOpen={isModalOpen} onClose={closeModal} onTopicsChange={handleTopicsChange} />
 
-          <div className='hudElementContainer'>
-            <div className='buttons-container'>
+        <div className='hudElementContainer'>
+          <div className='buttons-container'>
 
-              {gameOver && (
-                <button onClick={gameLoop} className="btn-modal">
-                  Start Game
+            {gameOver && (
+              <button onClick={gameLoop} className="btn-modal">
+                Start Game
+              </button>
+            )}
+
+            {shopAndTroopTime && (
+              <>
+                <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
+                  Shop
                 </button>
-              )}
-
-              {shopAndTroopTime && (
-                <>
-                  <button onClick={toggleStoreModal} className="btn-modal" href="storeModal">
-                    Shop
-                  </button>
-                  <button onClick={() => { setGameLoopStep(4); sounds[0].play() }} className="btn-modal" href="battleModal">
-                    Battle
-                  </button>
-                </>
-              )}
-
-            </div>
-
-            {player && <ResourceBar techPoints={player.techPoints} woodPoints={player.woodPoints} foodPoints={player.foodPoints} metalPoints={player.metalPoints} ownedTroops={ownedTroops} />}
+                <button onClick={() => { setGameLoopStep(4); sounds[0].play() }} className="btn-modal" href="battleModal">
+                  Battle
+                </button>
+              </>
+            )}
 
           </div>
 
-        </div>
-        <div className='hexContainer'>
-          <Board
-            ref={boardRef}
-            toggleStoreModal={toggleStoreModal}
-            ownedTroops={ownedTroops}
-            setOwnedTroops={setOwnedTroops}
-            tiles={tiles} // Pass the initialized tiles to Board ###Zaid
-            currentPlayer={player} // Pass the current player ###Zaid
-          />
+          {player && <ResourceBar techPoints={player.techPoints} woodPoints={player.woodPoints} foodPoints={player.foodPoints} metalPoints={player.metalPoints} ownedTroops={ownedTroops} />}
+
         </div>
 
       </div>
-    </PlayerContext.Provider>
-  );
+      <div className='hexContainer'>
+        <Board
+          ref={boardRef}
+          toggleStoreModal={toggleStoreModal}
+          ownedTroops={ownedTroops}
+          setOwnedTroops={setOwnedTroops}
+          tiles={tiles} // Pass the initialized tiles to Board ###Zaid
+          currentPlayer={player} // Pass the current player ###Zaid
+        />
+      </div>
+
+    </div>
+  </PlayerContext.Provider>
+);
 }
 
 export default Game;

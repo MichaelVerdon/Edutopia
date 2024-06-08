@@ -15,7 +15,7 @@ class PlayerObject {
             randomTile.setBiome(`Grassland_${playerColor}`);
             randomTile.setOwner(playerId);
         } else {
-            console.error('randomTile is undefined. Player cannot be initialized correctly.');
+            //console.error('randomTile is undefined. Player cannot be initialized correctly.');
         }
         this.freeTroops = 10;
     }

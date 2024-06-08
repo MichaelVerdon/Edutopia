@@ -91,7 +91,8 @@ const InteractiveHexagon = ({ q, r, s, biome, onClick, troops, owner, currentPla
       r={r}
       s={s}
       size={configs.hexSize}
-      fill={getFillColor()}
+      //fill={biome}
+      fill={getFillColor()} // Error Here  
       onClick={clickable ? handleClick : null}
       className={hexagonClass}
       style={{ cursor: cursorStyle }}
@@ -112,3 +113,4 @@ const InteractiveHexagon = ({ q, r, s, biome, onClick, troops, owner, currentPla
 };
 
 export default InteractiveHexagon;
+

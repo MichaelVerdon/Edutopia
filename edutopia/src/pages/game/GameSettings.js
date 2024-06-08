@@ -140,8 +140,10 @@ const GameSettings = {
   }
 };
 
+GameSettings.loadCustomBiomes();
+
+
 export default GameSettings;
 window.GameSettings = GameSettings;
 
 // Load custom biomes when the script is loaded
-GameSettings.loadCustomBiomes();
