@@ -53,14 +53,6 @@ export default class aiPlayer extends PlayerObject{
                     return false;
             }else if(r===30){
                     return false;
-            }else if(r===Math.abs(q+s) && q<=-1 && q>=-15 && r >= 0 && r<=28 && s<=1 && s>=-13){
-                return false;
-            }else if(r===Math.abs(q+s) && q<=-1 && q>=-15 && r >= 1 && r<=29 && s<=0 && s>=-14){
-                return false;
-            }else if(r===Math.abs(q+s) && q<=30 && q>=15 && r >=0 && r<=30 && s<=-30 && s>=-45){
-                return false;
-            }else if(r===Math.abs(q+s) && q<=30 && q>=16 && r >=1 && r<=29 && s<=-31 && s>=-45){
-                return false;
             }else{
                 return true;
             }
@@ -75,16 +67,26 @@ export default class aiPlayer extends PlayerObject{
                 let r = this.ownedTiles[i].r;
                 let s = this.ownedTiles[i].s;
     
-                if(await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_").pop() !== "Unclaimed"){
-                    touchingTiles.push([[q,r,s], [q-1,r+1,s]]);
-                }else if(await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_").pop() !== "Unclaimed"){
-                    touchingTiles.push([[q,r,s], [q,r+1,s-1]]);
-                }else if(await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_").pop() !== "Unclaimed"){
-                    touchingTiles.push([[q,r,s], [q-1,r,s+1]]);
-                }else if(await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_").pop() !== "Unclaimed"){
-                    touchingTiles.push([[q,r,s], [q+1,r,s-1]]);
-                }else if(await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_").pop() !== "Unclaimed"){
-                    touchingTiles.push([[q,r,s], [q,r-1,s+1]]);
+                if(await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_").pop() !== await colorTurn(await this.playerId)){
+                    if(await this.outOfBounds(q-1,r+1,s)){
+                        touchingTiles.push([[q,r,s], [q-1,r+1,s]]);
+                    }
+                }else if(await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_").pop() !== await colorTurn(await this.playerId)){
+                    if(await this.outOfBounds(q,r+1,s-1)){
+                        touchingTiles.push([[q,r,s], [q,r+1,s-1]]);
+                    }
+                }else if(await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_").pop() !== await colorTurn(await this.playerId)){
+                    if(await this.outOfBounds(q-1,r,s+1)){
+                        touchingTiles.push([[q,r,s], [q-1,r,s+1]]);
+                    }
+                }else if(await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_").pop() !== await colorTurn(await this.playerId) ){
+                    if(await this.outOfBounds(q+1,r,s-1)){
+                        touchingTiles.push([[q,r,s], [q+1,r,s-1]]);
+                    }
+                }else if(await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_").pop() !== "Unclaimed" && await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_").pop() !== await colorTurn(await this.playerId)){
+                    if(await this.outOfBounds(q,r-1,s+1)){
+                        touchingTiles.push([[q,r,s], [q,r-1,s+1]]);
+                    }
                 }
             }
     
@@ -109,6 +111,15 @@ export default class aiPlayer extends PlayerObject{
             }
             return allocatableHexs;
         }
+        const colorTurn = async (turn) => {
+            switch (turn) {
+              case 1: return 'Blue';
+              case 2: return 'Pink';
+              case 3: return 'Cyan';
+              case 4: return 'Yellow';
+              default: return '';
+            }
+          };
 
         this.checkAdjacentTiles = async function(){
             let touchingTiles = [];
@@ -118,27 +129,27 @@ export default class aiPlayer extends PlayerObject{
                 let s = await this.ownedTiles[i].s;
                 //TODO: check for chomped out tiles and corner tiles
                 
-                    if(await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_").pop() === "Unclaimed"){
+                    if(await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_").pop() === "Unclaimed" && await GameSettings.getBiomeForCoordinates(q-1,r+1,s).split("_").pop() !== await colorTurn(await this.playerId)){
                         if(await this.outOfBounds(q-1,r+1,s)){
                           touchingTiles.push([q-1,r+1,s]);
                         }
                     }
-                    if(await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_").pop() === "Unclaimed"){
+                    if(await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_").pop() === "Unclaimed" && await GameSettings.getBiomeForCoordinates(q,r+1,s-1).split("_").pop() !== await colorTurn(await this.playerId)){
                         if(await this.outOfBounds(q,r+1,s-1)){
                           touchingTiles.push([q,r+1,s-1]);
                         }
                     }
-                    if(await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_").pop() === "Unclaimed"){
+                    if(await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_").pop() === "Unclaimed" && await GameSettings.getBiomeForCoordinates(q-1,r,s+1).split("_").pop() !== await colorTurn(await this.playerId)){
                         if(await this.outOfBounds(q-1,r,s+1)){
                           touchingTiles.push([q-1,r,s+1]);
                         }
                     }
-                    if(await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_").pop() === "Unclaimed"){
+                    if(await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_").pop() === "Unclaimed"  && await GameSettings.getBiomeForCoordinates(q+1,r,s-1).split("_").pop() !== await colorTurn(await this.playerId) ){
                         if(await this.outOfBounds(q+1,r,s-1)){
                           touchingTiles.push([q+1,r,s-1]);
                         }
                     }
-                    if(await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_").pop() === "Unclaimed"){
+                    if(await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_").pop() === "Unclaimed" && await GameSettings.getBiomeForCoordinates(q,r-1,s+1).split("_").pop() !== await colorTurn(await this.playerId)){
                         if(await this.outOfBounds(q,r-1,s+1)){
                           touchingTiles.push([q,r-1,s+1]);
                         }
@@ -154,7 +165,7 @@ export default class aiPlayer extends PlayerObject{
             let TileToUpdate;
             const option = Math.floor(Math.random() * 2);
             //randomly decide if buy new or upgrade
-            if (option === 1){
+            if (option === 0){
                 TileToUpdate = await this.getOwnedTile();
                 //decide on item
                 let biome = await GameSettings.getBiomeForCoordinates(TileToUpdate.q, TileToUpdate.r, TileToUpdate.s);
@@ -178,7 +189,7 @@ export default class aiPlayer extends PlayerObject{
                     }   
                 }
                 return([TileToUpdate, item]);
-            }else if (option ===0){
+            }else if (option ===1){
                 TileToUpdate = await this.getClaimTile();
                 if(TileToUpdate.length !== 0){
                   let tile = new Tile(TileToUpdate[0], TileToUpdate[1], TileToUpdate[2]);

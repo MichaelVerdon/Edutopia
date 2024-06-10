@@ -81,7 +81,9 @@ function Battle ({close, isOpen}) {
             aiPlayerBattle();
           }
         }catch(exceptionVar){
-            close();
+            if(turn !== 1){
+                close();
+            }
         }
     }, [battleTiles]);
     

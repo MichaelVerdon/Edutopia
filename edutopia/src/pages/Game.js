@@ -763,6 +763,7 @@ function Game() {
         <div className='hexContainer'>
         <Board
             ref={boardRef}
+            saveSelection={saveSelection}
             toggleStoreModal={toggleStoreModal}
             ownedTroops={ownedTroops}
             setOwnedTroops={setOwnedTroops}

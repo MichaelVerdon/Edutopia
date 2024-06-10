@@ -134,9 +134,16 @@ const Store = forwardRef(({ storeModal, close }, ref) => {
       return false;
   }
 
-  function checkTileAdjancency() {
+  async function checkTileAdjancency() {
     let selectedTile = [selectedHex.q, selectedHex.r, selectedHex.s];
-    let tiles = player.ownedTiles;
+    let tiles;
+    switch (turn) {
+      case 1: tiles = await player.ownedTiles;
+      case 2: tiles = await opponent.ownedTiles;
+      case 3: tiles = await opponent1.ownedTiles;
+      case 4: tiles = await opponent2.ownedTiles;
+      default: return null;
+    }
     tiles = tiles.map(tile => tile.getCoordVal());
     for (let tile of tiles) {
       for (let array of adjancenyMap) {
