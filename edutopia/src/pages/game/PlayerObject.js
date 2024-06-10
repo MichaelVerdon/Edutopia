@@ -12,9 +12,16 @@ class PlayerObject{
         this.woodPoints = 100;
         this.metalPoints = 100;
         // A list of tile objects
-        this.ownedTiles = [randomTile]; // We need to assign a random starting tile
+        this.ownedTiles = [randomTile]; // Assign a random starting tile
+        if (randomTile) {
+            randomTile.setBiome(`Grassland_${playerColor}`);
+            randomTile.setOwner(playerId);
+        } else {
+            //console.error('randomTile is undefined. Player cannot be initialized correctly.');
+        }
         this.freeTroops = 10;
     }
+
 
     // Return Player ID For checks
     get getPlayerID(){return this.player_id;}

@@ -1,6 +1,7 @@
 import React, { useReducer, useState, useEffect, createContext, useContext, useRef } from 'react';
 import PopUp from './PopUp';
 import Question from './Question';
+import { GridGenerator } from "react-hexgrid";
 import Board from './game/Board';
 import PlayerObject from './game/PlayerObject';
 import Store from './Store';
@@ -55,6 +56,9 @@ function Game() {
   const [ownedTroops, setOwnedTroops] = useState(player.getFreeTroops); // State for owned troops
   const [isPopupMenuOpen, setPopupMenuOpen] = useState(false); // State for popup menu
   const [loadedGameData, setLoadedGameData] = useState(null);
+
+  const [tiles, setTiles] = useState([]); // Added for tiles
+  const [focusedTile, setFocusedTile] = useState(null); // Added for focused tile
 
   const saveGame = () => {
     // save player and opponents data
@@ -172,12 +176,13 @@ function Game() {
   }, []);
 
   const boardRef = useRef(null);
-
+  // OLD ALLOCATING TROOPS
   const allocateTroops = (hex) => {
     if (boardRef.current) {
       boardRef.current.allocateTroops(hex);
     }
   };
+
 
   const storeRef = useRef();
 
@@ -190,6 +195,161 @@ function Game() {
   const toggleGameState = () => {
     setGameState(!gameOver);
   }
+
+  useEffect(() => {
+    const initTiles = initializeTiles();
+    setTiles(initTiles);
+    console.log('Initializing tiles and players', initTiles);
+  
+    const newPlayerTile = initTiles.find(tile => tile.owner === 1);
+    const newOpponentTile = initTiles.find(tile => tile.owner === 2);
+    const newOpponent1Tile = initTiles.find(tile => tile.owner === 3);
+    const newOpponent2Tile = initTiles.find(tile => tile.owner === 4);
+  
+    if (!newPlayerTile || !newOpponentTile || !newOpponent1Tile || !newOpponent2Tile) {
+        console.error('Failed to assign tiles to all players.', {
+            newPlayerTile,
+            newOpponentTile,
+            newOpponent1Tile,
+            newOpponent2Tile,
+        });
+        return;
+    }
+  
+    const newPlayer = new PlayerObject(1, newPlayerTile, "Blue");
+    const newOpponent = new aiPlayer(2, newOpponentTile, "Pink");
+    const newOpponent1 = new aiPlayer(3, newOpponent1Tile, "Cyan");
+    const newOpponent2 = new aiPlayer(4, newOpponent2Tile, "Yellow");
+  
+    if (newPlayer && newOpponent && newOpponent1 && newOpponent2) {
+        setPlayer(newPlayer);
+        setOpponent(newOpponent);
+        setOpponent1(newOpponent1);
+        setOpponent2(newOpponent2);
+        setOwnedTroops(newPlayer.getFreeTroops);
+    } else {
+        console.error('Failed to create one or more players.');
+    }
+  }, []);
+
+
+    // Function to Initialize Tiles / Zaid
+    const initializeTiles = () => {
+      const hexCoordinates = GridGenerator.hexagon(10); // Adjust the size as necessary
+      const playerColors = ["Blue", "Pink", "Cyan", "Yellow"];
+      const assignedTiles = [];
+    
+      const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      };
+  
+      // Adjust board bounds dynamically based on the q value
+      const boardBounds = (q) => {
+          let rMin, rMax;
+          switch (q) {
+              case -13: rMin = 26; rMax = 29; break;
+              case -12: rMin = 24; rMax = 29; break;
+              case -11: rMin = 22; rMax = 29; break;
+              case -10: rMin = 20; rMax = 29; break;
+              case -9: rMin = 18; rMax = 29; break;
+              case -8: rMin = 16; rMax = 29; break;
+              case -7: rMin = 14; rMax = 29; break;
+              case -6: rMin = 12; rMax = 29; break;
+              case -5: rMin = 10; rMax = 29; break;
+              case -4: rMin = 8; rMax = 29; break;
+              case -3: rMin = 6; rMax = 29; break;
+              case -2: rMin = 4; rMax = 29; break;
+              case -1: rMin = 2; rMax = 29; break;
+              case 0: rMin = 0; rMax = 29; break;
+              case 1: rMin = 0; rMax = 29; break;
+              case 2: rMin = 0; rMax = 29; break;
+              case 3: rMin = 0; rMax = 29; break;
+              case 4: rMin = 0; rMax = 29; break;
+              case 5: rMin = 0; rMax = 29; break;
+              case 6: rMin = 0; rMax = 29; break;
+              case 7: rMin = 0; rMax = 29; break;
+              case 8: rMin = 0; rMax = 29; break;
+              case 9: rMin = 0; rMax = 29; break;
+              case 10: rMin = 0; rMax = 29; break;
+              case 11: rMin = 0; rMax = 29; break;
+              case 12: rMin = 0; rMax = 29; break;
+              case 13: rMin = 0; rMax = 29; break;
+              case 14: rMin = 0; rMax = 29; break;
+              case 15: rMin = 0; rMax = 29; break;
+              case 16: rMin = 0; rMax = 27; break;
+              case 17: rMin = 0; rMax = 25; break;
+              case 18: rMin = 0; rMax = 23; break;
+              case 19: rMin = 0; rMax = 21; break;
+              case 20: rMin = 0; rMax = 19; break;
+              case 21: rMin = 0; rMax = 17; break;
+              case 22: rMin = 0; rMax = 15; break;
+              case 23: rMin = 0; rMax = 13; break;
+              case 24: rMin = 0; rMax = 11; break;
+              case 25: rMin = 0; rMax = 9; break;
+              case 26: rMin = 0; rMax = 7; break;
+              case 27: rMin = 0; rMax = 5; break;
+              case 28: rMin = 0; rMax = 3; break;
+              case 29: rMin = 0; rMax = 1; break;
+              default: rMin = -5; rMax = 29; break;
+          }
+          return { rMin, rMax };
+      };
+  
+      const hexDistance = (a, b) => {
+        return Math.max(Math.abs(a.q - b.q), Math.abs(a.r - b.r), Math.abs(a.s - b.s));
+      };
+    
+      const validCoordinates = hexCoordinates.filter((coord) => {
+        const { rMin, rMax } = boardBounds(coord.q);
+        if (coord.r < rMin || coord.r > rMax || coord.s > 0 || coord.s < -44) {
+          return false;
+        }
+        const biome = GameSettings.getBiomeForCoordinates(coord.q, coord.r, coord.s);
+        return biome !== "Water";
+      });
+    
+      const shuffledCoords = shuffleArray(validCoordinates);
+    
+      playerColors.forEach((color, index) => {
+        let assigned = false;
+        while (!assigned && shuffledCoords.length > 0) {
+          const tileCoord = shuffledCoords.pop();
+          if (tileCoord) {
+            const isFarEnough = assignedTiles.every(assignedTile => hexDistance(tileCoord, assignedTile) >= 5);
+            if (isFarEnough) {
+              const tile = new Tile(tileCoord.q, tileCoord.r, tileCoord.s);
+              tile.setOwner(index + 1);
+              tile.setBiome(`Grassland_${color}`);
+              assignedTiles.push(tile);
+              assigned = true;
+            }
+          }
+        }
+      });
+    
+      if (assignedTiles.length !== playerColors.length) {
+        console.error("Not all players could be assigned a tile. Check tile initialization logic.");
+      }
+    
+      const allTiles = hexCoordinates.map(coord => {
+        const tile = new Tile(coord.q, coord.r, coord.s);
+        const existingTile = assignedTiles.find(t => t.q === coord.q && t.r === coord.r && t.s === coord.s);
+        if (!existingTile) {
+          const biome = GameSettings.getBiomeForCoordinates(coord.q, coord.r, coord.s);
+          tile.setBiome(biome);
+        } else {
+          tile.setOwner(existingTile.owner);
+          tile.setBiome(existingTile.biome);
+        }
+        return tile;
+      });
+    
+      return allTiles;
+};
 
   // Function to calculate and update resources per turn based on owned tiles
   const generateResourcesPerTurn = () => {
@@ -601,7 +761,15 @@ function Game() {
 
         </div>
         <div className='hexContainer'>
-          <Board ref={boardRef} saveSelection={saveSelection} toggleStoreModal={toggleStoreModal} ownedTroops={ownedTroops} setOwnedTroops={setOwnedTroops} />
+        <Board
+            ref={boardRef}
+            toggleStoreModal={toggleStoreModal}
+            ownedTroops={ownedTroops}
+            setOwnedTroops={setOwnedTroops}
+            tiles={tiles} // Pass the initialized tiles to Board
+            currentPlayer={player} // Pass the current player
+            currentPlayerId={player.id} // Pass the current player ID
+          />
         </div>
       </div>
     </PlayerContext.Provider>
