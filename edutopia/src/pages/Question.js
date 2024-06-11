@@ -19,6 +19,7 @@ function Question ({questionJson, isOpen, close}) {
 
     //the timer code
     useEffect(() => {
+        setQuestion(questionJson);
         const timer = setInterval(() => {
         setTime(time - 1);
         }, 1000);
